@@ -1,0 +1,81 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Consolas, monospace;
+  --font-display: "Fraunces", Georgia, serif;
+
+  --color-cardboard: #c99a65;
+  --color-cardboard-light: #d9b47f;
+  --color-cardboard-dark: #a87543;
+  --color-cardboard-darker: #76502f;
+  --color-cardboard-edge: #8a5f38;
+  --color-paper: #f4e9d4;
+  --color-paper-dark: #e8d9bb;
+  --color-wood: #c38a4a;
+  --color-metal: #8b8b83;
+  --color-metal-dark: #5f5f58;
+
+  --color-dial-mod3: #e8b93f;
+  --color-dial-mod3-dark: #b8891a;
+  --color-dial-mod5: #d9668c;
+  --color-dial-mod5-dark: #a83f61;
+  --color-dial-mod7: #6fa06a;
+  --color-dial-mod7-dark: #476f45;
+
+  --color-ink: #3a2c1a;
+  --color-ink-soft: #6b5a42;
+
+  --color-status-good: #4d7c4a;
+  --color-status-bad: #a8432f;
+}
+
+:root {
+  color-scheme: light;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: #e9dcc2;
+  background-image:
+    radial-gradient(ellipse at top left, rgba(255,255,255,0.35), transparent 60%),
+    repeating-linear-gradient(45deg, rgba(120,95,60,0.025) 0px, rgba(120,95,60,0.025) 2px, transparent 2px, transparent 6px);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  min-height: 100vh;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+.focus-ring {
+  outline: none;
+}
+.focus-ring:focus-visible {
+  outline: 3px solid #2f6fb0;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+::selection {
+  background: var(--color-dial-mod5);
+  color: white;
+}
