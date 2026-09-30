@@ -2,7 +2,7 @@ import os
 import glob
 import re
 from reportlab.lib.pagesizes import letter
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image as RLImage, HRFlowable, Preformatted
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image as RLImage, HRFlowable, Preformatted, PageBreak
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib import colors
 from PIL import Image as PILImage
@@ -15,60 +15,63 @@ def convert_md_to_pdf(md_path, pdf_path):
     )
     styles = getSampleStyleSheet()
     
-    # Elegant Formal Serif Typography (Times-Roman / Times-Bold)
+    # Elegant Formal Serif Typography with keepWithNext=True to prevent orphan headings
     title_style = ParagraphStyle(
         'DocTitle',
         parent=styles['Heading1'],
         fontName='Times-Bold',
-        fontSize=20,
-        leading=24,
-        textColor=colors.HexColor('#0F172A'), # Deep Midnight Slate
-        spaceAfter=12
+        fontSize=19,
+        leading=23,
+        textColor=colors.HexColor('#0F172A'),
+        spaceAfter=10,
+        keepWithNext=True
     )
     
     h2_style = ParagraphStyle(
         'DocH2',
         parent=styles['Heading2'],
         fontName='Times-Bold',
-        fontSize=14,
-        leading=18,
-        textColor=colors.HexColor('#1E3A8A'), # Academic Navy
+        fontSize=13.5,
+        leading=17,
+        textColor=colors.HexColor('#1E3A8A'),
         spaceBefore=12,
-        spaceAfter=6
+        spaceAfter=5,
+        keepWithNext=True
     )
 
     h3_style = ParagraphStyle(
         'DocH3',
         parent=styles['Heading3'],
         fontName='Times-Bold',
-        fontSize=12,
-        leading=15,
-        textColor=colors.HexColor('#334155'), # Dark Slate
+        fontSize=11.5,
+        leading=14.5,
+        textColor=colors.HexColor('#334155'),
         spaceBefore=10,
-        spaceAfter=4
+        spaceAfter=4,
+        keepWithNext=True
     )
 
     body_style = ParagraphStyle(
         'DocBody',
         parent=styles['Normal'],
         fontName='Times-Roman',
-        fontSize=10.5,
-        leading=15,
+        fontSize=10,
+        leading=14,
         textColor=colors.HexColor('#1E293B'),
-        spaceAfter=6
+        spaceAfter=5
     )
 
     code_style = ParagraphStyle(
         'DocCode',
         parent=styles['Code'],
         fontName='Courier',
-        fontSize=8.5,
-        leading=11,
+        fontSize=8,
+        leading=10.5,
         textColor=colors.HexColor('#0F172A'),
         backColor=colors.HexColor('#F8FAFC'),
-        borderPadding=6,
-        spaceBefore=6,
-        spaceAfter=8
+        borderPadding=5,
+        spaceBefore=4,
+        spaceAfter=6
     )
 
     story = []
@@ -82,6 +85,11 @@ def convert_md_to_pdf(md_path, pdf_path):
     for line in lines:
         raw = line.rstrip('\n')
         
+        # Explicit Master report page break separator
+        if '=========================================================================' in raw:
+            story.append(PageBreak())
+            continue
+
         if raw.startswith('```'):
             if in_code:
                 code_text = '\n'.join(code_lines)
@@ -98,7 +106,7 @@ def convert_md_to_pdf(md_path, pdf_path):
             continue
 
         if raw.strip() == '---':
-            story.append(HRFlowable(width="100%", thickness=1, color=colors.HexColor('#CBD5E1'), spaceBefore=8, spaceAfter=8))
+            story.append(HRFlowable(width="100%", thickness=1, color=colors.HexColor('#CBD5E1'), spaceBefore=6, spaceAfter=6))
             continue
 
         if raw.startswith('# '):
@@ -111,7 +119,7 @@ def convert_md_to_pdf(md_path, pdf_path):
             story.append(Paragraph(raw[4:], h3_style))
             continue
 
-        # Images: Preserve exact natural aspect ratio using PIL dimensions
+        # Images: Proportional sizing with max height constraint to fit cleanly on pages
         if raw.strip().startswith('!['):
             m = re.match(r'!\[.*?\]\((.*?)\)', raw.strip())
             if m:
@@ -121,15 +129,20 @@ def convert_md_to_pdf(md_path, pdf_path):
                         with PILImage.open(img_p) as im:
                             orig_w, orig_h = im.size
                         
-                        target_w = 490  # Maximum printable page width in points
+                        target_w = 470  # Printable width
                         aspect_ratio = orig_h / orig_w
                         target_h = target_w * aspect_ratio
                         
-                        story.append(Spacer(1, 4))
+                        # Cap max height so images stay on same page as section heading
+                        if target_h > 230:
+                            target_h = 230
+                            target_w = target_h / aspect_ratio
+                        
+                        story.append(Spacer(1, 3))
                         story.append(RLImage(img_p, width=target_w, height=target_h))
-                        story.append(Spacer(1, 6))
+                        story.append(Spacer(1, 4))
                     except Exception as img_err:
-                        print(f"Error processing image aspect ratio: {img_err}")
+                        print(f"Error processing image: {img_err}")
             continue
 
         if raw.strip():
@@ -150,7 +163,7 @@ def convert_md_to_pdf(md_path, pdf_path):
             story.append(Paragraph(final_text, body_style))
 
     doc.build(story)
-    print(f"Generated PDF with natural aspect ratio scaling: {pdf_path}")
+    print(f"Generated PDF with clean page breaks & keepWithNext: {pdf_path}")
 
 if __name__ == '__main__':
     docs_dir = '/Users/justin/Public/projects/CRT/docs'

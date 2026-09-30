@@ -13,10 +13,10 @@ def md_to_docx(md_path, docx_path):
     # Page Margins
     sections = doc.sections
     for section in sections:
-        section.top_margin = Inches(0.85)
-        section.bottom_margin = Inches(0.85)
-        section.left_margin = Inches(0.85)
-        section.right_margin = Inches(0.85)
+        section.top_margin = Inches(0.8)
+        section.bottom_margin = Inches(0.8)
+        section.left_margin = Inches(0.8)
+        section.right_margin = Inches(0.8)
 
     with open(md_path, 'r', encoding='utf-8') as f:
         lines = f.readlines()
@@ -27,6 +27,11 @@ def md_to_docx(md_path, docx_path):
     for line in lines:
         raw_line = line.rstrip('\n')
         
+        # Explicit Master report page break separator
+        if '=========================================================================' in raw_line:
+            doc.add_page_break()
+            continue
+
         # Code block toggle
         if raw_line.startswith('```'):
             if in_code_block:
@@ -36,11 +41,12 @@ def md_to_docx(md_path, docx_path):
                 p.paragraph_format.space_before = Pt(4)
                 p.paragraph_format.space_after = Pt(6)
                 p.paragraph_format.left_indent = Inches(0.2)
+                p.paragraph_format.keep_with_next = True
                 
                 # Format code box style
                 run = p.add_run(code_text)
                 run.font.name = 'Consolas'
-                run.font.size = Pt(9.5)
+                run.font.size = Pt(9)
                 run.font.color.rgb = RGBColor(0x1E, 0x29, 0x3B)
                 
                 code_lines = []
@@ -62,35 +68,38 @@ def md_to_docx(md_path, docx_path):
             p._p.get_or_add_pPr().append(p_border)
             continue
 
-        # Headings (Times New Roman / Georgia)
+        # Headings (Times New Roman / Georgia) with keep_with_next = True
         if raw_line.startswith('# '):
             p = doc.add_heading(level=1)
+            p.paragraph_format.keep_with_next = True
             run = p.add_run(raw_line[2:])
             run.font.name = 'Times New Roman'
-            run.font.size = Pt(20)
+            run.font.size = Pt(19)
             run.font.bold = True
             run.font.color.rgb = RGBColor(0x0F, 0x17, 0x2A) # Midnight Slate
-            p.paragraph_format.space_before = Pt(14)
+            p.paragraph_format.space_before = Pt(12)
             p.paragraph_format.space_after = Pt(6)
             continue
         elif raw_line.startswith('## '):
             p = doc.add_heading(level=2)
+            p.paragraph_format.keep_with_next = True
             run = p.add_run(raw_line[3:])
             run.font.name = 'Times New Roman'
-            run.font.size = Pt(14)
+            run.font.size = Pt(13.5)
             run.font.bold = True
             run.font.color.rgb = RGBColor(0x1E, 0x3A, 0x8A) # Academic Navy
-            p.paragraph_format.space_before = Pt(12)
+            p.paragraph_format.space_before = Pt(10)
             p.paragraph_format.space_after = Pt(4)
             continue
         elif raw_line.startswith('### '):
             p = doc.add_heading(level=3)
+            p.paragraph_format.keep_with_next = True
             run = p.add_run(raw_line[4:])
             run.font.name = 'Times New Roman'
-            run.font.size = Pt(12)
+            run.font.size = Pt(11.5)
             run.font.bold = True
             run.font.color.rgb = RGBColor(0x33, 0x41, 0x55) # Dark Slate
-            p.paragraph_format.space_before = Pt(10)
+            p.paragraph_format.space_before = Pt(8)
             p.paragraph_format.space_after = Pt(3)
             continue
 
@@ -101,11 +110,11 @@ def md_to_docx(md_path, docx_path):
             if os.path.exists(img_path):
                 p = doc.add_paragraph()
                 p.alignment = WD_ALIGN_PARAGRAPH.CENTER
-                p.paragraph_format.space_before = Pt(6)
-                p.paragraph_format.space_after = Pt(6)
+                p.paragraph_format.space_before = Pt(4)
+                p.paragraph_format.space_after = Pt(4)
+                p.paragraph_format.keep_with_next = True
                 run = p.add_run()
-                # Specifying only width scales height proportionally, preserving exact natural aspect ratio
-                run.add_picture(img_path, width=Inches(6.0))
+                run.add_picture(img_path, width=Inches(5.5))
             continue
 
         # Bullet list items
@@ -133,7 +142,7 @@ def md_to_docx(md_path, docx_path):
             parse_formatted_text(p, raw_line)
 
     doc.save(docx_path)
-    print(f"Successfully created docx with natural aspect ratio: {docx_path}")
+    print(f"Successfully created docx with keep_with_next & page breaks: {docx_path}")
 
 def parse_formatted_text(paragraph, text):
     pattern = re.compile(r'(\*\*.*?\*\*|\*.*?\*|`.*?`)')
@@ -153,7 +162,7 @@ def parse_formatted_text(paragraph, text):
         elif token.startswith('`') and token.endswith('`'):
             run = paragraph.add_run(token[1:-1])
             run.font.name = 'Consolas'
-            run.font.size = Pt(9.5)
+            run.font.size = Pt(9)
             run.font.color.rgb = RGBColor(0xB9, 0x1C, 0x1C)
         else:
             run = paragraph.add_run(token)
