@@ -12,32 +12,32 @@ export const TEAM_GROUPS: TeamGroup[] = [
   {
     subteam: "Project Leadership & Working Model Construction",
     members: ["Justin Joe Mathew (Team Lead)", "Jyothis Liju"],
-    role: "Working Model & Microcontroller Architecture",
-    contribution: "Justin led overall system architecture over four weeks, constructing the 3-intersection breadboard prototype and writing C++ firmware. Jyothis collaborated over two weeks on pin mapping, wiring digital/analog outputs, and conducting signal timing tests.",
+    role: "Working Model & Circuit Build",
+    contribution: "Justin led project organization, built the 3-light breadboard model, and wrote the Arduino C++ code. Jyothis worked directly with Justin to wire LEDs to digital/analog pins and test timing accuracy.",
   },
   {
     subteam: "Hardware Procurement, Testing & Concept Applications",
     members: ["Joseph Alex", "Joseph J"],
-    role: "Hardware Sourcing, Bench Testing & Use-Case Mapping",
-    contribution: "Joseph Alex spent two weeks acquiring Arduino Nano boards, LEDs, resistors, and buzzers while testing voltage levels and continuity. Joseph J researched real-world CRT applications across ITS traffic systems and fiber-optic telecommunications.",
+    role: "Hardware Sourcing & Application Research",
+    contribution: "Joseph Alex bought the Arduino Nano board, LEDs, resistors, and buzzers while testing circuit connections. Joseph J researched real-world uses like city traffic lights and fiber-optic signals.",
   },
   {
     subteam: "Web Design & Frontend Engine Development",
     members: ["Johan Geo", "Johaan Sam"],
-    role: "UI/UX Architecture & React State Engine",
-    contribution: "Johan spent the first two weeks designing visual layouts, dark themes, and SVG circular monitors. Johaan spent three weeks engineering the React 19 state engine, 60 FPS animation loops, and dynamic CRT remainder solver.",
+    role: "UI Design & Web App Logic",
+    contribution: "Johan designed the dark laboratory theme, visual layout, and circular monitors. Johaan wrote the React/TypeScript code for the interactive dials, animation timer, and remainder state solver.",
   },
   {
     subteam: "Presentation Structure & Showcase Lead",
     members: ["Joel Geo Manuel"],
-    role: "Presentation Pacing & Live Demo Walkthrough",
-    contribution: "Authored the 2-speaker showcase script between driver Alex and tech lead Sam over multiple group rehearsal sessions, structuring demo pacing around 3s/5s/7s signal cycles and coordinating acoustic chime feedback.",
+    role: "Presentation & Demo Walkthrough",
+    contribution: "Wrote the 2-speaker presentation script between Alex and Sam over team practice sessions, set up the demo slide layout, and coordinated buzzer sound timing during the showcase.",
   },
   {
-    subteam: "Mathematics, Proofs & Pedagogical Design",
+    subteam: "Mathematics, Proofs & Educational Content",
     members: ["Joel Duke", "Jose Alex", "Jyothika Prakash"],
-    role: "Number Theory, Formal Proofs & Educational Engine",
-    contribution: "Joel Duke led initial research and formulated system congruences with Extended Euclidean inverses. Jose spent hours verifying solution existence/uniqueness bounds modulo 105. Jyothika spent three weeks authoring the 3-tier educational hint engine.",
+    role: "Math Equations, Verification & Hint Guides",
+    contribution: "Joel Duke worked out the modulo equations and inverse values. Jose double-checked all math steps and solution bounds by hand. Jyothika wrote the 3-step hint system and simple learning guides.",
   },
 ];
 

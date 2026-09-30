@@ -49,13 +49,13 @@ def convert_md_to_pdf(md_path, pdf_path):
     )
     styles = getSampleStyleSheet()
     
-    # High-Contrast Monochrome Academic Typography tuned for 5-page layout
+    # High-Contrast Monochrome Academic Typography (+3pt font size boost over initial 9.5pt -> 11.5pt body, 20pt title)
     title_style = ParagraphStyle(
         'DocTitle',
         parent=styles['Heading1'],
         fontName='Times-Bold',
-        fontSize=18,
-        leading=21,
+        fontSize=20,
+        leading=24,
         textColor=colors.HexColor('#000000'),
         spaceAfter=6,
         keepWithNext=True
@@ -65,8 +65,8 @@ def convert_md_to_pdf(md_path, pdf_path):
         'DocH2',
         parent=styles['Heading2'],
         fontName='Times-Bold',
-        fontSize=12.5,
-        leading=15.5,
+        fontSize=14.5,
+        leading=18,
         textColor=colors.HexColor('#111111'),
         spaceBefore=8,
         spaceAfter=3,
@@ -77,8 +77,8 @@ def convert_md_to_pdf(md_path, pdf_path):
         'DocH3',
         parent=styles['Heading3'],
         fontName='Times-Bold',
-        fontSize=10.5,
-        leading=13.5,
+        fontSize=12.5,
+        leading=15.5,
         textColor=colors.HexColor('#222222'),
         spaceBefore=6,
         spaceAfter=2,
@@ -89,8 +89,8 @@ def convert_md_to_pdf(md_path, pdf_path):
         'DocBody',
         parent=styles['Normal'],
         fontName='Times-Roman',
-        fontSize=9.5,
-        leading=13.2,
+        fontSize=11.5,
+        leading=15,
         textColor=colors.HexColor('#000000'),
         spaceAfter=3
     )
@@ -99,8 +99,8 @@ def convert_md_to_pdf(md_path, pdf_path):
         'DocTableCell',
         parent=styles['Normal'],
         fontName='Times-Roman',
-        fontSize=9,
-        leading=12.5,
+        fontSize=11,
+        leading=14,
         textColor=colors.HexColor('#000000'),
         spaceAfter=0
     )
@@ -109,8 +109,8 @@ def convert_md_to_pdf(md_path, pdf_path):
         'DocCode',
         parent=styles['Code'],
         fontName='Courier',
-        fontSize=7.5,
-        leading=9.5,
+        fontSize=8.5,
+        leading=10.5,
         textColor=colors.HexColor('#000000'),
         backColor=colors.HexColor('#F2F2F2'),
         borderPadding=4,
@@ -198,7 +198,7 @@ def convert_md_to_pdf(md_path, pdf_path):
             story.append(Paragraph(raw[4:], h3_style))
             continue
 
-        # Images: B&W grayscale conversion & proportional sizing capped for 5-page layout
+        # Images: B&W grayscale conversion & proportional sizing
         if raw.strip().startswith('!['):
             m = re.match(r'!\[.*?\]\((.*?)\)', raw.strip())
             if m:
@@ -207,13 +207,13 @@ def convert_md_to_pdf(md_path, pdf_path):
                     try:
                         bw_img_p, (orig_w, orig_h) = get_bw_image_path(img_p)
                         
-                        target_w = 540  # Printable width with 0.5 in margins
+                        target_w = 540  # Printable width
                         aspect_ratio = orig_h / orig_w
                         target_h = target_w * aspect_ratio
                         
-                        # Cap max height to 155pt to ensure clean fit <= 5 pages
-                        if target_h > 155:
-                            target_h = 155
+                        # Cap max height to 125pt for exact 5-page layout
+                        if target_h > 125:
+                            target_h = 125
                             target_w = target_h / aspect_ratio
                         
                         story.append(Spacer(1, 2))
@@ -230,7 +230,7 @@ def convert_md_to_pdf(md_path, pdf_path):
         flush_table()
 
     doc.build(story)
-    print(f"Generated B&W Optimized PDF: {pdf_path}")
+    print(f"Generated PDF (+3pt font size increase): {pdf_path}")
 
 if __name__ == '__main__':
     docs_dir = '/Users/justin/Public/projects/CRT/docs'

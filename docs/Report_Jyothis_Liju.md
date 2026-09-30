@@ -199,4 +199,4 @@ Both the physical Arduino Nano hardware prototype and the digital twin web appli
 **Role:** Working Model Co-Developer  
 
 ### Contribution Summary:
-I co-developed the physical working model, spending over two weeks collaborating directly with Team Lead Justin on breadboard circuit assembly and microcontroller pin mapping. I assisted in wiring digital output pins (Pins 2–10) and analog pins (A1, A3–A5), soldering component headers, and conducting hardware testing sessions. Working alongside the testing team, I validated real-time LED state transitions against C++ firmware modulo logic and verified acoustic piezo buzzer chime synchronization at the 105s master hyperperiod, ensuring high physical build quality and reliable operational demonstration.
+I co-developed the physical breadboard model, working directly with Justin over two weeks. I helped plug in the LED lights to digital pins 2 through 10 and connected the buzzer to analog pin A1. I tested the circuit while running the Arduino code to check if the LEDs flashed in the correct 3s, 5s, and 7s timing order and made sure the buzzer beeped when all lights turned green at second 23.
