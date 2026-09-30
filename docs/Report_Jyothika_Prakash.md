@@ -42,11 +42,11 @@ Suppose three traffic signals have cycle lengths of 3, 5, and 7 minutes respecti
 
 ### 3.3 CRT Solution Procedure
 1. Total Product: M = 3 × 5 × 7 = 105.
-2. Partial Products: M₁ = 35, M₂ = 21, M₃ = 15.
+2. Partial Products: M1 = 35, M2 = 21, M3 = 15.
 3. Modular Inverses:
-   • 35 · y₁ ≡ 1 (mod 3) ⇒ 2 · y₁ ≡ 1 (mod 3) ⇒ y₁ = 2
-   • 21 · y₂ ≡ 1 (mod 5) ⇒ 1 · y₂ ≡ 1 (mod 5) ⇒ y₂ = 1
-   • 15 · y₃ ≡ 1 (mod 7) ⇒ 1 · y₃ ≡ 1 (mod 7) ⇒ y₃ = 1
+   • 35 * y1 ≡ 1 (mod 3) ⇒ 2 * y1 ≡ 1 (mod 3) ⇒ y1 = 2
+   • 21 * y2 ≡ 1 (mod 5) ⇒ 1 * y2 ≡ 1 (mod 5) ⇒ y2 = 1
+   • 15 * y3 ≡ 1 (mod 7) ⇒ 1 * y3 ≡ 1 (mod 7) ⇒ y3 = 1
 4. Compute x:
    • x = (2 × 35 × 2) + (3 × 21 × 1) + (2 × 15 × 1)
    • x = 140 + 63 + 30 = 233
@@ -66,7 +66,7 @@ The web application models the traffic signal system digitally using React, Type
 
 ### Interactive User Controls:
 1. Candidate Timer Wheel: Adjusts the candidate time value x (e.g. set to 23).
-2. Intersection Signal Monitors (3 min, 5 min, 7 min): Shows real-time remainder values (x mod mᵢ) and green light indicator status.
+2. Intersection Signal Monitors (3 min, 5 min, 7 min): Shows real-time remainder values (x mod mi) and green light indicator status.
 3. 'Evaluate Synchronization' Button: Tests whether all 3 intersections display green lights simultaneously.
 4. Green-Wave Status Panel: Displays full green-wave confirmation when all 3 congruences are satisfied (x = 23).
 
