@@ -167,10 +167,15 @@ def convert_md_to_pdf(md_path, pdf_path):
 
 if __name__ == '__main__':
     docs_dir = '/Users/justin/Public/projects/CRT/docs'
+    pdf_dir = os.path.join(docs_dir, 'PDFs')
+    os.makedirs(pdf_dir, exist_ok=True)
+    
     md_files = glob.glob(os.path.join(docs_dir, '*.md'))
     for md_f in md_files:
-        pdf_f = md_f[:-3] + '.pdf'
+        base_name = os.path.basename(md_f)[:-3] + '.pdf'
+        pdf_f = os.path.join(pdf_dir, base_name)
         try:
             convert_md_to_pdf(md_f, pdf_f)
+            convert_md_to_pdf(md_f, md_f[:-3] + '.pdf')
         except Exception as e:
             print(f"Error converting {md_f}: {e}")
