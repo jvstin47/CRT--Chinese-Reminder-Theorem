@@ -28,7 +28,7 @@
 ## 📷 Physical Hardware Prototype & Digital Twin Interface
 
 The project includes both a physical Arduino Nano breadboard circuit and a full digital twin web simulator.  
-👉 **Interactive Web App & Project Repository:** `https://github.com/jvstin47/CRT--Chinese-Reminder-Theorem` (Local Dev Server: `http://localhost:5173/`)
+**Interactive Web App & Project Repository:** https://github.com/jvstin47/CRT--Chinese-Reminder-Theorem
 
 ![CRT Traffic Light Lab Dashboard](/Users/justin/Public/projects/CRT/docs/dashboard_lab.png)
 

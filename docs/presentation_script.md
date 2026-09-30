@@ -26,7 +26,7 @@
 
 ## ⚙️ Scene 2: The Traffic Signal Analogy
 
-**Sam:** *(Pointing to the app screen at `http://localhost:5173/`)*  
+**Sam:** *(Pointing to the interactive web app screen)*  
 > *"Imagine our street has 3 traffic signals:*  
 > - *Signal 1 changes every **3 minutes**.*  
 > - *Signal 2 changes every **5 minutes**.*  
