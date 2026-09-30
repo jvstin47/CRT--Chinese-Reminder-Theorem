@@ -34,7 +34,9 @@ def get_bw_image_path(img_p):
         with PILImage.open(img_p) as im:
             bw_im = im.convert('L')
             enhancer = ImageEnhance.Contrast(bw_im)
-            bw_im = enhancer.enhance(1.15)
+            bw_im = enhancer.enhance(1.25)
+            sharpener = ImageEnhance.Sharpness(bw_im)
+            bw_im = sharpener.enhance(1.2)
             bw_im.save(bw_path)
             return bw_path, im.size
     except Exception as e:
