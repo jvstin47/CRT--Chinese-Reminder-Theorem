@@ -1,9 +1,3 @@
-# MASTER ASSIGNMENT REPORTS COLLECTION — TRAFFIC SIGNAL SYNCHRONIZATION
-
-This document contains the individual project assignment reports for all 10 group members.
-
----
-
 # MATHEMATICS PROJECT ASSIGNMENT REPORT
 
 **PROJECT TITLE:** Traffic Signal Synchronization System Using Chinese Remainder Theorem  
