@@ -8,12 +8,13 @@ import { MechanismStatus } from "./components/CRTLock/MechanismStatus";
 import { HowItWorks } from "./components/Education/HowItWorks";
 import { MathExplanation } from "./components/Education/MathExplanation";
 import { HintSystem } from "./components/Education/HintSystem";
+import { GroupCredits } from "./components/Education/GroupCredits";
 import { Button } from "./components/UI/Button";
 import { Panel } from "./components/UI/Panel";
 import { TrafficLab } from "./components/TrafficLab/TrafficLab";
 
 function App() {
-  const [activeView, setActiveView] = useState<"lock" | "traffic">("lock");
+  const [activeView, setActiveView] = useState<"traffic" | "lock">("traffic");
 
   const lock = useCRTLock(defaultPuzzle);
   const sound = useSound();
@@ -63,45 +64,46 @@ function App() {
           >
             <button
               type="button"
+              onClick={() => setActiveView("traffic")}
+              className={`flex items-center gap-2 rounded-xl px-4 py-2 text-xs font-bold transition sm:text-sm ${
+                activeView === "traffic"
+                  ? "bg-[#22c55e] text-[#052e16] shadow"
+                  : "text-[#8a6f45] hover:text-[#3a2510]"
+              }`}
+            >
+              🚦 Traffic Light Simulator
+            </button>
+            <button
+              type="button"
               onClick={() => setActiveView("lock")}
               className={`flex items-center gap-2 rounded-xl px-4 py-2 text-xs font-bold transition sm:text-sm ${
                 activeView === "lock"
                   ? "bg-[#8a5f1a] text-white shadow"
                   : activeView === "traffic"
                   ? "text-[#8896a8] hover:text-white"
-                  : "text-[#6b5a42] hover:text-[#3a2510]"
+                  : "text-[#8a6f45] hover:text-[#3a2510]"
               }`}
             >
-              🔐 Mechanical CRT Lock
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setActiveView("traffic")}
-              className={`flex items-center gap-2 rounded-xl px-4 py-2 text-xs font-bold transition sm:text-sm ${
-                activeView === "traffic"
-                  ? "border border-[#2b394e] bg-[#162232] text-[#52d6ff] shadow-[0_0_12px_#52d6ff33]"
-                  : "text-[#6b5a42] hover:text-[#3a2510]"
-              }`}
-            >
-              🚦 Real-Time Signal Lab (Hardware)
+              ⚙️ Interactive Mechanism View
             </button>
           </div>
         </div>
 
-        {/* View 1: Traffic Light Lab */}
-        {activeView === "traffic" ? (
-          <TrafficLab />
-        ) : (
-          /* View 2: Mechanical Lock Box */
+        {/* View 1: Traffic Signal Simulator */}
+        {activeView === "traffic" && (
+          <div>
+            <TrafficLab />
+            <div className="mt-8">
+              <GroupCredits />
+            </div>
+          </div>
+        )}
+
+        {/* View 2: Interactive Mechanism View */}
+        {activeView === "lock" && (
           <div>
             <header className="mb-8 text-center sm:mb-10">
               <div className="mb-3 flex items-center justify-center gap-2">
-                {puzzles.length > 1 && (
-                  <label className="sr-only" htmlFor="puzzle-select">
-                    Choose puzzle
-                  </label>
-                )}
                 <button
                   type="button"
                   onClick={() => sound.setMuted((m) => !m)}
@@ -113,10 +115,10 @@ function App() {
                 </button>
               </div>
               <h1 className="font-display text-3xl font-bold tracking-tight text-[#3a2510] sm:text-4xl">
-                CRT LOCK
+                TRAFFIC SIGNAL SYNCHRONIZER
               </h1>
               <p className="mt-1 text-sm text-[#6b5a42] sm:text-base">
-                Chinese Remainder Theorem Lock Box
+                Chinese Remainder Theorem Traffic Light Simulator
               </p>
             </header>
 
@@ -148,21 +150,21 @@ function App() {
 
             <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
               <Button variant="secondary" onClick={lock.reset}>
-                Reset Lock
+                Reset Simulator
               </Button>
               <Button
                 variant="primary"
                 onClick={lock.pullRod}
                 disabled={lock.busy || lock.doorOpen || lock.latchReleased}
               >
-                Check Lock
+                Check Signal Sync
               </Button>
               <Button
                 variant="primary"
                 onClick={lock.openDoor}
                 disabled={!lock.latchReleased || lock.doorOpen}
               >
-                Open
+                Evaluate Green Wave
               </Button>
             </div>
 
@@ -174,12 +176,12 @@ function App() {
                 className="mx-auto mt-6 max-w-md rounded-xl border border-[#c9dfc4] bg-[#eef7ea] p-5 text-center"
               >
                 <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#3f7a3d]">
-                  Lock Open
+                  Synchronized Green Wave
                 </p>
                 <p className="my-1 text-4xl font-extrabold text-[#2f5c2d]">
-                  {lock.puzzle.solution}
+                  Minute {lock.puzzle.solution}
                 </p>
-                <p className="text-sm text-[#3f7a3d]">All three conditions satisfied.</p>
+                <p className="text-sm text-[#3f7a3d]">All three traffic light conditions satisfied.</p>
               </motion.div>
             )}
 
@@ -198,10 +200,11 @@ function App() {
             <div className="mt-6 space-y-4">
               <HowItWorks />
               <MathExplanation puzzle={lock.puzzle} />
+              <GroupCredits />
             </div>
 
             <footer className="mt-12 text-center text-xs text-[#8a6f45]/70">
-              A cardboard puzzle box, rebuilt in code.
+              Traffic Signal Green-Wave Synchronization Simulator powered by CRT.
             </footer>
           </div>
         )}

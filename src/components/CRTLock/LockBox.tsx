@@ -38,8 +38,8 @@ export function LockBox({ lock, onTick, onBlocked }: LockBoxProps) {
 
       <div className="mb-6 flex items-center justify-between">
         <div>
-          <h2 className="font-display text-lg font-bold text-[#4a3010] sm:text-xl">CRT Lock Mechanism</h2>
-          <p className="text-xs text-[#5c3f22]/80">Rotate the dials. Turn the wheel. Pull the rod.</p>
+          <h2 className="font-display text-lg font-bold text-[#4a3010] sm:text-xl">Traffic Signal Synchronization System</h2>
+          <p className="text-xs text-[#5c3f22]/80">Select candidate minute. Check signal synchronization across all 3 intersections.</p>
         </div>
         <Button variant="ghost" className="!text-[11px] !text-[#5c3f22]" onClick={() => lock.setInternalView(!lock.internalView)}>
           {lock.internalView ? "Hide Inside" : "View Inside"}

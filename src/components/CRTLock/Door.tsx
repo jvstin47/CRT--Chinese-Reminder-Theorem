@@ -33,7 +33,7 @@ export function Door({ open, latchReleased, secretNumber }: DoorProps) {
               transition={{ delay: 0.6, duration: 0.4 }}
               className="text-[9px] font-medium text-[#a3936f]"
             >
-              CRT solved
+              Signal Sync OK
             </motion.span>
           )}
         </div>
@@ -56,7 +56,7 @@ export function Door({ open, latchReleased, secretNumber }: DoorProps) {
             }`}
           />
           <span className="absolute bottom-2 left-1/2 -translate-x-1/2 text-[8px] font-bold tracking-[0.14em] text-[#5c3f22] uppercase">
-            CRT Lock
+            Sync Monitor
           </span>
         </motion.div>
       </div>
