@@ -1,5 +1,6 @@
 import os
 import glob
+import re
 from reportlab.lib.pagesizes import letter
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image, HRFlowable, Preformatted
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
@@ -9,49 +10,50 @@ def convert_md_to_pdf(md_path, pdf_path):
     doc = SimpleDocTemplate(
         pdf_path,
         pagesize=letter,
-        rightMargin=40, leftMargin=40, topMargin=40, bottomMargin=40
+        rightMargin=45, leftMargin=45, topMargin=45, bottomMargin=45
     )
     styles = getSampleStyleSheet()
     
+    # Elegant Formal Serif Typography (Times-Roman / Times-Bold)
     title_style = ParagraphStyle(
         'DocTitle',
         parent=styles['Heading1'],
-        fontName='Helvetica-Bold',
-        fontSize=18,
-        leading=22,
-        textColor=colors.HexColor('#1A365D'),
+        fontName='Times-Bold',
+        fontSize=20,
+        leading=24,
+        textColor=colors.HexColor('#0F172A'), # Deep Midnight Slate
         spaceAfter=12
     )
     
     h2_style = ParagraphStyle(
         'DocH2',
         parent=styles['Heading2'],
-        fontName='Helvetica-Bold',
-        fontSize=13,
-        leading=16,
-        textColor=colors.HexColor('#2B6CB0'),
-        spaceBefore=10,
+        fontName='Times-Bold',
+        fontSize=14,
+        leading=18,
+        textColor=colors.HexColor('#1E3A8A'), # Academic Navy
+        spaceBefore=12,
         spaceAfter=6
     )
 
     h3_style = ParagraphStyle(
         'DocH3',
         parent=styles['Heading3'],
-        fontName='Helvetica-Bold',
-        fontSize=11,
-        leading=14,
-        textColor=colors.HexColor('#2D3748'),
-        spaceBefore=8,
+        fontName='Times-Bold',
+        fontSize=12,
+        leading=15,
+        textColor=colors.HexColor('#334155'), # Dark Slate
+        spaceBefore=10,
         spaceAfter=4
     )
 
     body_style = ParagraphStyle(
         'DocBody',
         parent=styles['Normal'],
-        fontName='Helvetica',
-        fontSize=9.5,
-        leading=13,
-        textColor=colors.HexColor('#2D3748'),
+        fontName='Times-Roman',
+        fontSize=10.5,
+        leading=15,
+        textColor=colors.HexColor('#1E293B'),
         spaceAfter=6
     )
 
@@ -59,13 +61,13 @@ def convert_md_to_pdf(md_path, pdf_path):
         'DocCode',
         parent=styles['Code'],
         fontName='Courier',
-        fontSize=8,
-        leading=10,
-        textColor=colors.HexColor('#1A202C'),
-        backColor=colors.HexColor('#EDF2F7'),
+        fontSize=8.5,
+        leading=11,
+        textColor=colors.HexColor('#0F172A'),
+        backColor=colors.HexColor('#F8FAFC'),
         borderPadding=6,
-        spaceBefore=4,
-        spaceAfter=6
+        spaceBefore=6,
+        spaceAfter=8
     )
 
     story = []
@@ -95,7 +97,7 @@ def convert_md_to_pdf(md_path, pdf_path):
             continue
 
         if raw.strip() == '---':
-            story.append(HRFlowable(width="100%", thickness=1, color=colors.HexColor('#CBD5E0'), spaceBefore=8, spaceAfter=8))
+            story.append(HRFlowable(width="100%", thickness=1, color=colors.HexColor('#CBD5E1'), spaceBefore=8, spaceAfter=8))
             continue
 
         if raw.startswith('# '):
@@ -109,7 +111,6 @@ def convert_md_to_pdf(md_path, pdf_path):
             continue
 
         if raw.strip().startswith('!['):
-            import re
             m = re.match(r'!\[.*?\]\((.*?)\)', raw.strip())
             if m:
                 img_p = m.group(1)
@@ -120,9 +121,8 @@ def convert_md_to_pdf(md_path, pdf_path):
             continue
 
         if raw.strip():
-            # Clean markdown bold/italic formatting for ReportLab
+            # Clean formatting tags
             clean_text = raw.replace('**', '<b>').replace('**', '</b>')
-            # Handle remaining bold replacements
             parts = clean_text.split('<b>')
             formatted_parts = []
             for i, p in enumerate(parts):
@@ -135,12 +135,11 @@ def convert_md_to_pdf(md_path, pdf_path):
                     else:
                         formatted_parts.append(p)
             final_text = ''.join(formatted_parts)
-            # Escape & if needed except in tags
             final_text = final_text.replace('& ', '&amp; ')
             story.append(Paragraph(final_text, body_style))
 
     doc.build(story)
-    print(f"Generated PDF: {pdf_path}")
+    print(f"Generated PDF with elegant Times typography: {pdf_path}")
 
 if __name__ == '__main__':
     docs_dir = '/Users/justin/Public/projects/CRT/docs'

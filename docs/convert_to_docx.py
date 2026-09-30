@@ -4,7 +4,6 @@ import re
 from docx import Document
 from docx.shared import Inches, Pt, RGBColor
 from docx.enum.text import WD_ALIGN_PARAGRAPH
-from docx.enum.table import WD_TABLE_ALIGNMENT
 from docx.oxml import parse_xml, OxmlElement
 from docx.oxml.ns import nsdecls, qn
 
@@ -14,10 +13,10 @@ def md_to_docx(md_path, docx_path):
     # Page Margins
     sections = doc.sections
     for section in sections:
-        section.top_margin = Inches(0.8)
-        section.bottom_margin = Inches(0.8)
-        section.left_margin = Inches(0.8)
-        section.right_margin = Inches(0.8)
+        section.top_margin = Inches(0.85)
+        section.bottom_margin = Inches(0.85)
+        section.left_margin = Inches(0.85)
+        section.right_margin = Inches(0.85)
 
     with open(md_path, 'r', encoding='utf-8') as f:
         lines = f.readlines()
@@ -40,9 +39,9 @@ def md_to_docx(md_path, docx_path):
                 
                 # Format code box style
                 run = p.add_run(code_text)
-                run.font.name = 'Courier New'
+                run.font.name = 'Consolas'
                 run.font.size = Pt(9.5)
-                run.font.color.rgb = RGBColor(0x22, 0x22, 0x22)
+                run.font.color.rgb = RGBColor(0x1E, 0x29, 0x3B)
                 
                 code_lines = []
                 in_code_block = False
@@ -59,39 +58,39 @@ def md_to_docx(md_path, docx_path):
         if raw_line.strip() == '---':
             p = doc.add_paragraph()
             p.paragraph_format.space_after = Pt(6)
-            p_border = parse_xml(r'<w:pBdr xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:bottom w:val="single" w:sz="6" w:space="1" w:color="CCCCCC"/></w:pBdr>')
+            p_border = parse_xml(r'<w:pBdr xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:bottom w:val="single" w:sz="6" w:space="1" w:color="CBD5E1"/></w:pBdr>')
             p._p.get_or_add_pPr().append(p_border)
             continue
 
-        # Headings
+        # Headings (Times New Roman / Georgia)
         if raw_line.startswith('# '):
             p = doc.add_heading(level=1)
             run = p.add_run(raw_line[2:])
-            run.font.name = 'Arial'
-            run.font.size = Pt(18)
+            run.font.name = 'Times New Roman'
+            run.font.size = Pt(20)
             run.font.bold = True
-            run.font.color.rgb = RGBColor(0x1A, 0x36, 0x5D) # Navy
-            p.paragraph_format.space_before = Pt(12)
+            run.font.color.rgb = RGBColor(0x0F, 0x17, 0x2A) # Midnight Slate
+            p.paragraph_format.space_before = Pt(14)
             p.paragraph_format.space_after = Pt(6)
             continue
         elif raw_line.startswith('## '):
             p = doc.add_heading(level=2)
             run = p.add_run(raw_line[3:])
-            run.font.name = 'Arial'
+            run.font.name = 'Times New Roman'
             run.font.size = Pt(14)
             run.font.bold = True
-            run.font.color.rgb = RGBColor(0x2B, 0x6C, 0xB0) # Blue
-            p.paragraph_format.space_before = Pt(10)
+            run.font.color.rgb = RGBColor(0x1E, 0x3A, 0x8A) # Academic Navy
+            p.paragraph_format.space_before = Pt(12)
             p.paragraph_format.space_after = Pt(4)
             continue
         elif raw_line.startswith('### '):
             p = doc.add_heading(level=3)
             run = p.add_run(raw_line[4:])
-            run.font.name = 'Arial'
+            run.font.name = 'Times New Roman'
             run.font.size = Pt(12)
             run.font.bold = True
-            run.font.color.rgb = RGBColor(0x2D, 0x37, 0x48) # Dark Grey
-            p.paragraph_format.space_before = Pt(8)
+            run.font.color.rgb = RGBColor(0x33, 0x41, 0x55) # Dark Slate
+            p.paragraph_format.space_before = Pt(10)
             p.paragraph_format.space_after = Pt(3)
             continue
 
@@ -125,7 +124,7 @@ def md_to_docx(md_path, docx_path):
             parse_formatted_text(p, item_text)
             continue
 
-        # Regular Paragraph
+        # Regular Paragraph (Times New Roman)
         if raw_line.strip():
             p = doc.add_paragraph()
             p.paragraph_format.space_after = Pt(4)
@@ -133,10 +132,9 @@ def md_to_docx(md_path, docx_path):
             parse_formatted_text(p, raw_line)
 
     doc.save(docx_path)
-    print(f"Successfully created: {docx_path}")
+    print(f"Successfully created formal docx: {docx_path}")
 
 def parse_formatted_text(paragraph, text):
-    # Simple markdown inline formatting parser (**bold**, *italic*, `code`)
     pattern = re.compile(r'(\*\*.*?\*\*|\*.*?\*|`.*?`)')
     tokens = pattern.split(text)
     
@@ -145,17 +143,20 @@ def parse_formatted_text(paragraph, text):
             continue
         if token.startswith('**') and token.endswith('**'):
             run = paragraph.add_run(token[2:-2])
+            run.font.name = 'Times New Roman'
             run.bold = True
         elif token.startswith('*') and token.endswith('*'):
             run = paragraph.add_run(token[1:-1])
+            run.font.name = 'Times New Roman'
             run.italic = True
         elif token.startswith('`') and token.endswith('`'):
             run = paragraph.add_run(token[1:-1])
-            run.font.name = 'Courier New'
+            run.font.name = 'Consolas'
             run.font.size = Pt(9.5)
-            run.font.color.rgb = RGBColor(0xC5, 0x30, 0x30)
+            run.font.color.rgb = RGBColor(0xB9, 0x1C, 0x1C)
         else:
-            paragraph.add_run(token)
+            run = paragraph.add_run(token)
+            run.font.name = 'Times New Roman'
 
 if __name__ == '__main__':
     docs_dir = '/Users/justin/Public/projects/CRT/docs'
