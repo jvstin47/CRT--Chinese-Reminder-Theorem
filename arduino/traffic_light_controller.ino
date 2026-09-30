@@ -32,10 +32,10 @@ const int RED_C = A5;
 
 const int BUZZER = A1;
 
-const unsigned long PERIOD_A = 1500;
-const unsigned long PERIOD_B = 2000;
-const unsigned long PERIOD_C = 2500;
-const unsigned long MASTER_CYCLE = 30000;
+const unsigned long PERIOD_A = 3000;   // 3.0s Signal Cycle (mod 3)
+const unsigned long PERIOD_B = 5000;   // 5.0s Signal Cycle (mod 5)
+const unsigned long PERIOD_C = 7000;   // 7.0s Signal Cycle (mod 7)
+const unsigned long MASTER_CYCLE = 105000; // 105.0s Hyperperiod LCM (CRT Convergence at t=23s)
 
 const int RED_FREQ = 400;
 const int YELLOW_FREQ = 600;
@@ -151,13 +151,13 @@ void loop() {
 }
 
 int updateLightA(unsigned long phase) {
-  if (phase < 500) {
+  if (phase < 1000) {
     digitalWrite(RED_A, HIGH);
     digitalWrite(YELLOW_A, LOW);
     digitalWrite(GREEN_A, LOW);
     return 0;
   }
-  else if (phase < 1000) {
+  else if (phase < 2000) {
     digitalWrite(RED_A, LOW);
     digitalWrite(YELLOW_A, HIGH);
     digitalWrite(GREEN_A, LOW);
@@ -172,13 +172,13 @@ int updateLightA(unsigned long phase) {
 }
 
 int updateLightB(unsigned long phase) {
-  if (phase < 667) {
+  if (phase < 1667) {
     digitalWrite(RED_B, HIGH);
     digitalWrite(YELLOW_B, LOW);
     digitalWrite(GREEN_B, LOW);
     return 0;
   }
-  else if (phase < 1333) {
+  else if (phase < 3333) {
     digitalWrite(RED_B, LOW);
     digitalWrite(YELLOW_B, HIGH);
     digitalWrite(GREEN_B, LOW);
@@ -193,13 +193,13 @@ int updateLightB(unsigned long phase) {
 }
 
 int updateLightC(unsigned long phase) {
-  if (phase < 833) {
+  if (phase < 2333) {
     digitalWrite(RED_C, HIGH);
     digitalWrite(YELLOW_C, LOW);
     digitalWrite(GREEN_C, LOW);
     return 0;
   }
-  else if (phase < 1667) {
+  else if (phase < 4667) {
     digitalWrite(RED_C, LOW);
     digitalWrite(YELLOW_C, HIGH);
     digitalWrite(GREEN_C, LOW);
