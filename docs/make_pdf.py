@@ -133,6 +133,7 @@ def convert_md_to_pdf(md_path, pdf_path):
     in_code = False
     code_lines = []
     table_lines = []
+    image_buffer = []
 
     def flush_table():
         if not table_lines:
@@ -162,6 +163,62 @@ def convert_md_to_pdf(md_path, pdf_path):
             story.append(Spacer(1, 4))
         table_lines.clear()
 
+    def flush_images():
+        if not image_buffer:
+            return
+        i = 0
+        while i < len(image_buffer):
+            if i + 1 < len(image_buffer):
+                p1, w1, h1 = image_buffer[i]
+                p2, w2, h2 = image_buffer[i+1]
+                col_w = 265
+                max_h = 190
+
+                asp1 = h1 / w1 if w1 > 0 else 0.75
+                asp2 = h2 / w2 if w2 > 0 else 0.75
+
+                tw1 = col_w
+                th1 = tw1 * asp1
+                if th1 > max_h:
+                    th1 = max_h
+                    tw1 = th1 / asp1
+
+                tw2 = col_w
+                th2 = tw2 * asp2
+                if th2 > max_h:
+                    th2 = max_h
+                    tw2 = th2 / asp2
+
+                img1 = RLImage(p1, width=tw1, height=th1)
+                img2 = RLImage(p2, width=tw2, height=th2)
+
+                row_table = Table([[img1, img2]], colWidths=[270, 270])
+                row_table.setStyle(TableStyle([
+                    ('ALIGN', (0,0), (0,0), 'CENTER'),
+                    ('ALIGN', (1,0), (1,0), 'CENTER'),
+                    ('VALIGN', (0,0), (-1,-1), 'MIDDLE'),
+                    ('LEFTPADDING', (0,0), (-1,-1), 0),
+                    ('RIGHTPADDING', (0,0), (-1,-1), 0),
+                    ('TOPPADDING', (0,0), (-1,-1), 2),
+                    ('BOTTOMPADDING', (0,0), (-1,-1), 2),
+                ]))
+                story.append(Spacer(1, 2))
+                story.append(row_table)
+                story.append(Spacer(1, 4))
+                i += 2
+            else:
+                p1, w1, h1 = image_buffer[i]
+                asp1 = h1 / w1 if w1 > 0 else 0.75
+                tw1 = 360
+                th1 = tw1 * asp1
+                if th1 > 190:
+                    th1 = 190
+                    tw1 = th1 / asp1
+                story.append(RLImage(p1, width=tw1, height=th1))
+                story.append(Spacer(1, 4))
+                i += 1
+        image_buffer.clear()
+
     for line in lines:
         raw = line.rstrip('\n')
 
@@ -170,7 +227,24 @@ def convert_md_to_pdf(md_path, pdf_path):
             continue
         elif table_lines:
             flush_table()
-        
+
+        # Images: buffer and render side-by-side
+        if raw.strip().startswith('!['):
+            m = re.match(r'!\[.*?\]\((.*?)\)', raw.strip())
+            if m:
+                img_p = m.group(1)
+                if os.path.exists(img_p):
+                    try:
+                        bw_img_p, (orig_w, orig_h) = get_bw_image_path(img_p)
+                        image_buffer.append((bw_img_p, orig_w, orig_h))
+                    except Exception as img_err:
+                        print(f"Error processing image: {img_err}")
+            continue
+        elif raw.strip() == '' and image_buffer:
+            continue
+        elif image_buffer:
+            flush_images()
+
         # Explicit Master report page break separator
         if '=========================================================================' in raw:
             story.append(PageBreak())
@@ -206,34 +280,11 @@ def convert_md_to_pdf(md_path, pdf_path):
             story.append(Paragraph(format_inline_text(raw[4:]), h3_style))
             continue
 
-        # Images: B&W grayscale conversion & proportional sizing
-        if raw.strip().startswith('!['):
-            m = re.match(r'!\[.*?\]\((.*?)\)', raw.strip())
-            if m:
-                img_p = m.group(1)
-                if os.path.exists(img_p):
-                    try:
-                        bw_img_p, (orig_w, orig_h) = get_bw_image_path(img_p)
-                        
-                        target_w = 540  # Printable width
-                        aspect_ratio = orig_h / orig_w
-                        target_h = target_w * aspect_ratio
-                        
-                        # Cap max height to 125pt for exact 5-page layout
-                        if target_h > 125:
-                            target_h = 125
-                            target_w = target_h / aspect_ratio
-                        
-                        story.append(Spacer(1, 2))
-                        story.append(RLImage(bw_img_p, width=target_w, height=target_h))
-                        story.append(Spacer(1, 3))
-                    except Exception as img_err:
-                        print(f"Error processing image: {img_err}")
-            continue
-
         if raw.strip():
             story.append(Paragraph(format_inline_text(raw), body_style))
 
+    if image_buffer:
+        flush_images()
     if table_lines:
         flush_table()
 

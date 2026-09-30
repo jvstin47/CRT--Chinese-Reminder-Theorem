@@ -4,6 +4,7 @@ import re
 from docx import Document
 from docx.shared import Inches, Pt, RGBColor
 from docx.enum.text import WD_ALIGN_PARAGRAPH
+from docx.enum.table import WD_TABLE_ALIGNMENT
 from docx.oxml import parse_xml, OxmlElement
 from docx.oxml.ns import nsdecls, qn
 
@@ -24,6 +25,7 @@ def md_to_docx(md_path, docx_path):
     in_code_block = False
     code_lines = []
     table_lines = []
+    image_buffer = []
 
     def flush_docx_table():
         if not table_lines:
@@ -60,6 +62,46 @@ def md_to_docx(md_path, docx_path):
             p_space = doc.add_paragraph()
             p_space.paragraph_format.space_after = Pt(4)
         table_lines.clear()
+
+    def flush_docx_images():
+        if not image_buffer:
+            return
+        i = 0
+        while i < len(image_buffer):
+            if i + 1 < len(image_buffer):
+                img1 = image_buffer[i]
+                img2 = image_buffer[i+1]
+                table = doc.add_table(rows=1, cols=2)
+                table.alignment = WD_TABLE_ALIGNMENT.CENTER
+                table.columns[0].width = Inches(3.3)
+                table.columns[1].width = Inches(3.3)
+
+                cell0 = table.cell(0, 0)
+                p0 = cell0.paragraphs[0]
+                p0.alignment = WD_ALIGN_PARAGRAPH.CENTER
+                p0.paragraph_format.space_before = Pt(2)
+                p0.paragraph_format.space_after = Pt(4)
+                p0.add_run().add_picture(img1, width=Inches(3.2))
+
+                cell1 = table.cell(0, 1)
+                p1 = cell1.paragraphs[0]
+                p1.alignment = WD_ALIGN_PARAGRAPH.CENTER
+                p1.paragraph_format.space_before = Pt(2)
+                p1.paragraph_format.space_after = Pt(4)
+                p1.add_run().add_picture(img2, width=Inches(3.2))
+                i += 2
+            else:
+                img = image_buffer[i]
+                p = doc.add_paragraph()
+                p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+                p.paragraph_format.space_before = Pt(4)
+                p.paragraph_format.space_after = Pt(4)
+                p.paragraph_format.keep_with_next = True
+                p.add_run().add_picture(img, width=Inches(5.5))
+                i += 1
+        p_space = doc.add_paragraph()
+        p_space.paragraph_format.space_after = Pt(4)
+        image_buffer.clear()
 
     for line in lines:
         raw_line = line.rstrip('\n')
@@ -146,19 +188,17 @@ def md_to_docx(md_path, docx_path):
             p.paragraph_format.space_after = Pt(3)
             continue
 
-        # Images: ![alt](path) - Preserve natural aspect ratio
+        # Images: buffer and render side-by-side
         img_match = re.match(r'!\[.*?\]\((.*?)\)', raw_line.strip())
         if img_match:
             img_path = img_match.group(1)
             if os.path.exists(img_path):
-                p = doc.add_paragraph()
-                p.alignment = WD_ALIGN_PARAGRAPH.CENTER
-                p.paragraph_format.space_before = Pt(4)
-                p.paragraph_format.space_after = Pt(4)
-                p.paragraph_format.keep_with_next = True
-                run = p.add_run()
-                run.add_picture(img_path, width=Inches(5.5))
+                image_buffer.append(img_path)
             continue
+        elif raw_line.strip() == '' and image_buffer:
+            continue
+        elif image_buffer:
+            flush_docx_images()
 
         # Bullet list items
         if raw_line.strip().startswith('- ') or raw_line.strip().startswith('* '):
@@ -184,6 +224,8 @@ def md_to_docx(md_path, docx_path):
             p.paragraph_format.line_spacing = 1.15
             parse_formatted_text(p, raw_line)
 
+    if image_buffer:
+        flush_docx_images()
     if table_lines:
         flush_docx_table()
 
