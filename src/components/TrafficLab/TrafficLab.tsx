@@ -827,6 +827,41 @@ export function TrafficLab() {
         </div>
       </div>
 
+      {/* Physical Hardware Prototype Photo Showcase */}
+      <div className="rounded-2xl border border-[#1f2a3a] bg-[#0b0f16] p-5 shadow-2xl">
+        <div className="mb-4">
+          <h3 className="text-base font-bold text-white flex items-center gap-2">
+            <span>📷 Physical ATmega328P / Arduino Hardware Prototype</span>
+          </h3>
+          <p className="mt-1 text-xs text-[#8ca0b8]">
+            Breadboard circuit construction featuring 3 traffic signal LED clusters (Red, Yellow, Green), piezo buzzer acoustic telemetry, and microcontroller timing logic.
+          </p>
+        </div>
+
+        <div className="grid gap-4 sm:grid-cols-2">
+          <div className="overflow-hidden rounded-xl border border-[#1c2738] bg-[#080c14] p-3 text-center">
+            <img
+              src="/hardware_perspective.jpg"
+              alt="Arduino Hardware Prototype Perspective View"
+              className="h-52 w-full object-cover rounded-lg"
+            />
+            <p className="mt-2 text-center text-xs font-semibold text-[#52d6ff]">
+              Perspective View (Microcontroller, LED Array & Piezo Buzzer)
+            </p>
+          </div>
+          <div className="overflow-hidden rounded-xl border border-[#1c2738] bg-[#080c14] p-3 text-center">
+            <img
+              src="/hardware_topdown.jpg"
+              alt="Arduino Hardware Prototype Top-Down View"
+              className="h-52 w-full object-cover rounded-lg"
+            />
+            <p className="mt-2 text-center text-xs font-semibold text-[#52d6ff]">
+              Top-Down View (Breadboard Pin Alignment & Wire Routing)
+            </p>
+          </div>
+        </div>
+      </div>
+
       {/* Embedded Arduino Code Viewer */}
       <div className="rounded-2xl border border-[#1f2a3a] bg-[#0b0f16] p-5 shadow-2xl">
         <div className="mb-3 flex flex-wrap items-center justify-between gap-3">

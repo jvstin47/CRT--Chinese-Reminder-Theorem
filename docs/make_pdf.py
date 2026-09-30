@@ -134,8 +134,8 @@ def convert_md_to_pdf(md_path, pdf_path):
                         target_h = target_w * aspect_ratio
                         
                         # Cap max height so images stay on same page as section heading
-                        if target_h > 230:
-                            target_h = 230
+                        if target_h > 190:
+                            target_h = 190
                             target_w = target_h / aspect_ratio
                         
                         story.append(Spacer(1, 3))

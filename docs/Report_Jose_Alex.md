@@ -60,9 +60,13 @@ The unique green-wave solution within [0, 104] is Timestamp 23s.
 
 The hardware prototype is driven by an ATmega328P (Arduino Uno) microcontroller controlling a 3-intersection LED traffic array and piezo buzzer.
 
-![CRT Traffic Light Lab Dashboard](/Users/justin/.gemini/antigravity/brain/e7c94d9d-c35b-4a53-a23b-c1f6d686fdc4/.user_uploaded/media_1790791490718.png)
+![CRT Traffic Light Lab Dashboard](/Users/justin/Public/projects/CRT/docs/dashboard_lab.png)
 
-![Multi-Channel Phase Waveform & Arduino Hardware Setup](/Users/justin/.gemini/antigravity/brain/e7c94d9d-c35b-4a53-a23b-c1f6d686fdc4/.user_uploaded/media_1790791505847.png)
+![Multi-Channel Phase Waveform & Telemetry](/Users/justin/Public/projects/CRT/docs/dashboard_waveform.png)
+
+![Arduino ATmega328P Physical Breadboard Prototype - Perspective View](/Users/justin/Public/projects/CRT/docs/hardware_perspective.jpg)
+
+![Arduino ATmega328P Physical Breadboard Prototype - Top View](/Users/justin/Public/projects/CRT/docs/hardware_topdown.jpg)
 
 ### Interactive Hardware & Digital Twin Controls:
 1. Live Signal Array (SIG A 3.0s, SIG B 5.0s, SIG C 7.0s): Monitors real-time LED states across intersections.
