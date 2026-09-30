@@ -32,9 +32,7 @@ def get_bw_image_path(img_p):
     
     try:
         with PILImage.open(img_p) as im:
-            # Convert to Grayscale ('L')
             bw_im = im.convert('L')
-            # Slightly enhance contrast for razor-sharp monochrome print readability
             enhancer = ImageEnhance.Contrast(bw_im)
             bw_im = enhancer.enhance(1.15)
             bw_im.save(bw_path)
@@ -47,19 +45,19 @@ def convert_md_to_pdf(md_path, pdf_path):
     doc = SimpleDocTemplate(
         pdf_path,
         pagesize=letter,
-        rightMargin=45, leftMargin=45, topMargin=45, bottomMargin=45
+        rightMargin=36, leftMargin=36, topMargin=36, bottomMargin=36
     )
     styles = getSampleStyleSheet()
     
-    # High-Contrast Monochrome / Black & White Academic Typography
+    # High-Contrast Monochrome Academic Typography tuned for 5-page layout
     title_style = ParagraphStyle(
         'DocTitle',
         parent=styles['Heading1'],
         fontName='Times-Bold',
-        fontSize=19,
-        leading=23,
+        fontSize=18,
+        leading=21,
         textColor=colors.HexColor('#000000'),
-        spaceAfter=10,
+        spaceAfter=6,
         keepWithNext=True
     )
     
@@ -67,11 +65,11 @@ def convert_md_to_pdf(md_path, pdf_path):
         'DocH2',
         parent=styles['Heading2'],
         fontName='Times-Bold',
-        fontSize=13.5,
-        leading=17,
+        fontSize=12.5,
+        leading=15.5,
         textColor=colors.HexColor('#111111'),
-        spaceBefore=12,
-        spaceAfter=5,
+        spaceBefore=8,
+        spaceAfter=3,
         keepWithNext=True
     )
 
@@ -79,11 +77,11 @@ def convert_md_to_pdf(md_path, pdf_path):
         'DocH3',
         parent=styles['Heading3'],
         fontName='Times-Bold',
-        fontSize=11.5,
-        leading=14.5,
+        fontSize=10.5,
+        leading=13.5,
         textColor=colors.HexColor('#222222'),
-        spaceBefore=10,
-        spaceAfter=4,
+        spaceBefore=6,
+        spaceAfter=2,
         keepWithNext=True
     )
 
@@ -91,18 +89,18 @@ def convert_md_to_pdf(md_path, pdf_path):
         'DocBody',
         parent=styles['Normal'],
         fontName='Times-Roman',
-        fontSize=10,
-        leading=14,
+        fontSize=9.5,
+        leading=13.2,
         textColor=colors.HexColor('#000000'),
-        spaceAfter=5
+        spaceAfter=3
     )
 
     table_cell_style = ParagraphStyle(
         'DocTableCell',
         parent=styles['Normal'],
         fontName='Times-Roman',
-        fontSize=9.5,
-        leading=13.5,
+        fontSize=9,
+        leading=12.5,
         textColor=colors.HexColor('#000000'),
         spaceAfter=0
     )
@@ -111,13 +109,13 @@ def convert_md_to_pdf(md_path, pdf_path):
         'DocCode',
         parent=styles['Code'],
         fontName='Courier',
-        fontSize=8,
-        leading=10.5,
+        fontSize=7.5,
+        leading=9.5,
         textColor=colors.HexColor('#000000'),
         backColor=colors.HexColor('#F2F2F2'),
-        borderPadding=5,
-        spaceBefore=4,
-        spaceAfter=6
+        borderPadding=4,
+        spaceBefore=3,
+        spaceAfter=4
     )
 
     story = []
@@ -142,19 +140,19 @@ def convert_md_to_pdf(md_path, pdf_path):
                 p2 = Paragraph(format_inline_text(cols[1]), table_cell_style)
                 table_data.append([p1, p2])
         if table_data:
-            t = Table(table_data, colWidths=[240, 230])
+            t = Table(table_data, colWidths=[270, 270])
             t.setStyle(TableStyle([
                 ('VALIGN', (0,0), (-1,-1), 'TOP'),
                 ('BACKGROUND', (0,0), (-1,-1), colors.HexColor('#F5F5F5')),
                 ('BOX', (0,0), (-1,-1), 1.0, colors.HexColor('#222222')),
                 ('INNERGRID', (0,0), (-1,-1), 0.5, colors.HexColor('#CCCCCC')),
-                ('TOPPADDING', (0,0), (-1,-1), 5),
-                ('BOTTOMPADDING', (0,0), (-1,-1), 5),
-                ('LEFTPADDING', (0,0), (-1,-1), 8),
-                ('RIGHTPADDING', (0,0), (-1,-1), 8),
+                ('TOPPADDING', (0,0), (-1,-1), 4),
+                ('BOTTOMPADDING', (0,0), (-1,-1), 4),
+                ('LEFTPADDING', (0,0), (-1,-1), 6),
+                ('RIGHTPADDING', (0,0), (-1,-1), 6),
             ]))
             story.append(t)
-            story.append(Spacer(1, 6))
+            story.append(Spacer(1, 4))
         table_lines.clear()
 
     for line in lines:
@@ -187,7 +185,7 @@ def convert_md_to_pdf(md_path, pdf_path):
             continue
 
         if raw.strip() == '---':
-            story.append(HRFlowable(width="100%", thickness=1, color=colors.HexColor('#333333'), spaceBefore=6, spaceAfter=6))
+            story.append(HRFlowable(width="100%", thickness=1, color=colors.HexColor('#333333'), spaceBefore=4, spaceAfter=4))
             continue
 
         if raw.startswith('# '):
@@ -200,7 +198,7 @@ def convert_md_to_pdf(md_path, pdf_path):
             story.append(Paragraph(raw[4:], h3_style))
             continue
 
-        # Images: B&W grayscale conversion & proportional sizing
+        # Images: B&W grayscale conversion & proportional sizing capped for 5-page layout
         if raw.strip().startswith('!['):
             m = re.match(r'!\[.*?\]\((.*?)\)', raw.strip())
             if m:
@@ -209,18 +207,18 @@ def convert_md_to_pdf(md_path, pdf_path):
                     try:
                         bw_img_p, (orig_w, orig_h) = get_bw_image_path(img_p)
                         
-                        target_w = 470  # Printable width
+                        target_w = 540  # Printable width with 0.5 in margins
                         aspect_ratio = orig_h / orig_w
                         target_h = target_w * aspect_ratio
                         
-                        # Cap max height so images stay on same page as section heading
-                        if target_h > 190:
-                            target_h = 190
+                        # Cap max height to 155pt to ensure clean fit <= 5 pages
+                        if target_h > 155:
+                            target_h = 155
                             target_w = target_h / aspect_ratio
                         
-                        story.append(Spacer(1, 3))
+                        story.append(Spacer(1, 2))
                         story.append(RLImage(bw_img_p, width=target_w, height=target_h))
-                        story.append(Spacer(1, 4))
+                        story.append(Spacer(1, 3))
                     except Exception as img_err:
                         print(f"Error processing image: {img_err}")
             continue
