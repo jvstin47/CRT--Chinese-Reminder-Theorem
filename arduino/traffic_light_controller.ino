@@ -1,7 +1,7 @@
 /*
  * ==============================================================================
  * Project: CRT Traffic Light Lab (Embedded Real-Time Controller)
- * Target Hardware: Arduino Nano / Uno (ATmega328P)
+ * Target Hardware: Arduino Nano / Uno (Arduino Nano)
  * License: MIT License
  * 
  * Authors & Engineering Team:

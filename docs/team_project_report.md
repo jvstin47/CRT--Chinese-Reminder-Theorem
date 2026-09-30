@@ -27,15 +27,15 @@
 
 ## 📷 Physical Hardware Prototype & Digital Twin Interface
 
-The project includes both a physical ATmega328P / Arduino Uno breadboard circuit and a full digital twin web simulator.
+The project includes both a physical Arduino Nano breadboard circuit and a full digital twin web simulator.
 
 ![CRT Traffic Light Lab Dashboard](/Users/justin/Public/projects/CRT/docs/dashboard_lab.png)
 
 ![Multi-Channel Phase Waveform & Telemetry](/Users/justin/Public/projects/CRT/docs/dashboard_waveform.png)
 
-![Arduino ATmega328P Physical Breadboard Prototype - Perspective View](/Users/justin/Public/projects/CRT/docs/hardware_perspective.jpg)
+![Arduino Nano Physical Breadboard Prototype - Perspective View](/Users/justin/Public/projects/CRT/docs/hardware_perspective.jpg)
 
-![Arduino ATmega328P Physical Breadboard Prototype - Top View](/Users/justin/Public/projects/CRT/docs/hardware_topdown.jpg)
+![Arduino Nano Physical Breadboard Prototype - Top View](/Users/justin/Public/projects/CRT/docs/hardware_topdown.jpg)
 
 ---
 

@@ -12,7 +12,7 @@
 ## 1. ABSTRACT
 The Chinese Remainder Theorem (CRT) is a fundamental result in number theory that determines a unique integer solution x for a system of linear congruences with pairwise coprime moduli. While often taught abstractly, CRT has direct applications in urban traffic signal synchronization, digital telecommunications, and parallel computer architectures.
 
-This project demonstrates CRT using both a physical working ATmega328P / Arduino Uno traffic signal model and an interactive digital twin web application. By modeling traffic signals as modular timing cycles, the project illustrates how independent light timers (3s, 5s, 7s) align to create a continuous 'Green Wave' for vehicles at Minute 23 (105s master recurrence).
+This project demonstrates CRT using both a physical working Arduino Nano traffic signal model and an interactive digital twin web application. By modeling traffic signals as modular timing cycles, the project illustrates how independent light timers (3s, 5s, 7s) align to create a continuous 'Green Wave' for vehicles at Minute 23 (105s master recurrence).
 
 ---
 
@@ -23,7 +23,7 @@ When traffic signals operate on independent timer cycles along a main avenue, dr
 1. To understand the mathematical principles of the Chinese Remainder Theorem (CRT).
 2. To differentiate between Least Common Multiple (LCM) and CRT when remainder offsets are present.
 3. To model traffic signal timing cycles (3s, 5s, 7s) as modular congruences.
-4. To build a physical working model powered by an Arduino Uno / ATmega328P microcontroller.
+4. To build a physical working model powered by an Arduino Nano microcontroller.
 5. To provide clear visual, audio, and waveform telemetry feedback upon signal synchronization.
 
 ---
@@ -58,15 +58,15 @@ The unique green-wave solution within [0, 104] is Timestamp 23s.
 
 ## 4. PHYSICAL HARDWARE & DIGITAL TWIN IMPLEMENTATION
 
-The hardware prototype is driven by an ATmega328P (Arduino Uno) microcontroller controlling a 3-intersection LED traffic array and piezo buzzer.
+The hardware prototype is driven by an Arduino Nano microcontroller controlling a 3-intersection LED traffic array and piezo buzzer.
 
 ![CRT Traffic Light Lab Dashboard](/Users/justin/Public/projects/CRT/docs/dashboard_lab.png)
 
 ![Multi-Channel Phase Waveform & Telemetry](/Users/justin/Public/projects/CRT/docs/dashboard_waveform.png)
 
-![Arduino ATmega328P Physical Breadboard Prototype - Perspective View](/Users/justin/Public/projects/CRT/docs/hardware_perspective.jpg)
+![Arduino Nano Physical Breadboard Prototype - Perspective View](/Users/justin/Public/projects/CRT/docs/hardware_perspective.jpg)
 
-![Arduino ATmega328P Physical Breadboard Prototype - Top View](/Users/justin/Public/projects/CRT/docs/hardware_topdown.jpg)
+![Arduino Nano Physical Breadboard Prototype - Top View](/Users/justin/Public/projects/CRT/docs/hardware_topdown.jpg)
 
 ### Interactive Hardware & Digital Twin Controls:
 1. Live Signal Array (SIG A 3.0s, SIG B 5.0s, SIG C 7.0s): Monitors real-time LED states across intersections.
@@ -76,12 +76,12 @@ The hardware prototype is driven by an ATmega328P (Arduino Uno) microcontroller 
 
 ---
 
-## 5. HARDWARE SOURCE CODE (ARDUINO UNO FIRMWARE - C++)
+## 5. HARDWARE SOURCE CODE (ARDUINO NANO FIRMWARE - C++)
 
-The following complete C++ firmware source code (`arduino/traffic_light_controller.ino`) is executed directly on the Arduino Uno microcontroller to drive the physical traffic light hardware:
+The following complete C++ firmware source code (`arduino/traffic_light_controller.ino`) is executed directly on the Arduino Nano microcontroller to drive the physical traffic light hardware:
 
 ```cpp
-// Arduino Uno / ATmega328P Physical Traffic Light Controller
+// Arduino Nano Physical Traffic Light Controller
 // File: arduino/traffic_light_controller.ino
 
 const int RED_A = 2;
@@ -188,7 +188,7 @@ void loop() {
 ## 6. CONCLUSION
 The Traffic Signal Synchronization System provides an intuitive, practical bridge between abstract number theory and urban infrastructure engineering. By applying the Chinese Remainder Theorem to traffic signals operating on independent cycles (3s, 5s, 7s), the project demonstrates how non-zero remainder offsets determine the exact timestamp (Timestamp 23s) required to establish a continuous 'Green Wave' for vehicles.
 
-Both the physical Arduino Uno hardware prototype and the digital twin web application successfully visualize modular congruences, offering an accessible learning tool that highlights the real-world power of modular arithmetic in signal timing, telecommunications, and digital computing.
+Both the physical Arduino Nano hardware prototype and the digital twin web application successfully visualize modular congruences, offering an accessible learning tool that highlights the real-world power of modular arithmetic in signal timing, telecommunications, and digital computing.
 
 ---
 

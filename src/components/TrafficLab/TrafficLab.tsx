@@ -420,7 +420,7 @@ export function TrafficLab() {
             CRT Traffic Light Lab
           </h2>
           <p className="mt-1 max-w-2xl text-xs text-[#8ca0b8] sm:text-sm">
-            Hardware digital twin mirroring an ATmega328P prototype. Demonstrates multi-frequency phase drift and Chinese Remainder Theorem convergence.
+            Hardware digital twin mirroring an Arduino Nano prototype. Demonstrates multi-frequency phase drift and Chinese Remainder Theorem convergence.
           </p>
         </div>
 
@@ -481,7 +481,7 @@ export function TrafficLab() {
           <div className="mb-4 flex items-center justify-between">
             <h3 className="text-base font-bold text-white">Live Signal Array</h3>
             <span className="rounded-md border border-[#233346] bg-[#131c2a] px-2.5 py-1 text-[11px] font-semibold text-[#8ca0b8]">
-              ATmega328P View
+              Arduino Nano View
             </span>
           </div>
 
@@ -831,7 +831,7 @@ export function TrafficLab() {
       <div className="rounded-2xl border border-[#1f2a3a] bg-[#0b0f16] p-5 shadow-2xl">
         <div className="mb-4">
           <h3 className="text-base font-bold text-white flex items-center gap-2">
-            <span>📷 Physical ATmega328P / Arduino Hardware Prototype</span>
+            <span>📷 Physical Arduino Nano / Arduino Hardware Prototype</span>
           </h3>
           <p className="mt-1 text-xs text-[#8ca0b8]">
             Breadboard circuit construction featuring 3 traffic signal LED clusters (Red, Yellow, Green), piezo buzzer acoustic telemetry, and microcontroller timing logic.
@@ -970,7 +970,7 @@ export function TrafficLab() {
             </div>
             <div className="space-y-4 text-xs text-[#b8cadc]">
               <div>
-                <h4 className="font-bold text-[#52d6ff]">ATmega328P Pin Allocation</h4>
+                <h4 className="font-bold text-[#52d6ff]">Arduino Nano Pin Allocation</h4>
                 <div className="mt-2 overflow-hidden rounded-lg border border-[#1e2a3c]">
                   <table className="w-full text-left font-mono">
                     <thead className="bg-[#121a28] text-[#788da4]">

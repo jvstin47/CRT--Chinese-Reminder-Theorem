@@ -4,7 +4,7 @@
 [![React 19](https://img.shields.io/badge/React-19.2-61DAFB.svg)](https://react.dev)
 [![TypeScript](https://img.shields.io/badge/TypeScript-6.0-3178C6.svg)](https://www.typescriptlang.org)
 [![Vite](https://img.shields.io/badge/Vite-6.3-646CFF.svg)](https://vitejs.dev)
-[![Arduino Nano](https://img.shields.io/badge/Hardware-Arduino%20Nano%20%28ATmega328P%29-00979D.svg)](arduino/)
+[![Arduino Nano](https://img.shields.io/badge/Hardware-Arduino%20Nano%20%28Arduino Nano%29-00979D.svg)](arduino/)
 
 A comprehensive interactive laboratory exploring the **Chinese Remainder Theorem (CRT)** across two complementary domains:
 1. **The Mechanical Lock Box:** A discrete, spatial puzzle box demonstrating modular congruence solving.
