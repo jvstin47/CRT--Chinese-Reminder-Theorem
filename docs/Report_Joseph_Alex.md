@@ -56,7 +56,8 @@ The unique green-wave solution within [0, 104] is Timestamp 23s.
 
 ## 4. PHYSICAL HARDWARE & DIGITAL TWIN IMPLEMENTATION
 
-The hardware prototype is driven by an Arduino Nano microcontroller controlling a 3-intersection LED traffic array and piezo buzzer.
+The hardware prototype is driven by an Arduino Nano microcontroller controlling a 3-intersection LED traffic array and piezo buzzer. The physical build is paired with an interactive digital twin web application accessible at:
+👉 **Interactive Web App & Project Repository:** https://github.com/jvstin47/CRT--Chinese-Reminder-Theorem (Local Dev Server: http://localhost:5173/)
 
 ![CRT Traffic Light Lab Dashboard](/Users/justin/Public/projects/CRT/docs/dashboard_lab.png)
 
