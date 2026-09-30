@@ -8,6 +8,11 @@ from reportlab.lib import colors
 from PIL import Image as PILImage, ImageEnhance
 
 def format_inline_text(text):
+    # Strip emojis and unsupported unicode glyphs that cause black box ■ artifacts
+    text = re.sub(r'[\U00010000-\U0010ffff]', '', text)
+    text = re.sub(r'[\ufe00-\ufe0f\u200b-\u200f]', '', text)
+    text = re.sub(r'[💡⚙🎬👥📝📄🎭🚦🎉👉✔❌■]', '', text)
+    text = re.sub(r'[\u2500-\u257f]', '', text)
     clean_text = text.replace('**', '<b>').replace('**', '</b>')
     parts = clean_text.split('<b>')
     formatted_parts = []
@@ -174,6 +179,7 @@ def convert_md_to_pdf(md_path, pdf_path):
         if raw.startswith('```'):
             if in_code:
                 code_text = '\n'.join(code_lines)
+                code_text = re.sub(r'[\ufe00-\ufe0f\u200b-\u200f\U00010000-\U0010ffff\u2500-\u257f]', '', code_text)
                 story.append(Preformatted(code_text, code_style))
                 code_lines = []
                 in_code = False
@@ -191,13 +197,13 @@ def convert_md_to_pdf(md_path, pdf_path):
             continue
 
         if raw.startswith('# '):
-            story.append(Paragraph(raw[2:], title_style))
+            story.append(Paragraph(format_inline_text(raw[2:]), title_style))
             continue
         elif raw.startswith('## '):
-            story.append(Paragraph(raw[3:], h2_style))
+            story.append(Paragraph(format_inline_text(raw[3:]), h2_style))
             continue
         elif raw.startswith('### '):
-            story.append(Paragraph(raw[4:], h3_style))
+            story.append(Paragraph(format_inline_text(raw[4:]), h3_style))
             continue
 
         # Images: B&W grayscale conversion & proportional sizing

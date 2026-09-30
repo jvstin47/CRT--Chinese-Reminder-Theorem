@@ -1,4 +1,4 @@
-# 🎭 CRT LOCK — 2-Speaker Traffic Signal Presentation Script
+#  CRT LOCK — 2-Speaker Traffic Signal Presentation Script
 
 **Format:** 2-Speaker Dialogue / Conversation  
 **Characters:**  
@@ -8,7 +8,7 @@
 
 ---
 
-## 🚦 Scene 1: The Problem (Stuck in Traffic)
+##  Scene 1: The Problem (Stuck in Traffic)
 
 **Alex:**  
 > *"Sam, be honest with me... why does it feel like whenever I'm in a rush, every single traffic light turns red right in front of me?"*
@@ -24,7 +24,7 @@
 
 ---
 
-## ⚙️ Scene 2: The Traffic Signal Analogy
+##  Scene 2: The Traffic Signal Analogy
 
 **Sam:** *(Pointing to the interactive web app screen)*  
 > *"Imagine our street has 3 traffic signals:*  
@@ -42,7 +42,7 @@
 
 ---
 
-## 🎬 Scene 3: Live Interactive Demo
+##  Scene 3: Live Interactive Demo
 
 **Alex:**  
 > *"Alright, let's test it! Suppose Signal A turned green 2 minutes ago, Signal B turned green 3 minutes ago, and Signal C turned green 2 minutes ago. What minute should I dial?"*
@@ -84,7 +84,7 @@
 
 ---
 
-## 🎉 Scene 4: Wrap-Up & Everyday Impact
+##  Scene 4: Wrap-Up & Everyday Impact
 
 **Alex:**  
 > *"That’s awesome! So the Chinese Remainder Theorem basically finds the one secret timing where different repeating cycles align?"*
@@ -97,7 +97,7 @@
 
 ---
 
-## 👥 Speaker Role Assignments Summary
+##  Speaker Role Assignments Summary
 
 | Role | Speaker Name | Focus |
 | :--- | :--- | :--- |
