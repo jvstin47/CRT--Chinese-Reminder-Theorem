@@ -199,4 +199,4 @@ Both the physical Arduino Nano hardware prototype and the digital twin web appli
 **Role:** Component Procurement & Application Ideas  
 
 ### Contribution Summary:
-I handled hardware component selection, part procurement, and application domain research. I mapped Chinese Remainder Theorem modular congruences to real-world engineering problems, detailing how CRT timing algorithms are applied in urban traffic signal synchronization, fiber-optic telecommunications channel multiplexing, and parallel computing architectures.
+I contributed to hardware part acquisition, component bench testing, and real-world application domain research. Working in tandem with Joseph Alex, I spent time sourcing electronic parts and testing physical LED pin alignments on breadboards. I dedicated the second half of the project timeline to researching practical applications of the Chinese Remainder Theorem beyond traffic light synchronization. In collaboration with the report writing team, I documented how CRT modular timing principles apply to urban intelligent transportation systems (ITS), fiber-optic telecommunications channel multiplexing, and parallel computing architectures.

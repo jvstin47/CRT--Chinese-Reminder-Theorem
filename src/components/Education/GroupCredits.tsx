@@ -13,31 +13,31 @@ export const TEAM_GROUPS: TeamGroup[] = [
     subteam: "Project Leadership & Working Model Construction",
     members: ["Justin Joe Mathew (Team Lead)", "Jyothis Liju"],
     role: "Working Model & Microcontroller Architecture",
-    contribution: "Justin led overall system architecture, breadboard circuit assembly, and C++ firmware development. Jyothis co-developed the physical model, wiring digital/analog pins and conducting timing verification.",
+    contribution: "Justin led overall system architecture over four weeks, constructing the 3-intersection breadboard prototype and writing C++ firmware. Jyothis collaborated over two weeks on pin mapping, wiring digital/analog outputs, and conducting signal timing tests.",
   },
   {
     subteam: "Hardware Procurement, Testing & Concept Applications",
     members: ["Joseph Alex", "Joseph J"],
     role: "Hardware Sourcing, Bench Testing & Use-Case Mapping",
-    contribution: "Joseph Alex acquired Arduino Nano boards, LEDs, resistors, and acoustic buzzers while executing bench testing. Joseph J mapped CRT congruences to ITS traffic systems and fiber-optic networking.",
+    contribution: "Joseph Alex spent two weeks acquiring Arduino Nano boards, LEDs, resistors, and buzzers while testing voltage levels and continuity. Joseph J researched real-world CRT applications across ITS traffic systems and fiber-optic telecommunications.",
   },
   {
     subteam: "Web Design & Frontend Engine Development",
     members: ["Johan Geo", "Johaan Sam"],
     role: "UI/UX Architecture & React State Engine",
-    contribution: "Johan designed the visual layout, dark laboratory aesthetic, and SVG circular monitors. Johaan built the React 19 state engine, 60 FPS animation loops, and dynamic CRT remainder solver.",
+    contribution: "Johan spent the first two weeks designing visual layouts, dark themes, and SVG circular monitors. Johaan spent three weeks engineering the React 19 state engine, 60 FPS animation loops, and dynamic CRT remainder solver.",
   },
   {
     subteam: "Presentation Structure & Showcase Lead",
     members: ["Joel Geo Manuel"],
     role: "Presentation Pacing & Live Demo Walkthrough",
-    contribution: "Authored the 2-speaker presentation dialogue script between driver Alex and tech lead Sam, structured demo pacing, and coordinated acoustic chime feedback during live demonstrations.",
+    contribution: "Authored the 2-speaker showcase script between driver Alex and tech lead Sam over multiple group rehearsal sessions, structuring demo pacing around 3s/5s/7s signal cycles and coordinating acoustic chime feedback.",
   },
   {
     subteam: "Mathematics, Proofs & Pedagogical Design",
     members: ["Joel Duke", "Jose Alex", "Jyothika Prakash"],
     role: "Number Theory, Formal Proofs & Educational Engine",
-    contribution: "Joel Duke formulated system congruences and Extended Euclidean inverses. Jose verified solution existence/uniqueness bounds modulo 105. Jyothika designed the 3-tier progressive hint engine.",
+    contribution: "Joel Duke led initial research and formulated system congruences with Extended Euclidean inverses. Jose spent hours verifying solution existence/uniqueness bounds modulo 105. Jyothika spent three weeks authoring the 3-tier educational hint engine.",
   },
 ];
 

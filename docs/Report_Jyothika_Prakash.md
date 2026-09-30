@@ -199,4 +199,4 @@ Both the physical Arduino Nano hardware prototype and the digital twin web appli
 **Role:** Pedagogical Systems & Educational Design  
 
 ### Contribution Summary:
-I developed the pedagogical system, progressive 3-tier educational hint engine, and explanatory learning modules. I authored step-by-step documentation translating abstract number theory and modulo congruences x ≡ a_i (mod m_i) into intuitive traffic light timing concepts, ensuring accessible comprehension for students and non-technical viewers.
+I led the educational system design and pedagogical documentation, focusing on making abstract discrete mathematics accessible and engaging. Working closely with mathematicians Joel Duke and Jose Alex, I spent three weeks designing the 3-tier progressive educational hint engine for the web application. I authored step-by-step learning modules that explain how modular congruences x ≡ a_i (mod m_i) translate into real-world traffic green-wave timing. Through peer feedback sessions with team members, I refined documentation clarity, created explanatory diagrams, and ensured all educational content bridged abstract theory with visual intuition.

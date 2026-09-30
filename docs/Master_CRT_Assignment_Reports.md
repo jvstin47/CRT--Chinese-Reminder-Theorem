@@ -199,7 +199,7 @@ Both the physical Arduino Nano hardware prototype and the digital twin web appli
 **Role:** Mathematical Research & Problem Formulation  
 
 ### Contribution Summary:
-I researched the mathematical foundation of linear congruences and modular arithmetic for traffic signal timing cycles. I formulated the 3-intersection system equations for 3s, 5s, and 7s cycle lengths with non-zero remainder offsets, proved coprimality of moduli (gcd=1), and computed modular inverses (y1=2, y2=1, y3=1) using the Extended Euclidean Algorithm to solve for the unique green-wave timestamp (t=23s) within the 105s hyperperiod.
+I led the theoretical research phase during the first week, investigating modular arithmetic and linear congruences to establish the project's mathematical foundation. Over two weeks of team collaboration with Jose Alex and Jyothika Prakash, I formulated the system of congruences for 3s, 5s, and 7s cycle lengths with non-zero remainder offsets. I proved the pairwise coprimality of moduli (gcd=1) and spent substantial time deriving modular inverses (y1=2, y2=1, y3=1) using the Extended Euclidean Algorithm. Working alongside the frontend team, I verified that our computed green-wave timestamp (t=23s) modulo 105 matched both theoretical calculations and real-time simulator outputs.
 
 =========================================================================
 
@@ -404,7 +404,7 @@ Both the physical Arduino Nano hardware prototype and the digital twin web appli
 **Role:** Presentation & Showcase Lead  
 
 ### Contribution Summary:
-I led the presentation design and showcase workflow for explaining the traffic signal synchronization concept to live audiences. I authored the 2-speaker presentation dialogue between driver Alex and tech lead Sam, structured the live demo pacing around 3s/5s/7s signal cycles, prepared the slide deck visual layout, and coordinated acoustic chime feedback during live hardware and digital twin demonstrations.
+I spearheaded the presentation design and showcase strategy, dedicating extensive effort to translating complex number theory into an engaging demonstration flow. Over multiple group rehearsal sessions with Justin and Johaan, I authored the 2-speaker script featuring driver Alex and tech lead Sam to illustrate the traffic signal green-wave analogy. I structured the demo pacing around 3s, 5s, and 7s cycle presets, created visually compelling presentation slides, and coordinated acoustic chime feedback during live showcase trials. My collaboration ensured that both non-technical audiences and project evaluators could easily appreciate the practical impact of the Chinese Remainder Theorem.
 
 =========================================================================
 
@@ -609,7 +609,7 @@ Both the physical Arduino Nano hardware prototype and the digital twin web appli
 **Role:** Frontend & State Engine Developer  
 
 ### Contribution Summary:
-I engineered the interactive web application frontend and state engine using React 19 and TypeScript. I developed custom 60 FPS animation loops and telemetry sweep cursors, implemented the dynamic CRT remainder state solver, wired real-time state synchronization across traffic monitors and phase waveforms, and tuned Framer Motion visual transitions for seamless user interaction.
+I spent over three weeks engineering the interactive web application frontend and real-time state engine using React 19 and TypeScript. Collaborating daily with UI architect Johan Geo and team lead Justin, I developed custom 60 FPS animation requestAnimationFrame loops and telemetry sweep cursors. I dedicated significant time to implementing the dynamic CRT remainder solver and wiring real-time state synchronization across interactive traffic monitors, multi-frequency phase waveforms, and acoustic web audio chimes. Through iterative peer code reviews and UI testing sessions, I tuned Framer Motion transitions and component state management for seamless cross-device performance.
 
 =========================================================================
 
@@ -814,7 +814,7 @@ Both the physical Arduino Nano hardware prototype and the digital twin web appli
 **Role:** Web Design & UI Architect  
 
 ### Contribution Summary:
-I designed the complete visual architecture, color palette, dark laboratory theme, and responsive layout system using Tailwind CSS v4. I created custom SVG circular monitor displays for 3-intersection traffic signals, designed interactive dial controls and status panels, and established high-contrast UI component states for optimal visual clarity across desktop and mobile displays.
+I served as the UI/UX architect, dedicating the first two weeks of development to designing the application's visual identity, dark laboratory theme, and responsive layout system using Tailwind CSS v4. Working in close partnership with frontend developer Johaan Sam, I spent numerous design iterations crafting custom SVG circular LED monitor displays for 3-intersection traffic signals, interactive number wheels, and status telemetry cards. I prioritized accessibility and usability, conducting usability reviews with team members to refine color contrast ratios, typography scaling, and mobile responsiveness, ensuring the digital twin web app delivered an intuitive visual experience.
 
 =========================================================================
 
@@ -1019,7 +1019,7 @@ Both the physical Arduino Nano hardware prototype and the digital twin web appli
 **Role:** Mathematical Proofs & Solution Verification  
 
 ### Contribution Summary:
-I verified the mathematical proofs, solution existence, and uniqueness bounds for system congruences modulo M=105. I conducted formal step-by-step calculations for Extended Euclidean Algorithm modular inverses (y1, y2, y3), validated remainder offset equations against theoretical bounds, and analyzed boundary edge cases to ensure mathematical rigor in all solution derivations.
+I focused on mathematical verification, formal proofs, and solution bound validation throughout the project lifecycle. Collaborating closely with Joel Duke and Jyothika Prakash during mathematical working sessions, I dedicated hours to deriving formal existence and uniqueness proofs for system congruences modulo M=105. I conducted rigorous step-by-step verification of Extended Euclidean Algorithm modular inverse computations, cross-checked remainder offset equations against theoretical bounds, and analyzed boundary edge cases. My collaborative efforts ensured that all formulas presented in the documentation, reports, and interactive web tools possessed complete mathematical integrity.
 
 =========================================================================
 
@@ -1224,7 +1224,7 @@ Both the physical Arduino Nano hardware prototype and the digital twin web appli
 **Role:** Hardware Sourcing & Build Testing  
 
 ### Contribution Summary:
-I managed the selection and procurement of physical electronic components, acquired Arduino Nano microcontrollers, breadboards, 220 ohm resistors, 9 LED traffic clusters, and piezo buzzers. I executed bench testing, verified digital and analog GPIO pin voltage outputs, conducted breadboard wiring continuity checks, and validated hardware reliability during continuous operation.
+I managed hardware component selection, procurement, and physical build testing over a two-week bench testing phase. Working alongside Joseph J and team lead Justin, I sourced Arduino Nano microcontrollers, solderless breadboards, 220-ohm current-limiting resistors, 9 LED traffic clusters, and piezo acoustic buzzers. I spent considerable time conducting electrical continuity checks, verifying digital and analog GPIO pin voltage outputs under load, and troubleshooting breadboard wire routing. Through collaborative hardware-software integration trials, I validated circuit reliability and ensured stable physical signal transitions during extended testing cycles.
 
 =========================================================================
 
@@ -1429,7 +1429,7 @@ Both the physical Arduino Nano hardware prototype and the digital twin web appli
 **Role:** Component Procurement & Application Ideas  
 
 ### Contribution Summary:
-I handled hardware component selection, part procurement, and application domain research. I mapped Chinese Remainder Theorem modular congruences to real-world engineering problems, detailing how CRT timing algorithms are applied in urban traffic signal synchronization, fiber-optic telecommunications channel multiplexing, and parallel computing architectures.
+I contributed to hardware part acquisition, component bench testing, and real-world application domain research. Working in tandem with Joseph Alex, I spent time sourcing electronic parts and testing physical LED pin alignments on breadboards. I dedicated the second half of the project timeline to researching practical applications of the Chinese Remainder Theorem beyond traffic light synchronization. In collaboration with the report writing team, I documented how CRT modular timing principles apply to urban intelligent transportation systems (ITS), fiber-optic telecommunications channel multiplexing, and parallel computing architectures.
 
 =========================================================================
 
@@ -1634,7 +1634,7 @@ Both the physical Arduino Nano hardware prototype and the digital twin web appli
 **Role:** Team Lead & Working Model Engineer  
 
 ### Contribution Summary:
-I led overall project execution, system architecture, and physical model construction as Team Lead. I engineered the 3-intersection breadboard circuit, wrote the C++ firmware (arduino/traffic_light_controller.ino) for Arduino Nano microcontroller timing and acoustic chime feedback, and established full integration between the physical hardware prototype and the digital twin web application.
+As Team Lead, I directed overall project execution, task delegation, and system architecture across 10 subteam members over four weeks. I dedicated extensive time to constructing the physical 3-intersection breadboard prototype and writing the C++ firmware (arduino/traffic_light_controller.ino) for Arduino Nano microcontroller timing, modulo logic, and acoustic chime feedback. Working closely with co-developer Jyothis Liju and frontend engineer Johaan Sam, I led hardware-software integration sessions, resolved timing drift bugs, and ensured seamless alignment between the physical working model and the digital twin web application.
 
 =========================================================================
 
@@ -1839,7 +1839,7 @@ Both the physical Arduino Nano hardware prototype and the digital twin web appli
 **Role:** Pedagogical Systems & Educational Design  
 
 ### Contribution Summary:
-I developed the pedagogical system, progressive 3-tier educational hint engine, and explanatory learning modules. I authored step-by-step documentation translating abstract number theory and modulo congruences x ≡ a_i (mod m_i) into intuitive traffic light timing concepts, ensuring accessible comprehension for students and non-technical viewers.
+I led the educational system design and pedagogical documentation, focusing on making abstract discrete mathematics accessible and engaging. Working closely with mathematicians Joel Duke and Jose Alex, I spent three weeks designing the 3-tier progressive educational hint engine for the web application. I authored step-by-step learning modules that explain how modular congruences x ≡ a_i (mod m_i) translate into real-world traffic green-wave timing. Through peer feedback sessions with team members, I refined documentation clarity, created explanatory diagrams, and ensured all educational content bridged abstract theory with visual intuition.
 
 =========================================================================
 
@@ -2044,4 +2044,4 @@ Both the physical Arduino Nano hardware prototype and the digital twin web appli
 **Role:** Working Model Co-Developer  
 
 ### Contribution Summary:
-I co-developed the physical working model and assisted in breadboard circuit assembly and microcontroller pin configuration. I wired digital output pins (Pins 2–10) and analog pins (A1, A3–A5), conducted real-time signal timing tests against C++ firmware modulo logic, and verified acoustic piezo buzzer chime synchronization at the 105s master hyperperiod.
+I co-developed the physical working model, spending over two weeks collaborating directly with Team Lead Justin on breadboard circuit assembly and microcontroller pin mapping. I assisted in wiring digital output pins (Pins 2–10) and analog pins (A1, A3–A5), soldering component headers, and conducting hardware testing sessions. Working alongside the testing team, I validated real-time LED state transitions against C++ firmware modulo logic and verified acoustic piezo buzzer chime synchronization at the 105s master hyperperiod, ensuring high physical build quality and reliable operational demonstration.
