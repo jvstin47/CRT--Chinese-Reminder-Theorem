@@ -199,4 +199,4 @@ Both the physical Arduino Nano hardware prototype and the digital twin web appli
 **Role:** Pedagogical Systems & Educational Design  
 
 ### Contribution Summary:
-I explored real-world CRT applications and designed the interactive hint system and step-by-step mathematical explanations to help users understand remainder arithmetic without complex jargon.
+I developed the pedagogical system, progressive 3-tier educational hint engine, and explanatory learning modules. I authored step-by-step documentation translating abstract number theory and modulo congruences x ≡ a_i (mod m_i) into intuitive traffic light timing concepts, ensuring accessible comprehension for students and non-technical viewers.

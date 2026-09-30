@@ -199,4 +199,4 @@ Both the physical Arduino Nano hardware prototype and the digital twin web appli
 **Role:** Working Model Co-Developer  
 
 ### Contribution Summary:
-I collaborated directly with Justin Joe Mathew on constructing the working traffic signal model. I assisted in component assembly, signal alignment testing, and verifying electrical/mechanical clearance to ensure reliable execution when all modulo remainder conditions were met.
+I co-developed the physical working model and assisted in breadboard circuit assembly and microcontroller pin configuration. I wired digital output pins (Pins 2–10) and analog pins (A1, A3–A5), conducted real-time signal timing tests against C++ firmware modulo logic, and verified acoustic piezo buzzer chime synchronization at the 105s master hyperperiod.

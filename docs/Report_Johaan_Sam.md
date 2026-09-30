@@ -199,4 +199,4 @@ Both the physical Arduino Nano hardware prototype and the digital twin web appli
 **Role:** Frontend & State Engine Developer  
 
 ### Contribution Summary:
-I developed the frontend state logic and component structure. Working with Johan Geo, I built the interactive controls for the timer wheel and state transition hooks managing traffic light synchronization and green-wave status indicators.
+I engineered the interactive web application frontend and state engine using React 19 and TypeScript. I developed custom 60 FPS animation loops and telemetry sweep cursors, implemented the dynamic CRT remainder state solver, wired real-time state synchronization across traffic monitors and phase waveforms, and tuned Framer Motion visual transitions for seamless user interaction.

@@ -199,4 +199,4 @@ Both the physical Arduino Nano hardware prototype and the digital twin web appli
 **Role:** Web Design & UI Architect  
 
 ### Contribution Summary:
-I designed the website interface, visual layout, and traffic signal dashboard theme. I created the interactive modular dial components and responsive styling using Tailwind CSS, ensuring clear visual feedback for remainder checkmarks and signal light states.
+I designed the complete visual architecture, color palette, dark laboratory theme, and responsive layout system using Tailwind CSS v4. I created custom SVG circular monitor displays for 3-intersection traffic signals, designed interactive dial controls and status panels, and established high-contrast UI component states for optimal visual clarity across desktop and mobile displays.

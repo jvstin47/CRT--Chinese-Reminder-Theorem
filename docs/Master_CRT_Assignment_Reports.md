@@ -199,8 +199,7 @@ Both the physical Arduino Nano hardware prototype and the digital twin web appli
 **Role:** Mathematical Research & Problem Formulation  
 
 ### Contribution Summary:
-I researched the mathematical foundation of linear congruences. I formulated the traffic signal green-wave equations for 3, 5, and 7-minute cycles and calculated the unique solution bounds modulo 105.
-
+I researched the mathematical foundation of linear congruences and modular arithmetic for traffic signal timing cycles. I formulated the 3-intersection system equations for 3s, 5s, and 7s cycle lengths with non-zero remainder offsets, proved coprimality of moduli (gcd=1), and computed modular inverses (y1=2, y2=1, y3=1) using the Extended Euclidean Algorithm to solve for the unique green-wave timestamp (t=23s) within the 105s hyperperiod.
 
 =========================================================================
 
@@ -405,8 +404,7 @@ Both the physical Arduino Nano hardware prototype and the digital twin web appli
 **Role:** Presentation & Showcase Lead  
 
 ### Contribution Summary:
-I designed the presentation structure, demo walkthrough flow, and visual slides. I formulated the showcase script explaining the Chinese Remainder Theorem through the traffic signal analogy for live audience demonstrations.
-
+I led the presentation design and showcase workflow for explaining the traffic signal synchronization concept to live audiences. I authored the 2-speaker presentation dialogue between driver Alex and tech lead Sam, structured the live demo pacing around 3s/5s/7s signal cycles, prepared the slide deck visual layout, and coordinated acoustic chime feedback during live hardware and digital twin demonstrations.
 
 =========================================================================
 
@@ -611,8 +609,7 @@ Both the physical Arduino Nano hardware prototype and the digital twin web appli
 **Role:** Frontend & State Engine Developer  
 
 ### Contribution Summary:
-I developed the frontend state logic and component structure. Working with Johan Geo, I built the interactive controls for the timer wheel and state transition hooks managing traffic light synchronization and green-wave status indicators.
-
+I engineered the interactive web application frontend and state engine using React 19 and TypeScript. I developed custom 60 FPS animation loops and telemetry sweep cursors, implemented the dynamic CRT remainder state solver, wired real-time state synchronization across traffic monitors and phase waveforms, and tuned Framer Motion visual transitions for seamless user interaction.
 
 =========================================================================
 
@@ -817,8 +814,7 @@ Both the physical Arduino Nano hardware prototype and the digital twin web appli
 **Role:** Web Design & UI Architect  
 
 ### Contribution Summary:
-I designed the website interface, visual layout, and traffic signal dashboard theme. I created the interactive modular dial components and responsive styling using Tailwind CSS, ensuring clear visual feedback for remainder checkmarks and signal light states.
-
+I designed the complete visual architecture, color palette, dark laboratory theme, and responsive layout system using Tailwind CSS v4. I created custom SVG circular monitor displays for 3-intersection traffic signals, designed interactive dial controls and status panels, and established high-contrast UI component states for optimal visual clarity across desktop and mobile displays.
 
 =========================================================================
 
@@ -1023,8 +1019,7 @@ Both the physical Arduino Nano hardware prototype and the digital twin web appli
 **Role:** Mathematical Proofs & Solution Verification  
 
 ### Contribution Summary:
-I investigated Chinese Remainder Theorem proofs, verifying solution uniqueness within the range [0, 104]. I tested edge-case remainder combinations to ensure mathematical accuracy across all puzzle configurations.
-
+I verified the mathematical proofs, solution existence, and uniqueness bounds for system congruences modulo M=105. I conducted formal step-by-step calculations for Extended Euclidean Algorithm modular inverses (y1, y2, y3), validated remainder offset equations against theoretical bounds, and analyzed boundary edge cases to ensure mathematical rigor in all solution derivations.
 
 =========================================================================
 
@@ -1229,8 +1224,7 @@ Both the physical Arduino Nano hardware prototype and the digital twin web appli
 **Role:** Hardware Sourcing & Build Testing  
 
 ### Contribution Summary:
-I determined the hardware part requirements for the model, sourced necessary components, and executed physical build testing. I also contributed to application use-cases, exploring how modular arithmetic aligns traffic signal cycles in real-world urban infrastructure.
-
+I managed the selection and procurement of physical electronic components, acquired Arduino Nano microcontrollers, breadboards, 220 ohm resistors, 9 LED traffic clusters, and piezo buzzers. I executed bench testing, verified digital and analog GPIO pin voltage outputs, conducted breadboard wiring continuity checks, and validated hardware reliability during continuous operation.
 
 =========================================================================
 
@@ -1435,8 +1429,7 @@ Both the physical Arduino Nano hardware prototype and the digital twin web appli
 **Role:** Component Procurement & Application Ideas  
 
 ### Contribution Summary:
-I handled component selection, hardware procurement, and assembly testing alongside Joseph Alex. Additionally, I assisted in designing application scenarios and creating vector schematics to visually represent the internal signal timing mechanism for project documentation.
-
+I handled hardware component selection, part procurement, and application domain research. I mapped Chinese Remainder Theorem modular congruences to real-world engineering problems, detailing how CRT timing algorithms are applied in urban traffic signal synchronization, fiber-optic telecommunications channel multiplexing, and parallel computing architectures.
 
 =========================================================================
 
@@ -1641,8 +1634,7 @@ Both the physical Arduino Nano hardware prototype and the digital twin web appli
 **Role:** Team Lead & Working Model Engineer  
 
 ### Contribution Summary:
-I served as Team Lead, guiding overall project execution and system architecture. I led the construction and logic development of the working traffic signal model, implementing the mathematical solver engine using the Extended Euclidean Algorithm to calculate modular multiplicative inverses for traffic light synchronization.
-
+I led overall project execution, system architecture, and physical model construction as Team Lead. I engineered the 3-intersection breadboard circuit, wrote the C++ firmware (arduino/traffic_light_controller.ino) for Arduino Nano microcontroller timing and acoustic chime feedback, and established full integration between the physical hardware prototype and the digital twin web application.
 
 =========================================================================
 
@@ -1847,8 +1839,7 @@ Both the physical Arduino Nano hardware prototype and the digital twin web appli
 **Role:** Pedagogical Systems & Educational Design  
 
 ### Contribution Summary:
-I explored real-world CRT applications and designed the interactive hint system and step-by-step mathematical explanations to help users understand remainder arithmetic without complex jargon.
-
+I developed the pedagogical system, progressive 3-tier educational hint engine, and explanatory learning modules. I authored step-by-step documentation translating abstract number theory and modulo congruences x ≡ a_i (mod m_i) into intuitive traffic light timing concepts, ensuring accessible comprehension for students and non-technical viewers.
 
 =========================================================================
 
@@ -2053,8 +2044,4 @@ Both the physical Arduino Nano hardware prototype and the digital twin web appli
 **Role:** Working Model Co-Developer  
 
 ### Contribution Summary:
-I collaborated directly with Justin Joe Mathew on constructing the working traffic signal model. I assisted in component assembly, signal alignment testing, and verifying electrical/mechanical clearance to ensure reliable execution when all modulo remainder conditions were met.
-
-
-=========================================================================
-
+I co-developed the physical working model and assisted in breadboard circuit assembly and microcontroller pin configuration. I wired digital output pins (Pins 2–10) and analog pins (A1, A3–A5), conducted real-time signal timing tests against C++ firmware modulo logic, and verified acoustic piezo buzzer chime synchronization at the 105s master hyperperiod.

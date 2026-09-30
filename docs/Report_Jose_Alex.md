@@ -199,4 +199,4 @@ Both the physical Arduino Nano hardware prototype and the digital twin web appli
 **Role:** Mathematical Proofs & Solution Verification  
 
 ### Contribution Summary:
-I investigated Chinese Remainder Theorem proofs, verifying solution uniqueness within the range [0, 104]. I tested edge-case remainder combinations to ensure mathematical accuracy across all puzzle configurations.
+I verified the mathematical proofs, solution existence, and uniqueness bounds for system congruences modulo M=105. I conducted formal step-by-step calculations for Extended Euclidean Algorithm modular inverses (y1, y2, y3), validated remainder offset equations against theoretical bounds, and analyzed boundary edge cases to ensure mathematical rigor in all solution derivations.

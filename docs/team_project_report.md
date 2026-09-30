@@ -60,25 +60,25 @@ The project includes both a physical Arduino Nano breadboard circuit and a full 
 
 ### 1. Project Leadership & Working Model Construction
 👥 **Team Members:** **Justin Joe Mathew (Team Lead)** & **Jyothis Liju**
-- **Justin Joe Mathew (Team Lead):** Guided overall project direction, engineered core system architecture, and led the construction and logic of the working traffic signal model.
-- **Jyothis Liju:** Assisted Justin directly in constructing the working traffic signal model, testing signal synchronization alignment, and verifying physical component interaction.
+- **Justin Joe Mathew (Team Lead):** Led overall system architecture, physical 3-intersection breadboard prototype assembly, and written C++ firmware (`traffic_light_controller.ino`) for Arduino Nano timing and acoustic chime feedback. Established full integration with the digital twin web app.
+- **Jyothis Liju:** Co-developed the physical working model, wiring digital output pins (Pins 2–10) and analog pins (A1, A3–A5), conducted real-time signal timing tests against C++ firmware modulo logic, and verified acoustic piezo chime synchronization.
 
-### 2. Hardware Sourcing, Build Testing & Application Design
+### 2. Hardware Sourcing, Bench Testing & Application Design
 👥 **Team Members:** **Joseph Alex** & **Joseph J**
-- **Joseph Alex:** Determined component requirements, purchased hardware parts, executed physical build testing, and contributed to application use-cases.
-- **Joseph J:** Handled hardware part selection, procurement, mechanism assembly testing, and co-developed application integration ideas.
+- **Joseph Alex:** Selected and acquired physical electronic components, including Arduino Nano microcontrollers, breadboards, 220Ω resistors, 9 LED traffic clusters, and piezo buzzers. Executed bench testing, GPIO voltage verification, and continuity checks.
+- **Joseph J:** Handled part procurement, assembly testing, and application domain research. Mapped CRT modular congruences to real-world intelligent transportation systems (ITS), fiber-optic telecommunications multiplexing, and parallel computing architectures.
 
-### 3. Web Design & Frontend Development
+### 3. Web Design & Frontend Engine Development
 👥 **Team Members:** **Johan Geo** & **Johaan Sam**
-- **Johan Geo:** Designed the user interface, visual layout, traffic signal dashboard theme, and interactive monitor dials.
-- **Johaan Sam:** Built the frontend components, state integration, responsive layouts, and interactive controls.
+- **Johan Geo:** Designed the complete visual layout, dark laboratory aesthetic, and responsive layout system using Tailwind CSS v4. Created custom SVG circular monitor displays, interactive dial controls, and status panels.
+- **Johaan Sam:** Engineered the interactive web application frontend and state engine using React 19 and TypeScript. Developed 60 FPS animation loops, telemetry sweep cursors, dynamic CRT remainder solver, and Framer Motion transitions.
 
-### 4. Presentation & Demo Lead
+### 4. Presentation Pacing & Showcase Lead
 👥 **Team Member:** **Joel Geo Manuel**
-- **Joel Geo Manuel:** Handled the presentation structure, demo walkthrough flow, visual slides, and showcase delivery for explaining the project to an audience.
+- **Joel Geo Manuel:** Authored the 2-speaker presentation script between driver Alex and tech lead Sam, structured demo pacing around 3s/5s/7s signal cycles, prepared the slide deck visual layout, and coordinated acoustic chime feedback during live demonstrations.
 
-### 5. Mathematics & CRT Applications Research
-👥 **Team Members:** **Joel Duke**, **Jyothika Prakash**, & **Jose Alex**
-- **Joel Duke:** Researched linear congruences and formulated the traffic signal synchronization modulo equations ($3, 5, 7$ minute cycles).
-- **Jyothika Prakash:** Explored real-world CRT applications and authored step-by-step mathematical explanations and hint structures.
-- **Jose Alex:** Investigated Chinese Remainder Theorem proofs, solution bounds ($N = 105$), and modulo remainder properties.
+### 5. Mathematics, Proofs & Pedagogical Systems
+👥 **Team Members:** **Joel Duke**, **Jose Alex**, & **Jyothika Prakash**
+- **Joel Duke:** Researched linear congruences for traffic signal timing cycles. Formulated 3-intersection system equations for 3s, 5s, 7s cycles with non-zero remainder offsets, proved coprimality of moduli ($\gcd=1$), and computed modular inverses ($y_1=2, y_2=1, y_3=1$).
+- **Jose Alex:** Verified mathematical proofs and uniqueness bounds modulo $M=105$. Conducted formal Extended Euclidean Algorithm inverse calculations, validated remainder offset equations against theoretical bounds, and analyzed boundary edge cases.
+- **Jyothika Prakash:** Developed the pedagogical system, progressive 3-tier educational hint engine, and explanatory learning modules. Authored step-by-step documentation translating abstract modulo congruences $x \equiv a_i \pmod{m_i}$ into intuitive traffic light timing concepts.

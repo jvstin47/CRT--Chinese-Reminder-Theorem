@@ -199,4 +199,4 @@ Both the physical Arduino Nano hardware prototype and the digital twin web appli
 **Role:** Component Procurement & Application Ideas  
 
 ### Contribution Summary:
-I handled component selection, hardware procurement, and assembly testing alongside Joseph Alex. Additionally, I assisted in designing application scenarios and creating vector schematics to visually represent the internal signal timing mechanism for project documentation.
+I handled hardware component selection, part procurement, and application domain research. I mapped Chinese Remainder Theorem modular congruences to real-world engineering problems, detailing how CRT timing algorithms are applied in urban traffic signal synchronization, fiber-optic telecommunications channel multiplexing, and parallel computing architectures.

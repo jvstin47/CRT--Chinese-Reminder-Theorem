@@ -199,4 +199,4 @@ Both the physical Arduino Nano hardware prototype and the digital twin web appli
 **Role:** Presentation & Showcase Lead  
 
 ### Contribution Summary:
-I designed the presentation structure, demo walkthrough flow, and visual slides. I formulated the showcase script explaining the Chinese Remainder Theorem through the traffic signal analogy for live audience demonstrations.
+I led the presentation design and showcase workflow for explaining the traffic signal synchronization concept to live audiences. I authored the 2-speaker presentation dialogue between driver Alex and tech lead Sam, structured the live demo pacing around 3s/5s/7s signal cycles, prepared the slide deck visual layout, and coordinated acoustic chime feedback during live hardware and digital twin demonstrations.

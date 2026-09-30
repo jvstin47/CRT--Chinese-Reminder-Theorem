@@ -199,4 +199,4 @@ Both the physical Arduino Nano hardware prototype and the digital twin web appli
 **Role:** Mathematical Research & Problem Formulation  
 
 ### Contribution Summary:
-I researched the mathematical foundation of linear congruences. I formulated the traffic signal green-wave equations for 3, 5, and 7-minute cycles and calculated the unique solution bounds modulo 105.
+I researched the mathematical foundation of linear congruences and modular arithmetic for traffic signal timing cycles. I formulated the 3-intersection system equations for 3s, 5s, and 7s cycle lengths with non-zero remainder offsets, proved coprimality of moduli (gcd=1), and computed modular inverses (y1=2, y2=1, y3=1) using the Extended Euclidean Algorithm to solve for the unique green-wave timestamp (t=23s) within the 105s hyperperiod.

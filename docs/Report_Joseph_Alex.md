@@ -199,4 +199,4 @@ Both the physical Arduino Nano hardware prototype and the digital twin web appli
 **Role:** Hardware Sourcing & Build Testing  
 
 ### Contribution Summary:
-I determined the hardware part requirements for the model, sourced necessary components, and executed physical build testing. I also contributed to application use-cases, exploring how modular arithmetic aligns traffic signal cycles in real-world urban infrastructure.
+I managed the selection and procurement of physical electronic components, acquired Arduino Nano microcontrollers, breadboards, 220 ohm resistors, 9 LED traffic clusters, and piezo buzzers. I executed bench testing, verified digital and analog GPIO pin voltage outputs, conducted breadboard wiring continuity checks, and validated hardware reliability during continuous operation.

@@ -10,34 +10,34 @@ export interface TeamGroup {
 
 export const TEAM_GROUPS: TeamGroup[] = [
   {
-    subteam: "Project Leadership & Model Construction",
+    subteam: "Project Leadership & Working Model Construction",
     members: ["Justin Joe Mathew (Team Lead)", "Jyothis Liju"],
-    role: "Working Model & System Architecture",
-    contribution: "Justin led overall project execution and construction of the working traffic signal model, supported by Jyothis in physical mechanism logic and integration.",
+    role: "Working Model & Microcontroller Architecture",
+    contribution: "Justin led overall system architecture, breadboard circuit assembly, and C++ firmware development. Jyothis co-developed the physical model, wiring digital/analog pins and conducting timing verification.",
   },
   {
-    subteam: "Hardware Procurement, Testing & Concept Development",
+    subteam: "Hardware Procurement, Testing & Concept Applications",
     members: ["Joseph Alex", "Joseph J"],
-    role: "Hardware Sourcing, Build Testing & Applications",
-    contribution: "Decided required components/parts, handled hardware procurement, conducted build testing, and contributed to application ideas.",
+    role: "Hardware Sourcing, Bench Testing & Use-Case Mapping",
+    contribution: "Joseph Alex acquired Arduino Nano boards, LEDs, resistors, and acoustic buzzers while executing bench testing. Joseph J mapped CRT congruences to ITS traffic systems and fiber-optic networking.",
   },
   {
-    subteam: "Web Design & Frontend Development",
+    subteam: "Web Design & Frontend Engine Development",
     members: ["Johan Geo", "Johaan Sam"],
-    role: "UI/UX & Web Implementation",
-    contribution: "Handled complete web design, component architecture, styling, and interactive dial/wheel frontend development.",
+    role: "UI/UX Architecture & React State Engine",
+    contribution: "Johan designed the visual layout, dark laboratory aesthetic, and SVG circular monitors. Johaan built the React 19 state engine, 60 FPS animation loops, and dynamic CRT remainder solver.",
   },
   {
-    subteam: "Presentation & Showcase Lead",
+    subteam: "Presentation Structure & Showcase Lead",
     members: ["Joel Geo Manuel"],
-    role: "Project Presentation & Demo Coordination",
-    contribution: "Managed the presentation design, live demo workflow, and script formulation for showcasing the traffic light sync concept.",
+    role: "Presentation Pacing & Live Demo Walkthrough",
+    contribution: "Authored the 2-speaker presentation dialogue script between driver Alex and tech lead Sam, structured demo pacing, and coordinated acoustic chime feedback during live demonstrations.",
   },
   {
-    subteam: "Mathematics & Applications Research",
-    members: ["Joel Duke", "Jyothika Prakash", "Jose Alex"],
-    role: "Number Theory & Real-World Use Cases",
-    contribution: "Researched Chinese Remainder Theorem mathematics, modular congruences, and formulated real-world application models (e.g. Traffic Signals).",
+    subteam: "Mathematics, Proofs & Pedagogical Design",
+    members: ["Joel Duke", "Jose Alex", "Jyothika Prakash"],
+    role: "Number Theory, Formal Proofs & Educational Engine",
+    contribution: "Joel Duke formulated system congruences and Extended Euclidean inverses. Jose verified solution existence/uniqueness bounds modulo 105. Jyothika designed the 3-tier progressive hint engine.",
   },
 ];
 

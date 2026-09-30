@@ -199,4 +199,4 @@ Both the physical Arduino Nano hardware prototype and the digital twin web appli
 **Role:** Team Lead & Working Model Engineer  
 
 ### Contribution Summary:
-I served as Team Lead, guiding overall project execution and system architecture. I led the construction and logic development of the working traffic signal model, implementing the mathematical solver engine using the Extended Euclidean Algorithm to calculate modular multiplicative inverses for traffic light synchronization.
+I led overall project execution, system architecture, and physical model construction as Team Lead. I engineered the 3-intersection breadboard circuit, wrote the C++ firmware (arduino/traffic_light_controller.ino) for Arduino Nano microcontroller timing and acoustic chime feedback, and established full integration between the physical hardware prototype and the digital twin web application.
