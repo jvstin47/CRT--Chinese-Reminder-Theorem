@@ -9,9 +9,9 @@ interface Preset {
 }
 
 const PRESETS: Preset[] = [
-  { name: "105s (3.0s, 5.0s, 7.0s)", periods: [3000, 5000, 7000], lcm: 105000 },
-  { name: "30s (1.5s, 2.0s, 2.5s)", periods: [1500, 2000, 2500], lcm: 30000 },
-  { name: "12s (2.0s, 3.0s, 4.0s)", periods: [2000, 3000, 4000], lcm: 12000 },
+  { name: "105s", periods: [3000, 5000, 7000], lcm: 105000 },
+  { name: "30s", periods: [1500, 2000, 2500], lcm: 30000 },
+  { name: "12s", periods: [2000, 3000, 4000], lcm: 12000 },
 ];
 
 const TEAM_MEMBERS = [
@@ -611,7 +611,7 @@ export function TrafficLab() {
                       : "border-[#1c2738] bg-[#090d14] text-[#8ca0b8] hover:bg-[#121a28]"
                   }`}
                 >
-                  <strong className="font-mono text-sm text-white">{p.name.split(" ")[0]}</strong>
+                  <strong className="font-mono text-sm text-white">{p.name}</strong>
                   <span className="text-[10px] text-[#71869e]">
                     ({(p.periods[0] / 1000).toFixed(1)}s, {(p.periods[1] / 1000).toFixed(1)}s, {(p.periods[2] / 1000).toFixed(1)}s)
                   </span>
