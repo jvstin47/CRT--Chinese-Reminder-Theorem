@@ -94,7 +94,7 @@ def md_to_docx(md_path, docx_path):
             p.paragraph_format.space_after = Pt(3)
             continue
 
-        # Images: ![alt](path)
+        # Images: ![alt](path) - Preserve natural aspect ratio
         img_match = re.match(r'!\[.*?\]\((.*?)\)', raw_line.strip())
         if img_match:
             img_path = img_match.group(1)
@@ -104,7 +104,8 @@ def md_to_docx(md_path, docx_path):
                 p.paragraph_format.space_before = Pt(6)
                 p.paragraph_format.space_after = Pt(6)
                 run = p.add_run()
-                run.add_picture(img_path, width=Inches(5.8))
+                # Specifying only width scales height proportionally, preserving exact natural aspect ratio
+                run.add_picture(img_path, width=Inches(6.0))
             continue
 
         # Bullet list items
@@ -132,7 +133,7 @@ def md_to_docx(md_path, docx_path):
             parse_formatted_text(p, raw_line)
 
     doc.save(docx_path)
-    print(f"Successfully created formal docx: {docx_path}")
+    print(f"Successfully created docx with natural aspect ratio: {docx_path}")
 
 def parse_formatted_text(paragraph, text):
     pattern = re.compile(r'(\*\*.*?\*\*|\*.*?\*|`.*?`)')

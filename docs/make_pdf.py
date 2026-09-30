@@ -2,9 +2,10 @@ import os
 import glob
 import re
 from reportlab.lib.pagesizes import letter
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image, HRFlowable, Preformatted
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image as RLImage, HRFlowable, Preformatted
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib import colors
+from PIL import Image as PILImage
 
 def convert_md_to_pdf(md_path, pdf_path):
     doc = SimpleDocTemplate(
@@ -110,18 +111,28 @@ def convert_md_to_pdf(md_path, pdf_path):
             story.append(Paragraph(raw[4:], h3_style))
             continue
 
+        # Images: Preserve exact natural aspect ratio using PIL dimensions
         if raw.strip().startswith('!['):
             m = re.match(r'!\[.*?\]\((.*?)\)', raw.strip())
             if m:
                 img_p = m.group(1)
                 if os.path.exists(img_p):
-                    story.append(Spacer(1, 4))
-                    story.append(Image(img_p, width=500, height=280))
-                    story.append(Spacer(1, 6))
+                    try:
+                        with PILImage.open(img_p) as im:
+                            orig_w, orig_h = im.size
+                        
+                        target_w = 490  # Maximum printable page width in points
+                        aspect_ratio = orig_h / orig_w
+                        target_h = target_w * aspect_ratio
+                        
+                        story.append(Spacer(1, 4))
+                        story.append(RLImage(img_p, width=target_w, height=target_h))
+                        story.append(Spacer(1, 6))
+                    except Exception as img_err:
+                        print(f"Error processing image aspect ratio: {img_err}")
             continue
 
         if raw.strip():
-            # Clean formatting tags
             clean_text = raw.replace('**', '<b>').replace('**', '</b>')
             parts = clean_text.split('<b>')
             formatted_parts = []
@@ -139,7 +150,7 @@ def convert_md_to_pdf(md_path, pdf_path):
             story.append(Paragraph(final_text, body_style))
 
     doc.build(story)
-    print(f"Generated PDF with elegant Times typography: {pdf_path}")
+    print(f"Generated PDF with natural aspect ratio scaling: {pdf_path}")
 
 if __name__ == '__main__':
     docs_dir = '/Users/justin/Public/projects/CRT/docs'
