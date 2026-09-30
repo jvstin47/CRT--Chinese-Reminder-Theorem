@@ -1,12 +1,10 @@
 # MATHEMATICS PROJECT ASSIGNMENT REPORT
 
-**PROJECT TITLE:** Traffic Signal Synchronization System Using Chinese Remainder Theorem  
-**COURSE:** Number Theory & Discrete Mathematics Application  
-**CLASS:** S3 CSE B  
-**STUDENT NAME:** Jyothis Liju  
-**ROLL NO:** 60  
-**ROLE / FUNCTION:** Working Model Co-Developer  
-
+| | |
+| :--- | :--- |
+| **PROJECT TITLE:** Traffic Signal Synchronization System Using Chinese Remainder Theorem | **STUDENT NAME:** Jyothis Liju |
+| **COURSE:** Number Theory & Discrete Mathematics Application | **ROLL NO:** 60 |
+| **CLASS:** S3 CSE B | **ROLE / FUNCTION:** Working Model Co-Developer |
 ---
 
 ## 1. ABSTRACT

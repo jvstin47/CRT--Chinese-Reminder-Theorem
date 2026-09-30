@@ -2,10 +2,26 @@ import os
 import glob
 import re
 from reportlab.lib.pagesizes import letter
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image as RLImage, HRFlowable, Preformatted, PageBreak
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image as RLImage, HRFlowable, Preformatted, PageBreak, Table, TableStyle
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib import colors
 from PIL import Image as PILImage
+
+def format_inline_text(text):
+    clean_text = text.replace('**', '<b>').replace('**', '</b>')
+    parts = clean_text.split('<b>')
+    formatted_parts = []
+    for i, p in enumerate(parts):
+        if i == 0:
+            formatted_parts.append(p)
+        else:
+            subparts = p.split('</b>', 1)
+            if len(subparts) == 2:
+                formatted_parts.append(f'<b>{subparts[0]}</b>{subparts[1]}')
+            else:
+                formatted_parts.append(p)
+    final_text = ''.join(formatted_parts)
+    return final_text.replace('& ', '&amp; ')
 
 def convert_md_to_pdf(md_path, pdf_path):
     doc = SimpleDocTemplate(
@@ -61,6 +77,16 @@ def convert_md_to_pdf(md_path, pdf_path):
         spaceAfter=5
     )
 
+    table_cell_style = ParagraphStyle(
+        'DocTableCell',
+        parent=styles['Normal'],
+        fontName='Times-Roman',
+        fontSize=9.5,
+        leading=13.5,
+        textColor=colors.HexColor('#0F172A'),
+        spaceAfter=0
+    )
+
     code_style = ParagraphStyle(
         'DocCode',
         parent=styles['Code'],
@@ -81,9 +107,44 @@ def convert_md_to_pdf(md_path, pdf_path):
 
     in_code = False
     code_lines = []
+    table_lines = []
+
+    def flush_table():
+        if not table_lines:
+            return
+        table_data = []
+        for tline in table_lines:
+            if '---' in tline or tline == '| | |' or tline == '| |':
+                continue
+            cols = [c.strip() for c in tline.strip('|').split('|')]
+            if len(cols) == 2:
+                p1 = Paragraph(format_inline_text(cols[0]), table_cell_style)
+                p2 = Paragraph(format_inline_text(cols[1]), table_cell_style)
+                table_data.append([p1, p2])
+        if table_data:
+            t = Table(table_data, colWidths=[240, 230])
+            t.setStyle(TableStyle([
+                ('VALIGN', (0,0), (-1,-1), 'TOP'),
+                ('BACKGROUND', (0,0), (-1,-1), colors.HexColor('#F8FAFC')),
+                ('BOX', (0,0), (-1,-1), 0.75, colors.HexColor('#CBD5E1')),
+                ('INNERGRID', (0,0), (-1,-1), 0.5, colors.HexColor('#E2E8F0')),
+                ('TOPPADDING', (0,0), (-1,-1), 5),
+                ('BOTTOMPADDING', (0,0), (-1,-1), 5),
+                ('LEFTPADDING', (0,0), (-1,-1), 8),
+                ('RIGHTPADDING', (0,0), (-1,-1), 8),
+            ]))
+            story.append(t)
+            story.append(Spacer(1, 6))
+        table_lines.clear()
 
     for line in lines:
         raw = line.rstrip('\n')
+
+        if raw.strip().startswith('|'):
+            table_lines.append(raw.strip())
+            continue
+        elif table_lines:
+            flush_table()
         
         # Explicit Master report page break separator
         if '=========================================================================' in raw:
@@ -146,21 +207,10 @@ def convert_md_to_pdf(md_path, pdf_path):
             continue
 
         if raw.strip():
-            clean_text = raw.replace('**', '<b>').replace('**', '</b>')
-            parts = clean_text.split('<b>')
-            formatted_parts = []
-            for i, p in enumerate(parts):
-                if i == 0:
-                    formatted_parts.append(p)
-                else:
-                    subparts = p.split('</b>', 1)
-                    if len(subparts) == 2:
-                        formatted_parts.append(f'<b>{subparts[0]}</b>{subparts[1]}')
-                    else:
-                        formatted_parts.append(p)
-            final_text = ''.join(formatted_parts)
-            final_text = final_text.replace('& ', '&amp; ')
-            story.append(Paragraph(final_text, body_style))
+            story.append(Paragraph(format_inline_text(raw), body_style))
+
+    if table_lines:
+        flush_table()
 
     doc.build(story)
     print(f"Generated PDF with clean page breaks & keepWithNext: {pdf_path}")

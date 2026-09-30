@@ -1,12 +1,10 @@
 # MATHEMATICS PROJECT ASSIGNMENT REPORT
 
-**PROJECT TITLE:** Traffic Signal Synchronization System Using Chinese Remainder Theorem  
-**COURSE:** Number Theory & Discrete Mathematics Application  
-**CLASS:** S3 CSE B  
-**STUDENT NAME:** Johaan Sam  
-**ROLL NO:** 53  
-**ROLE / FUNCTION:** Frontend & State Engine Developer  
-
+| | |
+| :--- | :--- |
+| **PROJECT TITLE:** Traffic Signal Synchronization System Using Chinese Remainder Theorem | **STUDENT NAME:** Johaan Sam |
+| **COURSE:** Number Theory & Discrete Mathematics Application | **ROLL NO:** 53 |
+| **CLASS:** S3 CSE B | **ROLE / FUNCTION:** Frontend & State Engine Developer |
 ---
 
 ## 1. ABSTRACT

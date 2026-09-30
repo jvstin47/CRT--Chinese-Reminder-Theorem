@@ -1,12 +1,10 @@
 # MATHEMATICS PROJECT ASSIGNMENT REPORT
 
-**PROJECT TITLE:** Traffic Signal Synchronization System Using Chinese Remainder Theorem  
-**COURSE:** Number Theory & Discrete Mathematics Application  
-**CLASS:** S3 CSE B  
-**STUDENT NAME:** Johan Geo  
-**ROLL NO:** 54  
-**ROLE / FUNCTION:** Web Design & UI Architect  
-
+| | |
+| :--- | :--- |
+| **PROJECT TITLE:** Traffic Signal Synchronization System Using Chinese Remainder Theorem | **STUDENT NAME:** Johan Geo |
+| **COURSE:** Number Theory & Discrete Mathematics Application | **ROLL NO:** 54 |
+| **CLASS:** S3 CSE B | **ROLE / FUNCTION:** Web Design & UI Architect |
 ---
 
 ## 1. ABSTRACT

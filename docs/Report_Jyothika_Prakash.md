@@ -1,12 +1,10 @@
 # MATHEMATICS PROJECT ASSIGNMENT REPORT
 
-**PROJECT TITLE:** Traffic Signal Synchronization System Using Chinese Remainder Theorem  
-**COURSE:** Number Theory & Discrete Mathematics Application  
-**CLASS:** S3 CSE B  
-**STUDENT NAME:** Jyothika Prakash  
-**ROLL NO:** 59  
-**ROLE / FUNCTION:** Pedagogical Systems & Educational Design  
-
+| | |
+| :--- | :--- |
+| **PROJECT TITLE:** Traffic Signal Synchronization System Using Chinese Remainder Theorem | **STUDENT NAME:** Jyothika Prakash |
+| **COURSE:** Number Theory & Discrete Mathematics Application | **ROLL NO:** 59 |
+| **CLASS:** S3 CSE B | **ROLE / FUNCTION:** Pedagogical Systems & Educational Design |
 ---
 
 ## 1. ABSTRACT

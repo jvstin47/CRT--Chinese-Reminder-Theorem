@@ -23,9 +23,52 @@ def md_to_docx(md_path, docx_path):
 
     in_code_block = False
     code_lines = []
+    table_lines = []
+
+    def flush_docx_table():
+        if not table_lines:
+            return
+        table_data = []
+        for tline in table_lines:
+            if '---' in tline or tline == '| | |' or tline == '| |':
+                continue
+            cols = [c.strip() for c in tline.strip('|').split('|')]
+            if len(cols) == 2:
+                table_data.append(cols)
+        
+        if table_data:
+            table = doc.add_table(rows=len(table_data), cols=2)
+            table.autofit = False
+            for r_idx, row_cols in enumerate(table_data):
+                row = table.rows[r_idx]
+                
+                # Format left cell
+                p0 = row.cells[0].paragraphs[0]
+                p0.paragraph_format.space_before = Pt(2)
+                p0.paragraph_format.space_after = Pt(2)
+                parse_formatted_text(p0, row_cols[0])
+                
+                # Format right cell
+                p1 = row.cells[1].paragraphs[0]
+                p1.paragraph_format.space_before = Pt(2)
+                p1.paragraph_format.space_after = Pt(2)
+                parse_formatted_text(p1, row_cols[1])
+                
+                row.cells[0].width = Inches(3.4)
+                row.cells[1].width = Inches(3.2)
+                
+            p_space = doc.add_paragraph()
+            p_space.paragraph_format.space_after = Pt(4)
+        table_lines.clear()
 
     for line in lines:
         raw_line = line.rstrip('\n')
+
+        if raw_line.strip().startswith('|'):
+            table_lines.append(raw_line.strip())
+            continue
+        elif table_lines:
+            flush_docx_table()
         
         # Explicit Master report page break separator
         if '=========================================================================' in raw_line:
@@ -68,7 +111,7 @@ def md_to_docx(md_path, docx_path):
             p._p.get_or_add_pPr().append(p_border)
             continue
 
-        # Headings (Times New Roman / Georgia) with keep_with_next = True
+        # Headings (Times New Roman) with keep_with_next = True
         if raw_line.startswith('# '):
             p = doc.add_heading(level=1)
             p.paragraph_format.keep_with_next = True
@@ -140,6 +183,9 @@ def md_to_docx(md_path, docx_path):
             p.paragraph_format.space_after = Pt(4)
             p.paragraph_format.line_spacing = 1.15
             parse_formatted_text(p, raw_line)
+
+    if table_lines:
+        flush_docx_table()
 
     doc.save(docx_path)
     print(f"Successfully created docx with keep_with_next & page breaks: {docx_path}")

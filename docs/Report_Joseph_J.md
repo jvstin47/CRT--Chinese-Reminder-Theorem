@@ -1,12 +1,10 @@
 # MATHEMATICS PROJECT ASSIGNMENT REPORT
 
-**PROJECT TITLE:** Traffic Signal Synchronization System Using Chinese Remainder Theorem  
-**COURSE:** Number Theory & Discrete Mathematics Application  
-**CLASS:** S3 CSE B  
-**STUDENT NAME:** Joseph J  
-**ROLL NO:** 57  
-**ROLE / FUNCTION:** Component Procurement & Application Ideas  
-
+| | |
+| :--- | :--- |
+| **PROJECT TITLE:** Traffic Signal Synchronization System Using Chinese Remainder Theorem | **STUDENT NAME:** Joseph J |
+| **COURSE:** Number Theory & Discrete Mathematics Application | **ROLL NO:** 57 |
+| **CLASS:** S3 CSE B | **ROLE / FUNCTION:** Component Procurement & Application Ideas |
 ---
 
 ## 1. ABSTRACT

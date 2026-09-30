@@ -1,12 +1,10 @@
 # MATHEMATICS PROJECT ASSIGNMENT REPORT
 
-**PROJECT TITLE:** Traffic Signal Synchronization System Using Chinese Remainder Theorem  
-**COURSE:** Number Theory & Discrete Mathematics Application  
-**CLASS:** S3 CSE B  
-**STUDENT NAME:** Joel Geo Manuel  
-**ROLL NO:** 52  
-**ROLE / FUNCTION:** Presentation & Showcase Lead  
-
+| | |
+| :--- | :--- |
+| **PROJECT TITLE:** Traffic Signal Synchronization System Using Chinese Remainder Theorem | **STUDENT NAME:** Joel Geo Manuel |
+| **COURSE:** Number Theory & Discrete Mathematics Application | **ROLL NO:** 52 |
+| **CLASS:** S3 CSE B | **ROLE / FUNCTION:** Presentation & Showcase Lead |
 ---
 
 ## 1. ABSTRACT

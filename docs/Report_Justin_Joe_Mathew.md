@@ -1,12 +1,10 @@
 # MATHEMATICS PROJECT ASSIGNMENT REPORT
 
-**PROJECT TITLE:** Traffic Signal Synchronization System Using Chinese Remainder Theorem  
-**COURSE:** Number Theory & Discrete Mathematics Application  
-**CLASS:** S3 CSE B  
-**STUDENT NAME:** Justin Joe Mathew  
-**ROLL NO:** 58  
-**ROLE / FUNCTION:** Team Lead & Working Model Engineer  
-
+| | |
+| :--- | :--- |
+| **PROJECT TITLE:** Traffic Signal Synchronization System Using Chinese Remainder Theorem | **STUDENT NAME:** Justin Joe Mathew |
+| **COURSE:** Number Theory & Discrete Mathematics Application | **ROLL NO:** 58 |
+| **CLASS:** S3 CSE B | **ROLE / FUNCTION:** Team Lead & Working Model Engineer |
 ---
 
 ## 1. ABSTRACT

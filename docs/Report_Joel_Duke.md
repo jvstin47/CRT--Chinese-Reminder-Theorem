@@ -1,12 +1,10 @@
 # MATHEMATICS PROJECT ASSIGNMENT REPORT
 
-**PROJECT TITLE:** Traffic Signal Synchronization System Using Chinese Remainder Theorem  
-**COURSE:** Number Theory & Discrete Mathematics Application  
-**CLASS:** S3 CSE B  
-**STUDENT NAME:** Joel Duke  
-**ROLL NO:** 51  
-**ROLE / FUNCTION:** Mathematical Research & Problem Formulation  
-
+| | |
+| :--- | :--- |
+| **PROJECT TITLE:** Traffic Signal Synchronization System Using Chinese Remainder Theorem | **STUDENT NAME:** Joel Duke |
+| **COURSE:** Number Theory & Discrete Mathematics Application | **ROLL NO:** 51 |
+| **CLASS:** S3 CSE B | **ROLE / FUNCTION:** Mathematical Research & Problem Formulation |
 ---
 
 ## 1. ABSTRACT

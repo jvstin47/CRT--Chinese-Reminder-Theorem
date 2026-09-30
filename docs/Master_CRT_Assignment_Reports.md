@@ -1,12 +1,10 @@
 # MATHEMATICS PROJECT ASSIGNMENT REPORT
 
-**PROJECT TITLE:** Traffic Signal Synchronization System Using Chinese Remainder Theorem  
-**COURSE:** Number Theory & Discrete Mathematics Application  
-**CLASS:** S3 CSE B  
-**STUDENT NAME:** Joel Duke  
-**ROLL NO:** 51  
-**ROLE / FUNCTION:** Mathematical Research & Problem Formulation  
-
+| | |
+| :--- | :--- |
+| **PROJECT TITLE:** Traffic Signal Synchronization System Using Chinese Remainder Theorem | **STUDENT NAME:** Joel Duke |
+| **COURSE:** Number Theory & Discrete Mathematics Application | **ROLL NO:** 51 |
+| **CLASS:** S3 CSE B | **ROLE / FUNCTION:** Mathematical Research & Problem Formulation |
 ---
 
 ## 1. ABSTRACT
@@ -207,13 +205,11 @@ I researched the mathematical foundation of linear congruences. I formulated the
 
 # MATHEMATICS PROJECT ASSIGNMENT REPORT
 
-**PROJECT TITLE:** Traffic Signal Synchronization System Using Chinese Remainder Theorem  
-**COURSE:** Number Theory & Discrete Mathematics Application  
-**CLASS:** S3 CSE B  
-**STUDENT NAME:** Joel Geo Manuel  
-**ROLL NO:** 52  
-**ROLE / FUNCTION:** Presentation & Showcase Lead  
-
+| | |
+| :--- | :--- |
+| **PROJECT TITLE:** Traffic Signal Synchronization System Using Chinese Remainder Theorem | **STUDENT NAME:** Joel Geo Manuel |
+| **COURSE:** Number Theory & Discrete Mathematics Application | **ROLL NO:** 52 |
+| **CLASS:** S3 CSE B | **ROLE / FUNCTION:** Presentation & Showcase Lead |
 ---
 
 ## 1. ABSTRACT
@@ -414,13 +410,11 @@ I designed the presentation structure, demo walkthrough flow, and visual slides.
 
 # MATHEMATICS PROJECT ASSIGNMENT REPORT
 
-**PROJECT TITLE:** Traffic Signal Synchronization System Using Chinese Remainder Theorem  
-**COURSE:** Number Theory & Discrete Mathematics Application  
-**CLASS:** S3 CSE B  
-**STUDENT NAME:** Johaan Sam  
-**ROLL NO:** 53  
-**ROLE / FUNCTION:** Frontend & State Engine Developer  
-
+| | |
+| :--- | :--- |
+| **PROJECT TITLE:** Traffic Signal Synchronization System Using Chinese Remainder Theorem | **STUDENT NAME:** Johaan Sam |
+| **COURSE:** Number Theory & Discrete Mathematics Application | **ROLL NO:** 53 |
+| **CLASS:** S3 CSE B | **ROLE / FUNCTION:** Frontend & State Engine Developer |
 ---
 
 ## 1. ABSTRACT
@@ -621,13 +615,11 @@ I developed the frontend state logic and component structure. Working with Johan
 
 # MATHEMATICS PROJECT ASSIGNMENT REPORT
 
-**PROJECT TITLE:** Traffic Signal Synchronization System Using Chinese Remainder Theorem  
-**COURSE:** Number Theory & Discrete Mathematics Application  
-**CLASS:** S3 CSE B  
-**STUDENT NAME:** Johan Geo  
-**ROLL NO:** 54  
-**ROLE / FUNCTION:** Web Design & UI Architect  
-
+| | |
+| :--- | :--- |
+| **PROJECT TITLE:** Traffic Signal Synchronization System Using Chinese Remainder Theorem | **STUDENT NAME:** Johan Geo |
+| **COURSE:** Number Theory & Discrete Mathematics Application | **ROLL NO:** 54 |
+| **CLASS:** S3 CSE B | **ROLE / FUNCTION:** Web Design & UI Architect |
 ---
 
 ## 1. ABSTRACT
@@ -828,13 +820,11 @@ I designed the website interface, visual layout, and traffic signal dashboard th
 
 # MATHEMATICS PROJECT ASSIGNMENT REPORT
 
-**PROJECT TITLE:** Traffic Signal Synchronization System Using Chinese Remainder Theorem  
-**COURSE:** Number Theory & Discrete Mathematics Application  
-**CLASS:** S3 CSE B  
-**STUDENT NAME:** Jose Alex  
-**ROLL NO:** 55  
-**ROLE / FUNCTION:** Mathematical Proofs & Solution Verification  
-
+| | |
+| :--- | :--- |
+| **PROJECT TITLE:** Traffic Signal Synchronization System Using Chinese Remainder Theorem | **STUDENT NAME:** Jose Alex |
+| **COURSE:** Number Theory & Discrete Mathematics Application | **ROLL NO:** 55 |
+| **CLASS:** S3 CSE B | **ROLE / FUNCTION:** Mathematical Proofs & Solution Verification |
 ---
 
 ## 1. ABSTRACT
@@ -1035,13 +1025,11 @@ I investigated Chinese Remainder Theorem proofs, verifying solution uniqueness w
 
 # MATHEMATICS PROJECT ASSIGNMENT REPORT
 
-**PROJECT TITLE:** Traffic Signal Synchronization System Using Chinese Remainder Theorem  
-**COURSE:** Number Theory & Discrete Mathematics Application  
-**CLASS:** S3 CSE B  
-**STUDENT NAME:** Joseph Alex  
-**ROLL NO:** 56  
-**ROLE / FUNCTION:** Hardware Sourcing & Build Testing  
-
+| | |
+| :--- | :--- |
+| **PROJECT TITLE:** Traffic Signal Synchronization System Using Chinese Remainder Theorem | **STUDENT NAME:** Joseph Alex |
+| **COURSE:** Number Theory & Discrete Mathematics Application | **ROLL NO:** 56 |
+| **CLASS:** S3 CSE B | **ROLE / FUNCTION:** Hardware Sourcing & Build Testing |
 ---
 
 ## 1. ABSTRACT
@@ -1242,13 +1230,11 @@ I determined the hardware part requirements for the model, sourced necessary com
 
 # MATHEMATICS PROJECT ASSIGNMENT REPORT
 
-**PROJECT TITLE:** Traffic Signal Synchronization System Using Chinese Remainder Theorem  
-**COURSE:** Number Theory & Discrete Mathematics Application  
-**CLASS:** S3 CSE B  
-**STUDENT NAME:** Joseph J  
-**ROLL NO:** 57  
-**ROLE / FUNCTION:** Component Procurement & Application Ideas  
-
+| | |
+| :--- | :--- |
+| **PROJECT TITLE:** Traffic Signal Synchronization System Using Chinese Remainder Theorem | **STUDENT NAME:** Joseph J |
+| **COURSE:** Number Theory & Discrete Mathematics Application | **ROLL NO:** 57 |
+| **CLASS:** S3 CSE B | **ROLE / FUNCTION:** Component Procurement & Application Ideas |
 ---
 
 ## 1. ABSTRACT
@@ -1449,13 +1435,11 @@ I handled component selection, hardware procurement, and assembly testing alongs
 
 # MATHEMATICS PROJECT ASSIGNMENT REPORT
 
-**PROJECT TITLE:** Traffic Signal Synchronization System Using Chinese Remainder Theorem  
-**COURSE:** Number Theory & Discrete Mathematics Application  
-**CLASS:** S3 CSE B  
-**STUDENT NAME:** Justin Joe Mathew  
-**ROLL NO:** 58  
-**ROLE / FUNCTION:** Team Lead & Working Model Engineer  
-
+| | |
+| :--- | :--- |
+| **PROJECT TITLE:** Traffic Signal Synchronization System Using Chinese Remainder Theorem | **STUDENT NAME:** Justin Joe Mathew |
+| **COURSE:** Number Theory & Discrete Mathematics Application | **ROLL NO:** 58 |
+| **CLASS:** S3 CSE B | **ROLE / FUNCTION:** Team Lead & Working Model Engineer |
 ---
 
 ## 1. ABSTRACT
@@ -1656,13 +1640,11 @@ I served as Team Lead, guiding overall project execution and system architecture
 
 # MATHEMATICS PROJECT ASSIGNMENT REPORT
 
-**PROJECT TITLE:** Traffic Signal Synchronization System Using Chinese Remainder Theorem  
-**COURSE:** Number Theory & Discrete Mathematics Application  
-**CLASS:** S3 CSE B  
-**STUDENT NAME:** Jyothika Prakash  
-**ROLL NO:** 59  
-**ROLE / FUNCTION:** Pedagogical Systems & Educational Design  
-
+| | |
+| :--- | :--- |
+| **PROJECT TITLE:** Traffic Signal Synchronization System Using Chinese Remainder Theorem | **STUDENT NAME:** Jyothika Prakash |
+| **COURSE:** Number Theory & Discrete Mathematics Application | **ROLL NO:** 59 |
+| **CLASS:** S3 CSE B | **ROLE / FUNCTION:** Pedagogical Systems & Educational Design |
 ---
 
 ## 1. ABSTRACT
@@ -1863,13 +1845,11 @@ I explored real-world CRT applications and designed the interactive hint system 
 
 # MATHEMATICS PROJECT ASSIGNMENT REPORT
 
-**PROJECT TITLE:** Traffic Signal Synchronization System Using Chinese Remainder Theorem  
-**COURSE:** Number Theory & Discrete Mathematics Application  
-**CLASS:** S3 CSE B  
-**STUDENT NAME:** Jyothis Liju  
-**ROLL NO:** 60  
-**ROLE / FUNCTION:** Working Model Co-Developer  
-
+| | |
+| :--- | :--- |
+| **PROJECT TITLE:** Traffic Signal Synchronization System Using Chinese Remainder Theorem | **STUDENT NAME:** Jyothis Liju |
+| **COURSE:** Number Theory & Discrete Mathematics Application | **ROLL NO:** 60 |
+| **CLASS:** S3 CSE B | **ROLE / FUNCTION:** Working Model Co-Developer |
 ---
 
 ## 1. ABSTRACT
