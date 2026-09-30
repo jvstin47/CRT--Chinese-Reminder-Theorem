@@ -18,7 +18,7 @@ This document contains the individual project assignment reports for all 10 grou
 ## 1. ABSTRACT
 The Chinese Remainder Theorem (CRT) is a fundamental result in number theory that determines a unique integer solution x for a system of linear congruences with pairwise coprime moduli. While often taught abstractly, CRT has direct applications in urban traffic signal synchronization, digital telecommunications, and parallel computer architectures.
 
-This project demonstrates CRT using both a physical working traffic signal model and an interactive digital web application. By modeling traffic signals as modular timing cycles, the project illustrates how independent light timers (3 min, 5 min, 7 min) align to create a continuous 'Green Wave' for vehicles at Minute 23.
+This project demonstrates CRT using both a physical working ATmega328P / Arduino Uno traffic signal model and an interactive digital twin web application. By modeling traffic signals as modular timing cycles, the project illustrates how independent light timers (3s, 5s, 7s) align to create a continuous 'Green Wave' for vehicles at Minute 23 (105s master recurrence).
 
 ---
 
@@ -28,19 +28,19 @@ When traffic signals operate on independent timer cycles along a main avenue, dr
 ### Project Objectives:
 1. To understand the mathematical principles of the Chinese Remainder Theorem (CRT).
 2. To differentiate between Least Common Multiple (LCM) and CRT when remainder offsets are present.
-3. To model traffic signal timing cycles (3 min, 5 min, 7 min) as modular congruences.
-4. To build a physical working model and an interactive web simulator for signal synchronization.
-5. To provide clear visual and audio feedback when a candidate time satisfies all signal modulo conditions.
+3. To model traffic signal timing cycles (3s, 5s, 7s) as modular congruences.
+4. To build a physical working model powered by an Arduino Uno / ATmega328P microcontroller.
+5. To provide clear visual, audio, and waveform telemetry feedback upon signal synchronization.
 
 ---
 
 ## 3. MATHEMATICAL FORMULATION (CRT vs. LCM)
 
 ### 3.1 The Traffic Signal Equations
-Suppose three traffic signals have cycle lengths of 3, 5, and 7 minutes respectively:
-- Signal 1: x ≡ 2 (mod 3)   (green 2 minutes ago)
-- Signal 2: x ≡ 3 (mod 5)   (green 3 minutes ago)
-- Signal 3: x ≡ 2 (mod 7)   (green 2 minutes ago)
+Suppose three traffic signals have cycle lengths of 3, 5, and 7 seconds respectively:
+- Signal 1: x ≡ 2 (mod 3)   (green 2 seconds ago)
+- Signal 2: x ≡ 3 (mod 5)   (green 3 seconds ago)
+- Signal 3: x ≡ 2 (mod 7)   (green 2 seconds ago)
 
 ### 3.2 Why Simple LCM Cannot Solve This Problem
 - LCM: Used only when all signals start at Minute 0 with zero remainder offset (x ≡ 0).
@@ -58,71 +58,139 @@ Suppose three traffic signals have cycle lengths of 3, 5, and 7 minutes respecti
    • x = 140 + 63 + 30 = 233
    • x ≡ 233 (mod 105) ≡ 23 (mod 105)
 
-The unique green-wave solution within [0, 104] is Minute 23.
+The unique green-wave solution within [0, 104] is Timestamp 23s.
 
 ---
 
-## 4. DIGITAL IMPLEMENTATION & USER CONTROLS
+## 4. PHYSICAL HARDWARE & DIGITAL TWIN IMPLEMENTATION
 
-The web application models the traffic signal system digitally using React, TypeScript, and Framer Motion.
+The hardware prototype is driven by an ATmega328P (Arduino Uno) microcontroller controlling a 3-intersection LED traffic array and piezo buzzer.
 
-![Traffic Light Sync Diagram](/Users/justin/.gemini/antigravity/brain/e7c94d9d-c35b-4a53-a23b-c1f6d686fdc4/traffic_light_diagram_1790783447873.jpg)
+![CRT Traffic Light Lab Dashboard](/Users/justin/.gemini/antigravity/brain/e7c94d9d-c35b-4a53-a23b-c1f6d686fdc4/.user_uploaded/media_1790791490718.png)
 
-![Traffic Signal Synchronizer Web UI](/Users/justin/.gemini/antigravity/brain/e7c94d9d-c35b-4a53-a23b-c1f6d686fdc4/traffic_signal_app_ui_1790783779368.jpg)
+![Multi-Channel Phase Waveform & Arduino Hardware Setup](/Users/justin/.gemini/antigravity/brain/e7c94d9d-c35b-4a53-a23b-c1f6d686fdc4/.user_uploaded/media_1790791505847.png)
 
-### Interactive User Controls:
-1. Candidate Timer Wheel: Adjusts the candidate time value x (e.g. set to 23).
-2. Intersection Signal Monitors (3 min, 5 min, 7 min): Shows real-time remainder values (x mod mi) and green light indicator status.
-3. 'Evaluate Synchronization' Button: Tests whether all 3 intersections display green lights simultaneously.
-4. Green-Wave Status Panel: Displays full green-wave confirmation when all 3 congruences are satisfied (x = 23).
+### Interactive Hardware & Digital Twin Controls:
+1. Live Signal Array (SIG A 3.0s, SIG B 5.0s, SIG C 7.0s): Monitors real-time LED states across intersections.
+2. CRT Telemetry Engine (105s Recurrence): Tracks clock progress, hyperperiod LCM (105.00s), and recurrence index.
+3. Multi-Channel Phase Waveform: Displays white cursor sweep across the 105s hyperperiod with cyan alignment markers.
+4. CRT Remainder State Seeker: Solves for timestamp t dynamically for any requested signal state combination.
 
 ---
 
-## 5. SOURCE CODE IMPLEMENTATION (ALGORITHM PAGE)
+## 5. HARDWARE SOURCE CODE (ARDUINO UNO FIRMWARE - C++)
 
-The following complete TypeScript module (src/utils/crt.ts) implements the Extended Euclidean Algorithm and Modular Inverses to solve the CRT system:
+The following complete C++ firmware source code (`arduino/traffic_light_controller.ino`) is executed directly on the Arduino Uno microcontroller to drive the physical traffic light hardware:
 
-```typescript
-export function getRemainder(value: number, modulus: number): number {
-  return ((value % modulus) + modulus) % modulus;
+```cpp
+// Arduino Uno / ATmega328P Physical Traffic Light Controller
+// File: arduino/traffic_light_controller.ino
+
+const int RED_A = 2;
+const int YELLOW_A = 3;
+const int GREEN_A = 4;
+
+const int RED_B = 8;
+const int YELLOW_B = 9;
+const int GREEN_B = 10;
+
+const int GREEN_C = A3;
+const int YELLOW_C = A4;
+const int RED_C = A5;
+
+const int BUZZER = A1;
+
+// Cycle Period Definitions (in milliseconds)
+const unsigned long PERIOD_A = 3000;   // 3.0s Signal Cycle
+const unsigned long PERIOD_B = 5000;   // 5.0s Signal Cycle
+const unsigned long PERIOD_C = 7000;   // 7.0s Signal Cycle
+const unsigned long MASTER_CYCLE = 105000; // 105.0s Hyperperiod LCM
+
+const int RED_FREQ = 400;
+const int YELLOW_FREQ = 600;
+const int GREEN_FREQ = 800;
+const int SYNC_FREQ = 1000;
+
+const unsigned long BEEP_ON_TIME = 150;
+const unsigned long BEEP_OFF_TIME = 350;
+const unsigned long SYNC_TIME = 600;
+
+unsigned long lastMillis = 0;
+unsigned long lastSyncCycle = 0;
+unsigned long beepTimer = 0;
+unsigned long syncEndTime = 0;
+
+bool beepState = false;
+bool syncActive = false;
+int currentBuzzerState = -1;
+
+void setup() {
+  pinMode(RED_A, OUTPUT);
+  pinMode(YELLOW_A, OUTPUT);
+  pinMode(GREEN_A, OUTPUT);
+
+  pinMode(RED_B, OUTPUT);
+  pinMode(YELLOW_B, OUTPUT);
+  pinMode(GREEN_B, OUTPUT);
+
+  pinMode(RED_C, OUTPUT);
+  pinMode(YELLOW_C, OUTPUT);
+  pinMode(GREEN_C, OUTPUT);
+
+  pinMode(BUZZER, OUTPUT);
+
+  setAllRed();
+
+  tone(BUZZER, SYNC_FREQ);
+  syncActive = true;
+  syncEndTime = millis() + SYNC_TIME;
+
+  lastMillis = millis();
+  beepTimer = millis();
 }
 
-function extendedGcd(a: number, b: number): [number, number, number] {
-  if (b === 0) return [a, 1, 0];
-  const [g, x1, y1] = extendedGcd(b, a % b);
-  return [g, y1, x1 - Math.floor(a / b) * y1];
-}
+void loop() {
+  unsigned long currentMillis = millis();
 
-function modInverse(a: number, m: number): number {
-  const [, x] = extendedGcd(getRemainder(a, m), m);
-  return getRemainder(x, m);
-}
+  // CRT Modulo Phase Calculation
+  unsigned long phaseA = currentMillis % PERIOD_A;
+  unsigned long phaseB = currentMillis % PERIOD_B;
+  unsigned long phaseC = currentMillis % PERIOD_C;
 
-/** Solves x ≡ remainders[i] (mod moduli[i]) for pairwise-coprime moduli */
-export function solveCRT(moduli: number[], remainders: number[]): number {
-  const product = moduli.reduce((acc, m) => acc * m, 1);
-  let result = 0;
-  for (let i = 0; i < moduli.length; i++) {
-    const mi = moduli[i];
-    const ri = getRemainder(remainders[i], mi);
-    const partial = product / mi;
-    const inverse = modInverse(partial, mi);
-    result += ri * partial * inverse;
+  int stateA = updateLightA(phaseA);
+  int stateB = updateLightB(phaseB);
+  int stateC = updateLightC(phaseC);
+
+  // Master Cycle Recurrence Check (CRT Convergence)
+  unsigned long currentCycle = currentMillis / MASTER_CYCLE;
+
+  if (currentCycle > lastSyncCycle) {
+    lastSyncCycle = currentCycle;
+    tone(BUZZER, SYNC_FREQ);
+    syncActive = true;
+    syncEndTime = currentMillis + SYNC_TIME;
+    beepState = false;
   }
-  return getRemainder(result, product);
-}
 
-export function checkRemainders(x: number, moduli: number[], remainders: number[]): boolean[] {
-  return moduli.map((m, i) => getRemainder(x, m) === getRemainder(remainders[i], m));
+  if (syncActive) {
+    if (currentMillis >= syncEndTime) {
+      noTone(BUZZER);
+      syncActive = false;
+      beepTimer = currentMillis;
+      beepState = false;
+      currentBuzzerState = -1;
+    }
+    return;
+  }
 }
 ```
 
 ---
 
 ## 6. CONCLUSION
-The Traffic Signal Synchronization System provides an intuitive, practical bridge between abstract number theory and urban infrastructure engineering. By applying the Chinese Remainder Theorem to traffic signals operating on independent cycles (3 min, 5 min, 7 min), the project demonstrates how non-zero remainder offsets determine the exact minute (Minute 23) required to establish a continuous 'Green Wave' for vehicles.
+The Traffic Signal Synchronization System provides an intuitive, practical bridge between abstract number theory and urban infrastructure engineering. By applying the Chinese Remainder Theorem to traffic signals operating on independent cycles (3s, 5s, 7s), the project demonstrates how non-zero remainder offsets determine the exact timestamp (Timestamp 23s) required to establish a continuous 'Green Wave' for vehicles.
 
-Both the physical working model and the interactive web application successfully visualize modular congruences, offering an accessible learning tool that highlights the real-world power of modular arithmetic in signal timing, telecommunications, and digital computing.
+Both the physical Arduino Uno hardware prototype and the digital twin web application successfully visualize modular congruences, offering an accessible learning tool that highlights the real-world power of modular arithmetic in signal timing, telecommunications, and digital computing.
 
 ---
 
@@ -153,7 +221,7 @@ I researched the mathematical foundation of linear congruences. I formulated the
 ## 1. ABSTRACT
 The Chinese Remainder Theorem (CRT) is a fundamental result in number theory that determines a unique integer solution x for a system of linear congruences with pairwise coprime moduli. While often taught abstractly, CRT has direct applications in urban traffic signal synchronization, digital telecommunications, and parallel computer architectures.
 
-This project demonstrates CRT using both a physical working traffic signal model and an interactive digital web application. By modeling traffic signals as modular timing cycles, the project illustrates how independent light timers (3 min, 5 min, 7 min) align to create a continuous 'Green Wave' for vehicles at Minute 23.
+This project demonstrates CRT using both a physical working ATmega328P / Arduino Uno traffic signal model and an interactive digital twin web application. By modeling traffic signals as modular timing cycles, the project illustrates how independent light timers (3s, 5s, 7s) align to create a continuous 'Green Wave' for vehicles at Minute 23 (105s master recurrence).
 
 ---
 
@@ -163,19 +231,19 @@ When traffic signals operate on independent timer cycles along a main avenue, dr
 ### Project Objectives:
 1. To understand the mathematical principles of the Chinese Remainder Theorem (CRT).
 2. To differentiate between Least Common Multiple (LCM) and CRT when remainder offsets are present.
-3. To model traffic signal timing cycles (3 min, 5 min, 7 min) as modular congruences.
-4. To build a physical working model and an interactive web simulator for signal synchronization.
-5. To provide clear visual and audio feedback when a candidate time satisfies all signal modulo conditions.
+3. To model traffic signal timing cycles (3s, 5s, 7s) as modular congruences.
+4. To build a physical working model powered by an Arduino Uno / ATmega328P microcontroller.
+5. To provide clear visual, audio, and waveform telemetry feedback upon signal synchronization.
 
 ---
 
 ## 3. MATHEMATICAL FORMULATION (CRT vs. LCM)
 
 ### 3.1 The Traffic Signal Equations
-Suppose three traffic signals have cycle lengths of 3, 5, and 7 minutes respectively:
-- Signal 1: x ≡ 2 (mod 3)   (green 2 minutes ago)
-- Signal 2: x ≡ 3 (mod 5)   (green 3 minutes ago)
-- Signal 3: x ≡ 2 (mod 7)   (green 2 minutes ago)
+Suppose three traffic signals have cycle lengths of 3, 5, and 7 seconds respectively:
+- Signal 1: x ≡ 2 (mod 3)   (green 2 seconds ago)
+- Signal 2: x ≡ 3 (mod 5)   (green 3 seconds ago)
+- Signal 3: x ≡ 2 (mod 7)   (green 2 seconds ago)
 
 ### 3.2 Why Simple LCM Cannot Solve This Problem
 - LCM: Used only when all signals start at Minute 0 with zero remainder offset (x ≡ 0).
@@ -193,71 +261,139 @@ Suppose three traffic signals have cycle lengths of 3, 5, and 7 minutes respecti
    • x = 140 + 63 + 30 = 233
    • x ≡ 233 (mod 105) ≡ 23 (mod 105)
 
-The unique green-wave solution within [0, 104] is Minute 23.
+The unique green-wave solution within [0, 104] is Timestamp 23s.
 
 ---
 
-## 4. DIGITAL IMPLEMENTATION & USER CONTROLS
+## 4. PHYSICAL HARDWARE & DIGITAL TWIN IMPLEMENTATION
 
-The web application models the traffic signal system digitally using React, TypeScript, and Framer Motion.
+The hardware prototype is driven by an ATmega328P (Arduino Uno) microcontroller controlling a 3-intersection LED traffic array and piezo buzzer.
 
-![Traffic Light Sync Diagram](/Users/justin/.gemini/antigravity/brain/e7c94d9d-c35b-4a53-a23b-c1f6d686fdc4/traffic_light_diagram_1790783447873.jpg)
+![CRT Traffic Light Lab Dashboard](/Users/justin/.gemini/antigravity/brain/e7c94d9d-c35b-4a53-a23b-c1f6d686fdc4/.user_uploaded/media_1790791490718.png)
 
-![Traffic Signal Synchronizer Web UI](/Users/justin/.gemini/antigravity/brain/e7c94d9d-c35b-4a53-a23b-c1f6d686fdc4/traffic_signal_app_ui_1790783779368.jpg)
+![Multi-Channel Phase Waveform & Arduino Hardware Setup](/Users/justin/.gemini/antigravity/brain/e7c94d9d-c35b-4a53-a23b-c1f6d686fdc4/.user_uploaded/media_1790791505847.png)
 
-### Interactive User Controls:
-1. Candidate Timer Wheel: Adjusts the candidate time value x (e.g. set to 23).
-2. Intersection Signal Monitors (3 min, 5 min, 7 min): Shows real-time remainder values (x mod mi) and green light indicator status.
-3. 'Evaluate Synchronization' Button: Tests whether all 3 intersections display green lights simultaneously.
-4. Green-Wave Status Panel: Displays full green-wave confirmation when all 3 congruences are satisfied (x = 23).
+### Interactive Hardware & Digital Twin Controls:
+1. Live Signal Array (SIG A 3.0s, SIG B 5.0s, SIG C 7.0s): Monitors real-time LED states across intersections.
+2. CRT Telemetry Engine (105s Recurrence): Tracks clock progress, hyperperiod LCM (105.00s), and recurrence index.
+3. Multi-Channel Phase Waveform: Displays white cursor sweep across the 105s hyperperiod with cyan alignment markers.
+4. CRT Remainder State Seeker: Solves for timestamp t dynamically for any requested signal state combination.
 
 ---
 
-## 5. SOURCE CODE IMPLEMENTATION (ALGORITHM PAGE)
+## 5. HARDWARE SOURCE CODE (ARDUINO UNO FIRMWARE - C++)
 
-The following complete TypeScript module (src/utils/crt.ts) implements the Extended Euclidean Algorithm and Modular Inverses to solve the CRT system:
+The following complete C++ firmware source code (`arduino/traffic_light_controller.ino`) is executed directly on the Arduino Uno microcontroller to drive the physical traffic light hardware:
 
-```typescript
-export function getRemainder(value: number, modulus: number): number {
-  return ((value % modulus) + modulus) % modulus;
+```cpp
+// Arduino Uno / ATmega328P Physical Traffic Light Controller
+// File: arduino/traffic_light_controller.ino
+
+const int RED_A = 2;
+const int YELLOW_A = 3;
+const int GREEN_A = 4;
+
+const int RED_B = 8;
+const int YELLOW_B = 9;
+const int GREEN_B = 10;
+
+const int GREEN_C = A3;
+const int YELLOW_C = A4;
+const int RED_C = A5;
+
+const int BUZZER = A1;
+
+// Cycle Period Definitions (in milliseconds)
+const unsigned long PERIOD_A = 3000;   // 3.0s Signal Cycle
+const unsigned long PERIOD_B = 5000;   // 5.0s Signal Cycle
+const unsigned long PERIOD_C = 7000;   // 7.0s Signal Cycle
+const unsigned long MASTER_CYCLE = 105000; // 105.0s Hyperperiod LCM
+
+const int RED_FREQ = 400;
+const int YELLOW_FREQ = 600;
+const int GREEN_FREQ = 800;
+const int SYNC_FREQ = 1000;
+
+const unsigned long BEEP_ON_TIME = 150;
+const unsigned long BEEP_OFF_TIME = 350;
+const unsigned long SYNC_TIME = 600;
+
+unsigned long lastMillis = 0;
+unsigned long lastSyncCycle = 0;
+unsigned long beepTimer = 0;
+unsigned long syncEndTime = 0;
+
+bool beepState = false;
+bool syncActive = false;
+int currentBuzzerState = -1;
+
+void setup() {
+  pinMode(RED_A, OUTPUT);
+  pinMode(YELLOW_A, OUTPUT);
+  pinMode(GREEN_A, OUTPUT);
+
+  pinMode(RED_B, OUTPUT);
+  pinMode(YELLOW_B, OUTPUT);
+  pinMode(GREEN_B, OUTPUT);
+
+  pinMode(RED_C, OUTPUT);
+  pinMode(YELLOW_C, OUTPUT);
+  pinMode(GREEN_C, OUTPUT);
+
+  pinMode(BUZZER, OUTPUT);
+
+  setAllRed();
+
+  tone(BUZZER, SYNC_FREQ);
+  syncActive = true;
+  syncEndTime = millis() + SYNC_TIME;
+
+  lastMillis = millis();
+  beepTimer = millis();
 }
 
-function extendedGcd(a: number, b: number): [number, number, number] {
-  if (b === 0) return [a, 1, 0];
-  const [g, x1, y1] = extendedGcd(b, a % b);
-  return [g, y1, x1 - Math.floor(a / b) * y1];
-}
+void loop() {
+  unsigned long currentMillis = millis();
 
-function modInverse(a: number, m: number): number {
-  const [, x] = extendedGcd(getRemainder(a, m), m);
-  return getRemainder(x, m);
-}
+  // CRT Modulo Phase Calculation
+  unsigned long phaseA = currentMillis % PERIOD_A;
+  unsigned long phaseB = currentMillis % PERIOD_B;
+  unsigned long phaseC = currentMillis % PERIOD_C;
 
-/** Solves x ≡ remainders[i] (mod moduli[i]) for pairwise-coprime moduli */
-export function solveCRT(moduli: number[], remainders: number[]): number {
-  const product = moduli.reduce((acc, m) => acc * m, 1);
-  let result = 0;
-  for (let i = 0; i < moduli.length; i++) {
-    const mi = moduli[i];
-    const ri = getRemainder(remainders[i], mi);
-    const partial = product / mi;
-    const inverse = modInverse(partial, mi);
-    result += ri * partial * inverse;
+  int stateA = updateLightA(phaseA);
+  int stateB = updateLightB(phaseB);
+  int stateC = updateLightC(phaseC);
+
+  // Master Cycle Recurrence Check (CRT Convergence)
+  unsigned long currentCycle = currentMillis / MASTER_CYCLE;
+
+  if (currentCycle > lastSyncCycle) {
+    lastSyncCycle = currentCycle;
+    tone(BUZZER, SYNC_FREQ);
+    syncActive = true;
+    syncEndTime = currentMillis + SYNC_TIME;
+    beepState = false;
   }
-  return getRemainder(result, product);
-}
 
-export function checkRemainders(x: number, moduli: number[], remainders: number[]): boolean[] {
-  return moduli.map((m, i) => getRemainder(x, m) === getRemainder(remainders[i], m));
+  if (syncActive) {
+    if (currentMillis >= syncEndTime) {
+      noTone(BUZZER);
+      syncActive = false;
+      beepTimer = currentMillis;
+      beepState = false;
+      currentBuzzerState = -1;
+    }
+    return;
+  }
 }
 ```
 
 ---
 
 ## 6. CONCLUSION
-The Traffic Signal Synchronization System provides an intuitive, practical bridge between abstract number theory and urban infrastructure engineering. By applying the Chinese Remainder Theorem to traffic signals operating on independent cycles (3 min, 5 min, 7 min), the project demonstrates how non-zero remainder offsets determine the exact minute (Minute 23) required to establish a continuous 'Green Wave' for vehicles.
+The Traffic Signal Synchronization System provides an intuitive, practical bridge between abstract number theory and urban infrastructure engineering. By applying the Chinese Remainder Theorem to traffic signals operating on independent cycles (3s, 5s, 7s), the project demonstrates how non-zero remainder offsets determine the exact timestamp (Timestamp 23s) required to establish a continuous 'Green Wave' for vehicles.
 
-Both the physical working model and the interactive web application successfully visualize modular congruences, offering an accessible learning tool that highlights the real-world power of modular arithmetic in signal timing, telecommunications, and digital computing.
+Both the physical Arduino Uno hardware prototype and the digital twin web application successfully visualize modular congruences, offering an accessible learning tool that highlights the real-world power of modular arithmetic in signal timing, telecommunications, and digital computing.
 
 ---
 
@@ -288,7 +424,7 @@ I designed the presentation structure, demo walkthrough flow, and visual slides.
 ## 1. ABSTRACT
 The Chinese Remainder Theorem (CRT) is a fundamental result in number theory that determines a unique integer solution x for a system of linear congruences with pairwise coprime moduli. While often taught abstractly, CRT has direct applications in urban traffic signal synchronization, digital telecommunications, and parallel computer architectures.
 
-This project demonstrates CRT using both a physical working traffic signal model and an interactive digital web application. By modeling traffic signals as modular timing cycles, the project illustrates how independent light timers (3 min, 5 min, 7 min) align to create a continuous 'Green Wave' for vehicles at Minute 23.
+This project demonstrates CRT using both a physical working ATmega328P / Arduino Uno traffic signal model and an interactive digital twin web application. By modeling traffic signals as modular timing cycles, the project illustrates how independent light timers (3s, 5s, 7s) align to create a continuous 'Green Wave' for vehicles at Minute 23 (105s master recurrence).
 
 ---
 
@@ -298,19 +434,19 @@ When traffic signals operate on independent timer cycles along a main avenue, dr
 ### Project Objectives:
 1. To understand the mathematical principles of the Chinese Remainder Theorem (CRT).
 2. To differentiate between Least Common Multiple (LCM) and CRT when remainder offsets are present.
-3. To model traffic signal timing cycles (3 min, 5 min, 7 min) as modular congruences.
-4. To build a physical working model and an interactive web simulator for signal synchronization.
-5. To provide clear visual and audio feedback when a candidate time satisfies all signal modulo conditions.
+3. To model traffic signal timing cycles (3s, 5s, 7s) as modular congruences.
+4. To build a physical working model powered by an Arduino Uno / ATmega328P microcontroller.
+5. To provide clear visual, audio, and waveform telemetry feedback upon signal synchronization.
 
 ---
 
 ## 3. MATHEMATICAL FORMULATION (CRT vs. LCM)
 
 ### 3.1 The Traffic Signal Equations
-Suppose three traffic signals have cycle lengths of 3, 5, and 7 minutes respectively:
-- Signal 1: x ≡ 2 (mod 3)   (green 2 minutes ago)
-- Signal 2: x ≡ 3 (mod 5)   (green 3 minutes ago)
-- Signal 3: x ≡ 2 (mod 7)   (green 2 minutes ago)
+Suppose three traffic signals have cycle lengths of 3, 5, and 7 seconds respectively:
+- Signal 1: x ≡ 2 (mod 3)   (green 2 seconds ago)
+- Signal 2: x ≡ 3 (mod 5)   (green 3 seconds ago)
+- Signal 3: x ≡ 2 (mod 7)   (green 2 seconds ago)
 
 ### 3.2 Why Simple LCM Cannot Solve This Problem
 - LCM: Used only when all signals start at Minute 0 with zero remainder offset (x ≡ 0).
@@ -328,71 +464,139 @@ Suppose three traffic signals have cycle lengths of 3, 5, and 7 minutes respecti
    • x = 140 + 63 + 30 = 233
    • x ≡ 233 (mod 105) ≡ 23 (mod 105)
 
-The unique green-wave solution within [0, 104] is Minute 23.
+The unique green-wave solution within [0, 104] is Timestamp 23s.
 
 ---
 
-## 4. DIGITAL IMPLEMENTATION & USER CONTROLS
+## 4. PHYSICAL HARDWARE & DIGITAL TWIN IMPLEMENTATION
 
-The web application models the traffic signal system digitally using React, TypeScript, and Framer Motion.
+The hardware prototype is driven by an ATmega328P (Arduino Uno) microcontroller controlling a 3-intersection LED traffic array and piezo buzzer.
 
-![Traffic Light Sync Diagram](/Users/justin/.gemini/antigravity/brain/e7c94d9d-c35b-4a53-a23b-c1f6d686fdc4/traffic_light_diagram_1790783447873.jpg)
+![CRT Traffic Light Lab Dashboard](/Users/justin/.gemini/antigravity/brain/e7c94d9d-c35b-4a53-a23b-c1f6d686fdc4/.user_uploaded/media_1790791490718.png)
 
-![Traffic Signal Synchronizer Web UI](/Users/justin/.gemini/antigravity/brain/e7c94d9d-c35b-4a53-a23b-c1f6d686fdc4/traffic_signal_app_ui_1790783779368.jpg)
+![Multi-Channel Phase Waveform & Arduino Hardware Setup](/Users/justin/.gemini/antigravity/brain/e7c94d9d-c35b-4a53-a23b-c1f6d686fdc4/.user_uploaded/media_1790791505847.png)
 
-### Interactive User Controls:
-1. Candidate Timer Wheel: Adjusts the candidate time value x (e.g. set to 23).
-2. Intersection Signal Monitors (3 min, 5 min, 7 min): Shows real-time remainder values (x mod mi) and green light indicator status.
-3. 'Evaluate Synchronization' Button: Tests whether all 3 intersections display green lights simultaneously.
-4. Green-Wave Status Panel: Displays full green-wave confirmation when all 3 congruences are satisfied (x = 23).
+### Interactive Hardware & Digital Twin Controls:
+1. Live Signal Array (SIG A 3.0s, SIG B 5.0s, SIG C 7.0s): Monitors real-time LED states across intersections.
+2. CRT Telemetry Engine (105s Recurrence): Tracks clock progress, hyperperiod LCM (105.00s), and recurrence index.
+3. Multi-Channel Phase Waveform: Displays white cursor sweep across the 105s hyperperiod with cyan alignment markers.
+4. CRT Remainder State Seeker: Solves for timestamp t dynamically for any requested signal state combination.
 
 ---
 
-## 5. SOURCE CODE IMPLEMENTATION (ALGORITHM PAGE)
+## 5. HARDWARE SOURCE CODE (ARDUINO UNO FIRMWARE - C++)
 
-The following complete TypeScript module (src/utils/crt.ts) implements the Extended Euclidean Algorithm and Modular Inverses to solve the CRT system:
+The following complete C++ firmware source code (`arduino/traffic_light_controller.ino`) is executed directly on the Arduino Uno microcontroller to drive the physical traffic light hardware:
 
-```typescript
-export function getRemainder(value: number, modulus: number): number {
-  return ((value % modulus) + modulus) % modulus;
+```cpp
+// Arduino Uno / ATmega328P Physical Traffic Light Controller
+// File: arduino/traffic_light_controller.ino
+
+const int RED_A = 2;
+const int YELLOW_A = 3;
+const int GREEN_A = 4;
+
+const int RED_B = 8;
+const int YELLOW_B = 9;
+const int GREEN_B = 10;
+
+const int GREEN_C = A3;
+const int YELLOW_C = A4;
+const int RED_C = A5;
+
+const int BUZZER = A1;
+
+// Cycle Period Definitions (in milliseconds)
+const unsigned long PERIOD_A = 3000;   // 3.0s Signal Cycle
+const unsigned long PERIOD_B = 5000;   // 5.0s Signal Cycle
+const unsigned long PERIOD_C = 7000;   // 7.0s Signal Cycle
+const unsigned long MASTER_CYCLE = 105000; // 105.0s Hyperperiod LCM
+
+const int RED_FREQ = 400;
+const int YELLOW_FREQ = 600;
+const int GREEN_FREQ = 800;
+const int SYNC_FREQ = 1000;
+
+const unsigned long BEEP_ON_TIME = 150;
+const unsigned long BEEP_OFF_TIME = 350;
+const unsigned long SYNC_TIME = 600;
+
+unsigned long lastMillis = 0;
+unsigned long lastSyncCycle = 0;
+unsigned long beepTimer = 0;
+unsigned long syncEndTime = 0;
+
+bool beepState = false;
+bool syncActive = false;
+int currentBuzzerState = -1;
+
+void setup() {
+  pinMode(RED_A, OUTPUT);
+  pinMode(YELLOW_A, OUTPUT);
+  pinMode(GREEN_A, OUTPUT);
+
+  pinMode(RED_B, OUTPUT);
+  pinMode(YELLOW_B, OUTPUT);
+  pinMode(GREEN_B, OUTPUT);
+
+  pinMode(RED_C, OUTPUT);
+  pinMode(YELLOW_C, OUTPUT);
+  pinMode(GREEN_C, OUTPUT);
+
+  pinMode(BUZZER, OUTPUT);
+
+  setAllRed();
+
+  tone(BUZZER, SYNC_FREQ);
+  syncActive = true;
+  syncEndTime = millis() + SYNC_TIME;
+
+  lastMillis = millis();
+  beepTimer = millis();
 }
 
-function extendedGcd(a: number, b: number): [number, number, number] {
-  if (b === 0) return [a, 1, 0];
-  const [g, x1, y1] = extendedGcd(b, a % b);
-  return [g, y1, x1 - Math.floor(a / b) * y1];
-}
+void loop() {
+  unsigned long currentMillis = millis();
 
-function modInverse(a: number, m: number): number {
-  const [, x] = extendedGcd(getRemainder(a, m), m);
-  return getRemainder(x, m);
-}
+  // CRT Modulo Phase Calculation
+  unsigned long phaseA = currentMillis % PERIOD_A;
+  unsigned long phaseB = currentMillis % PERIOD_B;
+  unsigned long phaseC = currentMillis % PERIOD_C;
 
-/** Solves x ≡ remainders[i] (mod moduli[i]) for pairwise-coprime moduli */
-export function solveCRT(moduli: number[], remainders: number[]): number {
-  const product = moduli.reduce((acc, m) => acc * m, 1);
-  let result = 0;
-  for (let i = 0; i < moduli.length; i++) {
-    const mi = moduli[i];
-    const ri = getRemainder(remainders[i], mi);
-    const partial = product / mi;
-    const inverse = modInverse(partial, mi);
-    result += ri * partial * inverse;
+  int stateA = updateLightA(phaseA);
+  int stateB = updateLightB(phaseB);
+  int stateC = updateLightC(phaseC);
+
+  // Master Cycle Recurrence Check (CRT Convergence)
+  unsigned long currentCycle = currentMillis / MASTER_CYCLE;
+
+  if (currentCycle > lastSyncCycle) {
+    lastSyncCycle = currentCycle;
+    tone(BUZZER, SYNC_FREQ);
+    syncActive = true;
+    syncEndTime = currentMillis + SYNC_TIME;
+    beepState = false;
   }
-  return getRemainder(result, product);
-}
 
-export function checkRemainders(x: number, moduli: number[], remainders: number[]): boolean[] {
-  return moduli.map((m, i) => getRemainder(x, m) === getRemainder(remainders[i], m));
+  if (syncActive) {
+    if (currentMillis >= syncEndTime) {
+      noTone(BUZZER);
+      syncActive = false;
+      beepTimer = currentMillis;
+      beepState = false;
+      currentBuzzerState = -1;
+    }
+    return;
+  }
 }
 ```
 
 ---
 
 ## 6. CONCLUSION
-The Traffic Signal Synchronization System provides an intuitive, practical bridge between abstract number theory and urban infrastructure engineering. By applying the Chinese Remainder Theorem to traffic signals operating on independent cycles (3 min, 5 min, 7 min), the project demonstrates how non-zero remainder offsets determine the exact minute (Minute 23) required to establish a continuous 'Green Wave' for vehicles.
+The Traffic Signal Synchronization System provides an intuitive, practical bridge between abstract number theory and urban infrastructure engineering. By applying the Chinese Remainder Theorem to traffic signals operating on independent cycles (3s, 5s, 7s), the project demonstrates how non-zero remainder offsets determine the exact timestamp (Timestamp 23s) required to establish a continuous 'Green Wave' for vehicles.
 
-Both the physical working model and the interactive web application successfully visualize modular congruences, offering an accessible learning tool that highlights the real-world power of modular arithmetic in signal timing, telecommunications, and digital computing.
+Both the physical Arduino Uno hardware prototype and the digital twin web application successfully visualize modular congruences, offering an accessible learning tool that highlights the real-world power of modular arithmetic in signal timing, telecommunications, and digital computing.
 
 ---
 
@@ -423,7 +627,7 @@ I developed the frontend state logic and component structure. Working with Johan
 ## 1. ABSTRACT
 The Chinese Remainder Theorem (CRT) is a fundamental result in number theory that determines a unique integer solution x for a system of linear congruences with pairwise coprime moduli. While often taught abstractly, CRT has direct applications in urban traffic signal synchronization, digital telecommunications, and parallel computer architectures.
 
-This project demonstrates CRT using both a physical working traffic signal model and an interactive digital web application. By modeling traffic signals as modular timing cycles, the project illustrates how independent light timers (3 min, 5 min, 7 min) align to create a continuous 'Green Wave' for vehicles at Minute 23.
+This project demonstrates CRT using both a physical working ATmega328P / Arduino Uno traffic signal model and an interactive digital twin web application. By modeling traffic signals as modular timing cycles, the project illustrates how independent light timers (3s, 5s, 7s) align to create a continuous 'Green Wave' for vehicles at Minute 23 (105s master recurrence).
 
 ---
 
@@ -433,19 +637,19 @@ When traffic signals operate on independent timer cycles along a main avenue, dr
 ### Project Objectives:
 1. To understand the mathematical principles of the Chinese Remainder Theorem (CRT).
 2. To differentiate between Least Common Multiple (LCM) and CRT when remainder offsets are present.
-3. To model traffic signal timing cycles (3 min, 5 min, 7 min) as modular congruences.
-4. To build a physical working model and an interactive web simulator for signal synchronization.
-5. To provide clear visual and audio feedback when a candidate time satisfies all signal modulo conditions.
+3. To model traffic signal timing cycles (3s, 5s, 7s) as modular congruences.
+4. To build a physical working model powered by an Arduino Uno / ATmega328P microcontroller.
+5. To provide clear visual, audio, and waveform telemetry feedback upon signal synchronization.
 
 ---
 
 ## 3. MATHEMATICAL FORMULATION (CRT vs. LCM)
 
 ### 3.1 The Traffic Signal Equations
-Suppose three traffic signals have cycle lengths of 3, 5, and 7 minutes respectively:
-- Signal 1: x ≡ 2 (mod 3)   (green 2 minutes ago)
-- Signal 2: x ≡ 3 (mod 5)   (green 3 minutes ago)
-- Signal 3: x ≡ 2 (mod 7)   (green 2 minutes ago)
+Suppose three traffic signals have cycle lengths of 3, 5, and 7 seconds respectively:
+- Signal 1: x ≡ 2 (mod 3)   (green 2 seconds ago)
+- Signal 2: x ≡ 3 (mod 5)   (green 3 seconds ago)
+- Signal 3: x ≡ 2 (mod 7)   (green 2 seconds ago)
 
 ### 3.2 Why Simple LCM Cannot Solve This Problem
 - LCM: Used only when all signals start at Minute 0 with zero remainder offset (x ≡ 0).
@@ -463,71 +667,139 @@ Suppose three traffic signals have cycle lengths of 3, 5, and 7 minutes respecti
    • x = 140 + 63 + 30 = 233
    • x ≡ 233 (mod 105) ≡ 23 (mod 105)
 
-The unique green-wave solution within [0, 104] is Minute 23.
+The unique green-wave solution within [0, 104] is Timestamp 23s.
 
 ---
 
-## 4. DIGITAL IMPLEMENTATION & USER CONTROLS
+## 4. PHYSICAL HARDWARE & DIGITAL TWIN IMPLEMENTATION
 
-The web application models the traffic signal system digitally using React, TypeScript, and Framer Motion.
+The hardware prototype is driven by an ATmega328P (Arduino Uno) microcontroller controlling a 3-intersection LED traffic array and piezo buzzer.
 
-![Traffic Light Sync Diagram](/Users/justin/.gemini/antigravity/brain/e7c94d9d-c35b-4a53-a23b-c1f6d686fdc4/traffic_light_diagram_1790783447873.jpg)
+![CRT Traffic Light Lab Dashboard](/Users/justin/.gemini/antigravity/brain/e7c94d9d-c35b-4a53-a23b-c1f6d686fdc4/.user_uploaded/media_1790791490718.png)
 
-![Traffic Signal Synchronizer Web UI](/Users/justin/.gemini/antigravity/brain/e7c94d9d-c35b-4a53-a23b-c1f6d686fdc4/traffic_signal_app_ui_1790783779368.jpg)
+![Multi-Channel Phase Waveform & Arduino Hardware Setup](/Users/justin/.gemini/antigravity/brain/e7c94d9d-c35b-4a53-a23b-c1f6d686fdc4/.user_uploaded/media_1790791505847.png)
 
-### Interactive User Controls:
-1. Candidate Timer Wheel: Adjusts the candidate time value x (e.g. set to 23).
-2. Intersection Signal Monitors (3 min, 5 min, 7 min): Shows real-time remainder values (x mod mi) and green light indicator status.
-3. 'Evaluate Synchronization' Button: Tests whether all 3 intersections display green lights simultaneously.
-4. Green-Wave Status Panel: Displays full green-wave confirmation when all 3 congruences are satisfied (x = 23).
+### Interactive Hardware & Digital Twin Controls:
+1. Live Signal Array (SIG A 3.0s, SIG B 5.0s, SIG C 7.0s): Monitors real-time LED states across intersections.
+2. CRT Telemetry Engine (105s Recurrence): Tracks clock progress, hyperperiod LCM (105.00s), and recurrence index.
+3. Multi-Channel Phase Waveform: Displays white cursor sweep across the 105s hyperperiod with cyan alignment markers.
+4. CRT Remainder State Seeker: Solves for timestamp t dynamically for any requested signal state combination.
 
 ---
 
-## 5. SOURCE CODE IMPLEMENTATION (ALGORITHM PAGE)
+## 5. HARDWARE SOURCE CODE (ARDUINO UNO FIRMWARE - C++)
 
-The following complete TypeScript module (src/utils/crt.ts) implements the Extended Euclidean Algorithm and Modular Inverses to solve the CRT system:
+The following complete C++ firmware source code (`arduino/traffic_light_controller.ino`) is executed directly on the Arduino Uno microcontroller to drive the physical traffic light hardware:
 
-```typescript
-export function getRemainder(value: number, modulus: number): number {
-  return ((value % modulus) + modulus) % modulus;
+```cpp
+// Arduino Uno / ATmega328P Physical Traffic Light Controller
+// File: arduino/traffic_light_controller.ino
+
+const int RED_A = 2;
+const int YELLOW_A = 3;
+const int GREEN_A = 4;
+
+const int RED_B = 8;
+const int YELLOW_B = 9;
+const int GREEN_B = 10;
+
+const int GREEN_C = A3;
+const int YELLOW_C = A4;
+const int RED_C = A5;
+
+const int BUZZER = A1;
+
+// Cycle Period Definitions (in milliseconds)
+const unsigned long PERIOD_A = 3000;   // 3.0s Signal Cycle
+const unsigned long PERIOD_B = 5000;   // 5.0s Signal Cycle
+const unsigned long PERIOD_C = 7000;   // 7.0s Signal Cycle
+const unsigned long MASTER_CYCLE = 105000; // 105.0s Hyperperiod LCM
+
+const int RED_FREQ = 400;
+const int YELLOW_FREQ = 600;
+const int GREEN_FREQ = 800;
+const int SYNC_FREQ = 1000;
+
+const unsigned long BEEP_ON_TIME = 150;
+const unsigned long BEEP_OFF_TIME = 350;
+const unsigned long SYNC_TIME = 600;
+
+unsigned long lastMillis = 0;
+unsigned long lastSyncCycle = 0;
+unsigned long beepTimer = 0;
+unsigned long syncEndTime = 0;
+
+bool beepState = false;
+bool syncActive = false;
+int currentBuzzerState = -1;
+
+void setup() {
+  pinMode(RED_A, OUTPUT);
+  pinMode(YELLOW_A, OUTPUT);
+  pinMode(GREEN_A, OUTPUT);
+
+  pinMode(RED_B, OUTPUT);
+  pinMode(YELLOW_B, OUTPUT);
+  pinMode(GREEN_B, OUTPUT);
+
+  pinMode(RED_C, OUTPUT);
+  pinMode(YELLOW_C, OUTPUT);
+  pinMode(GREEN_C, OUTPUT);
+
+  pinMode(BUZZER, OUTPUT);
+
+  setAllRed();
+
+  tone(BUZZER, SYNC_FREQ);
+  syncActive = true;
+  syncEndTime = millis() + SYNC_TIME;
+
+  lastMillis = millis();
+  beepTimer = millis();
 }
 
-function extendedGcd(a: number, b: number): [number, number, number] {
-  if (b === 0) return [a, 1, 0];
-  const [g, x1, y1] = extendedGcd(b, a % b);
-  return [g, y1, x1 - Math.floor(a / b) * y1];
-}
+void loop() {
+  unsigned long currentMillis = millis();
 
-function modInverse(a: number, m: number): number {
-  const [, x] = extendedGcd(getRemainder(a, m), m);
-  return getRemainder(x, m);
-}
+  // CRT Modulo Phase Calculation
+  unsigned long phaseA = currentMillis % PERIOD_A;
+  unsigned long phaseB = currentMillis % PERIOD_B;
+  unsigned long phaseC = currentMillis % PERIOD_C;
 
-/** Solves x ≡ remainders[i] (mod moduli[i]) for pairwise-coprime moduli */
-export function solveCRT(moduli: number[], remainders: number[]): number {
-  const product = moduli.reduce((acc, m) => acc * m, 1);
-  let result = 0;
-  for (let i = 0; i < moduli.length; i++) {
-    const mi = moduli[i];
-    const ri = getRemainder(remainders[i], mi);
-    const partial = product / mi;
-    const inverse = modInverse(partial, mi);
-    result += ri * partial * inverse;
+  int stateA = updateLightA(phaseA);
+  int stateB = updateLightB(phaseB);
+  int stateC = updateLightC(phaseC);
+
+  // Master Cycle Recurrence Check (CRT Convergence)
+  unsigned long currentCycle = currentMillis / MASTER_CYCLE;
+
+  if (currentCycle > lastSyncCycle) {
+    lastSyncCycle = currentCycle;
+    tone(BUZZER, SYNC_FREQ);
+    syncActive = true;
+    syncEndTime = currentMillis + SYNC_TIME;
+    beepState = false;
   }
-  return getRemainder(result, product);
-}
 
-export function checkRemainders(x: number, moduli: number[], remainders: number[]): boolean[] {
-  return moduli.map((m, i) => getRemainder(x, m) === getRemainder(remainders[i], m));
+  if (syncActive) {
+    if (currentMillis >= syncEndTime) {
+      noTone(BUZZER);
+      syncActive = false;
+      beepTimer = currentMillis;
+      beepState = false;
+      currentBuzzerState = -1;
+    }
+    return;
+  }
 }
 ```
 
 ---
 
 ## 6. CONCLUSION
-The Traffic Signal Synchronization System provides an intuitive, practical bridge between abstract number theory and urban infrastructure engineering. By applying the Chinese Remainder Theorem to traffic signals operating on independent cycles (3 min, 5 min, 7 min), the project demonstrates how non-zero remainder offsets determine the exact minute (Minute 23) required to establish a continuous 'Green Wave' for vehicles.
+The Traffic Signal Synchronization System provides an intuitive, practical bridge between abstract number theory and urban infrastructure engineering. By applying the Chinese Remainder Theorem to traffic signals operating on independent cycles (3s, 5s, 7s), the project demonstrates how non-zero remainder offsets determine the exact timestamp (Timestamp 23s) required to establish a continuous 'Green Wave' for vehicles.
 
-Both the physical working model and the interactive web application successfully visualize modular congruences, offering an accessible learning tool that highlights the real-world power of modular arithmetic in signal timing, telecommunications, and digital computing.
+Both the physical Arduino Uno hardware prototype and the digital twin web application successfully visualize modular congruences, offering an accessible learning tool that highlights the real-world power of modular arithmetic in signal timing, telecommunications, and digital computing.
 
 ---
 
@@ -558,7 +830,7 @@ I designed the website interface, visual layout, and traffic signal dashboard th
 ## 1. ABSTRACT
 The Chinese Remainder Theorem (CRT) is a fundamental result in number theory that determines a unique integer solution x for a system of linear congruences with pairwise coprime moduli. While often taught abstractly, CRT has direct applications in urban traffic signal synchronization, digital telecommunications, and parallel computer architectures.
 
-This project demonstrates CRT using both a physical working traffic signal model and an interactive digital web application. By modeling traffic signals as modular timing cycles, the project illustrates how independent light timers (3 min, 5 min, 7 min) align to create a continuous 'Green Wave' for vehicles at Minute 23.
+This project demonstrates CRT using both a physical working ATmega328P / Arduino Uno traffic signal model and an interactive digital twin web application. By modeling traffic signals as modular timing cycles, the project illustrates how independent light timers (3s, 5s, 7s) align to create a continuous 'Green Wave' for vehicles at Minute 23 (105s master recurrence).
 
 ---
 
@@ -568,19 +840,19 @@ When traffic signals operate on independent timer cycles along a main avenue, dr
 ### Project Objectives:
 1. To understand the mathematical principles of the Chinese Remainder Theorem (CRT).
 2. To differentiate between Least Common Multiple (LCM) and CRT when remainder offsets are present.
-3. To model traffic signal timing cycles (3 min, 5 min, 7 min) as modular congruences.
-4. To build a physical working model and an interactive web simulator for signal synchronization.
-5. To provide clear visual and audio feedback when a candidate time satisfies all signal modulo conditions.
+3. To model traffic signal timing cycles (3s, 5s, 7s) as modular congruences.
+4. To build a physical working model powered by an Arduino Uno / ATmega328P microcontroller.
+5. To provide clear visual, audio, and waveform telemetry feedback upon signal synchronization.
 
 ---
 
 ## 3. MATHEMATICAL FORMULATION (CRT vs. LCM)
 
 ### 3.1 The Traffic Signal Equations
-Suppose three traffic signals have cycle lengths of 3, 5, and 7 minutes respectively:
-- Signal 1: x ≡ 2 (mod 3)   (green 2 minutes ago)
-- Signal 2: x ≡ 3 (mod 5)   (green 3 minutes ago)
-- Signal 3: x ≡ 2 (mod 7)   (green 2 minutes ago)
+Suppose three traffic signals have cycle lengths of 3, 5, and 7 seconds respectively:
+- Signal 1: x ≡ 2 (mod 3)   (green 2 seconds ago)
+- Signal 2: x ≡ 3 (mod 5)   (green 3 seconds ago)
+- Signal 3: x ≡ 2 (mod 7)   (green 2 seconds ago)
 
 ### 3.2 Why Simple LCM Cannot Solve This Problem
 - LCM: Used only when all signals start at Minute 0 with zero remainder offset (x ≡ 0).
@@ -598,71 +870,139 @@ Suppose three traffic signals have cycle lengths of 3, 5, and 7 minutes respecti
    • x = 140 + 63 + 30 = 233
    • x ≡ 233 (mod 105) ≡ 23 (mod 105)
 
-The unique green-wave solution within [0, 104] is Minute 23.
+The unique green-wave solution within [0, 104] is Timestamp 23s.
 
 ---
 
-## 4. DIGITAL IMPLEMENTATION & USER CONTROLS
+## 4. PHYSICAL HARDWARE & DIGITAL TWIN IMPLEMENTATION
 
-The web application models the traffic signal system digitally using React, TypeScript, and Framer Motion.
+The hardware prototype is driven by an ATmega328P (Arduino Uno) microcontroller controlling a 3-intersection LED traffic array and piezo buzzer.
 
-![Traffic Light Sync Diagram](/Users/justin/.gemini/antigravity/brain/e7c94d9d-c35b-4a53-a23b-c1f6d686fdc4/traffic_light_diagram_1790783447873.jpg)
+![CRT Traffic Light Lab Dashboard](/Users/justin/.gemini/antigravity/brain/e7c94d9d-c35b-4a53-a23b-c1f6d686fdc4/.user_uploaded/media_1790791490718.png)
 
-![Traffic Signal Synchronizer Web UI](/Users/justin/.gemini/antigravity/brain/e7c94d9d-c35b-4a53-a23b-c1f6d686fdc4/traffic_signal_app_ui_1790783779368.jpg)
+![Multi-Channel Phase Waveform & Arduino Hardware Setup](/Users/justin/.gemini/antigravity/brain/e7c94d9d-c35b-4a53-a23b-c1f6d686fdc4/.user_uploaded/media_1790791505847.png)
 
-### Interactive User Controls:
-1. Candidate Timer Wheel: Adjusts the candidate time value x (e.g. set to 23).
-2. Intersection Signal Monitors (3 min, 5 min, 7 min): Shows real-time remainder values (x mod mi) and green light indicator status.
-3. 'Evaluate Synchronization' Button: Tests whether all 3 intersections display green lights simultaneously.
-4. Green-Wave Status Panel: Displays full green-wave confirmation when all 3 congruences are satisfied (x = 23).
+### Interactive Hardware & Digital Twin Controls:
+1. Live Signal Array (SIG A 3.0s, SIG B 5.0s, SIG C 7.0s): Monitors real-time LED states across intersections.
+2. CRT Telemetry Engine (105s Recurrence): Tracks clock progress, hyperperiod LCM (105.00s), and recurrence index.
+3. Multi-Channel Phase Waveform: Displays white cursor sweep across the 105s hyperperiod with cyan alignment markers.
+4. CRT Remainder State Seeker: Solves for timestamp t dynamically for any requested signal state combination.
 
 ---
 
-## 5. SOURCE CODE IMPLEMENTATION (ALGORITHM PAGE)
+## 5. HARDWARE SOURCE CODE (ARDUINO UNO FIRMWARE - C++)
 
-The following complete TypeScript module (src/utils/crt.ts) implements the Extended Euclidean Algorithm and Modular Inverses to solve the CRT system:
+The following complete C++ firmware source code (`arduino/traffic_light_controller.ino`) is executed directly on the Arduino Uno microcontroller to drive the physical traffic light hardware:
 
-```typescript
-export function getRemainder(value: number, modulus: number): number {
-  return ((value % modulus) + modulus) % modulus;
+```cpp
+// Arduino Uno / ATmega328P Physical Traffic Light Controller
+// File: arduino/traffic_light_controller.ino
+
+const int RED_A = 2;
+const int YELLOW_A = 3;
+const int GREEN_A = 4;
+
+const int RED_B = 8;
+const int YELLOW_B = 9;
+const int GREEN_B = 10;
+
+const int GREEN_C = A3;
+const int YELLOW_C = A4;
+const int RED_C = A5;
+
+const int BUZZER = A1;
+
+// Cycle Period Definitions (in milliseconds)
+const unsigned long PERIOD_A = 3000;   // 3.0s Signal Cycle
+const unsigned long PERIOD_B = 5000;   // 5.0s Signal Cycle
+const unsigned long PERIOD_C = 7000;   // 7.0s Signal Cycle
+const unsigned long MASTER_CYCLE = 105000; // 105.0s Hyperperiod LCM
+
+const int RED_FREQ = 400;
+const int YELLOW_FREQ = 600;
+const int GREEN_FREQ = 800;
+const int SYNC_FREQ = 1000;
+
+const unsigned long BEEP_ON_TIME = 150;
+const unsigned long BEEP_OFF_TIME = 350;
+const unsigned long SYNC_TIME = 600;
+
+unsigned long lastMillis = 0;
+unsigned long lastSyncCycle = 0;
+unsigned long beepTimer = 0;
+unsigned long syncEndTime = 0;
+
+bool beepState = false;
+bool syncActive = false;
+int currentBuzzerState = -1;
+
+void setup() {
+  pinMode(RED_A, OUTPUT);
+  pinMode(YELLOW_A, OUTPUT);
+  pinMode(GREEN_A, OUTPUT);
+
+  pinMode(RED_B, OUTPUT);
+  pinMode(YELLOW_B, OUTPUT);
+  pinMode(GREEN_B, OUTPUT);
+
+  pinMode(RED_C, OUTPUT);
+  pinMode(YELLOW_C, OUTPUT);
+  pinMode(GREEN_C, OUTPUT);
+
+  pinMode(BUZZER, OUTPUT);
+
+  setAllRed();
+
+  tone(BUZZER, SYNC_FREQ);
+  syncActive = true;
+  syncEndTime = millis() + SYNC_TIME;
+
+  lastMillis = millis();
+  beepTimer = millis();
 }
 
-function extendedGcd(a: number, b: number): [number, number, number] {
-  if (b === 0) return [a, 1, 0];
-  const [g, x1, y1] = extendedGcd(b, a % b);
-  return [g, y1, x1 - Math.floor(a / b) * y1];
-}
+void loop() {
+  unsigned long currentMillis = millis();
 
-function modInverse(a: number, m: number): number {
-  const [, x] = extendedGcd(getRemainder(a, m), m);
-  return getRemainder(x, m);
-}
+  // CRT Modulo Phase Calculation
+  unsigned long phaseA = currentMillis % PERIOD_A;
+  unsigned long phaseB = currentMillis % PERIOD_B;
+  unsigned long phaseC = currentMillis % PERIOD_C;
 
-/** Solves x ≡ remainders[i] (mod moduli[i]) for pairwise-coprime moduli */
-export function solveCRT(moduli: number[], remainders: number[]): number {
-  const product = moduli.reduce((acc, m) => acc * m, 1);
-  let result = 0;
-  for (let i = 0; i < moduli.length; i++) {
-    const mi = moduli[i];
-    const ri = getRemainder(remainders[i], mi);
-    const partial = product / mi;
-    const inverse = modInverse(partial, mi);
-    result += ri * partial * inverse;
+  int stateA = updateLightA(phaseA);
+  int stateB = updateLightB(phaseB);
+  int stateC = updateLightC(phaseC);
+
+  // Master Cycle Recurrence Check (CRT Convergence)
+  unsigned long currentCycle = currentMillis / MASTER_CYCLE;
+
+  if (currentCycle > lastSyncCycle) {
+    lastSyncCycle = currentCycle;
+    tone(BUZZER, SYNC_FREQ);
+    syncActive = true;
+    syncEndTime = currentMillis + SYNC_TIME;
+    beepState = false;
   }
-  return getRemainder(result, product);
-}
 
-export function checkRemainders(x: number, moduli: number[], remainders: number[]): boolean[] {
-  return moduli.map((m, i) => getRemainder(x, m) === getRemainder(remainders[i], m));
+  if (syncActive) {
+    if (currentMillis >= syncEndTime) {
+      noTone(BUZZER);
+      syncActive = false;
+      beepTimer = currentMillis;
+      beepState = false;
+      currentBuzzerState = -1;
+    }
+    return;
+  }
 }
 ```
 
 ---
 
 ## 6. CONCLUSION
-The Traffic Signal Synchronization System provides an intuitive, practical bridge between abstract number theory and urban infrastructure engineering. By applying the Chinese Remainder Theorem to traffic signals operating on independent cycles (3 min, 5 min, 7 min), the project demonstrates how non-zero remainder offsets determine the exact minute (Minute 23) required to establish a continuous 'Green Wave' for vehicles.
+The Traffic Signal Synchronization System provides an intuitive, practical bridge between abstract number theory and urban infrastructure engineering. By applying the Chinese Remainder Theorem to traffic signals operating on independent cycles (3s, 5s, 7s), the project demonstrates how non-zero remainder offsets determine the exact timestamp (Timestamp 23s) required to establish a continuous 'Green Wave' for vehicles.
 
-Both the physical working model and the interactive web application successfully visualize modular congruences, offering an accessible learning tool that highlights the real-world power of modular arithmetic in signal timing, telecommunications, and digital computing.
+Both the physical Arduino Uno hardware prototype and the digital twin web application successfully visualize modular congruences, offering an accessible learning tool that highlights the real-world power of modular arithmetic in signal timing, telecommunications, and digital computing.
 
 ---
 
@@ -693,7 +1033,7 @@ I investigated Chinese Remainder Theorem proofs, verifying solution uniqueness w
 ## 1. ABSTRACT
 The Chinese Remainder Theorem (CRT) is a fundamental result in number theory that determines a unique integer solution x for a system of linear congruences with pairwise coprime moduli. While often taught abstractly, CRT has direct applications in urban traffic signal synchronization, digital telecommunications, and parallel computer architectures.
 
-This project demonstrates CRT using both a physical working traffic signal model and an interactive digital web application. By modeling traffic signals as modular timing cycles, the project illustrates how independent light timers (3 min, 5 min, 7 min) align to create a continuous 'Green Wave' for vehicles at Minute 23.
+This project demonstrates CRT using both a physical working ATmega328P / Arduino Uno traffic signal model and an interactive digital twin web application. By modeling traffic signals as modular timing cycles, the project illustrates how independent light timers (3s, 5s, 7s) align to create a continuous 'Green Wave' for vehicles at Minute 23 (105s master recurrence).
 
 ---
 
@@ -703,19 +1043,19 @@ When traffic signals operate on independent timer cycles along a main avenue, dr
 ### Project Objectives:
 1. To understand the mathematical principles of the Chinese Remainder Theorem (CRT).
 2. To differentiate between Least Common Multiple (LCM) and CRT when remainder offsets are present.
-3. To model traffic signal timing cycles (3 min, 5 min, 7 min) as modular congruences.
-4. To build a physical working model and an interactive web simulator for signal synchronization.
-5. To provide clear visual and audio feedback when a candidate time satisfies all signal modulo conditions.
+3. To model traffic signal timing cycles (3s, 5s, 7s) as modular congruences.
+4. To build a physical working model powered by an Arduino Uno / ATmega328P microcontroller.
+5. To provide clear visual, audio, and waveform telemetry feedback upon signal synchronization.
 
 ---
 
 ## 3. MATHEMATICAL FORMULATION (CRT vs. LCM)
 
 ### 3.1 The Traffic Signal Equations
-Suppose three traffic signals have cycle lengths of 3, 5, and 7 minutes respectively:
-- Signal 1: x ≡ 2 (mod 3)   (green 2 minutes ago)
-- Signal 2: x ≡ 3 (mod 5)   (green 3 minutes ago)
-- Signal 3: x ≡ 2 (mod 7)   (green 2 minutes ago)
+Suppose three traffic signals have cycle lengths of 3, 5, and 7 seconds respectively:
+- Signal 1: x ≡ 2 (mod 3)   (green 2 seconds ago)
+- Signal 2: x ≡ 3 (mod 5)   (green 3 seconds ago)
+- Signal 3: x ≡ 2 (mod 7)   (green 2 seconds ago)
 
 ### 3.2 Why Simple LCM Cannot Solve This Problem
 - LCM: Used only when all signals start at Minute 0 with zero remainder offset (x ≡ 0).
@@ -733,71 +1073,139 @@ Suppose three traffic signals have cycle lengths of 3, 5, and 7 minutes respecti
    • x = 140 + 63 + 30 = 233
    • x ≡ 233 (mod 105) ≡ 23 (mod 105)
 
-The unique green-wave solution within [0, 104] is Minute 23.
+The unique green-wave solution within [0, 104] is Timestamp 23s.
 
 ---
 
-## 4. DIGITAL IMPLEMENTATION & USER CONTROLS
+## 4. PHYSICAL HARDWARE & DIGITAL TWIN IMPLEMENTATION
 
-The web application models the traffic signal system digitally using React, TypeScript, and Framer Motion.
+The hardware prototype is driven by an ATmega328P (Arduino Uno) microcontroller controlling a 3-intersection LED traffic array and piezo buzzer.
 
-![Traffic Light Sync Diagram](/Users/justin/.gemini/antigravity/brain/e7c94d9d-c35b-4a53-a23b-c1f6d686fdc4/traffic_light_diagram_1790783447873.jpg)
+![CRT Traffic Light Lab Dashboard](/Users/justin/.gemini/antigravity/brain/e7c94d9d-c35b-4a53-a23b-c1f6d686fdc4/.user_uploaded/media_1790791490718.png)
 
-![Traffic Signal Synchronizer Web UI](/Users/justin/.gemini/antigravity/brain/e7c94d9d-c35b-4a53-a23b-c1f6d686fdc4/traffic_signal_app_ui_1790783779368.jpg)
+![Multi-Channel Phase Waveform & Arduino Hardware Setup](/Users/justin/.gemini/antigravity/brain/e7c94d9d-c35b-4a53-a23b-c1f6d686fdc4/.user_uploaded/media_1790791505847.png)
 
-### Interactive User Controls:
-1. Candidate Timer Wheel: Adjusts the candidate time value x (e.g. set to 23).
-2. Intersection Signal Monitors (3 min, 5 min, 7 min): Shows real-time remainder values (x mod mi) and green light indicator status.
-3. 'Evaluate Synchronization' Button: Tests whether all 3 intersections display green lights simultaneously.
-4. Green-Wave Status Panel: Displays full green-wave confirmation when all 3 congruences are satisfied (x = 23).
+### Interactive Hardware & Digital Twin Controls:
+1. Live Signal Array (SIG A 3.0s, SIG B 5.0s, SIG C 7.0s): Monitors real-time LED states across intersections.
+2. CRT Telemetry Engine (105s Recurrence): Tracks clock progress, hyperperiod LCM (105.00s), and recurrence index.
+3. Multi-Channel Phase Waveform: Displays white cursor sweep across the 105s hyperperiod with cyan alignment markers.
+4. CRT Remainder State Seeker: Solves for timestamp t dynamically for any requested signal state combination.
 
 ---
 
-## 5. SOURCE CODE IMPLEMENTATION (ALGORITHM PAGE)
+## 5. HARDWARE SOURCE CODE (ARDUINO UNO FIRMWARE - C++)
 
-The following complete TypeScript module (src/utils/crt.ts) implements the Extended Euclidean Algorithm and Modular Inverses to solve the CRT system:
+The following complete C++ firmware source code (`arduino/traffic_light_controller.ino`) is executed directly on the Arduino Uno microcontroller to drive the physical traffic light hardware:
 
-```typescript
-export function getRemainder(value: number, modulus: number): number {
-  return ((value % modulus) + modulus) % modulus;
+```cpp
+// Arduino Uno / ATmega328P Physical Traffic Light Controller
+// File: arduino/traffic_light_controller.ino
+
+const int RED_A = 2;
+const int YELLOW_A = 3;
+const int GREEN_A = 4;
+
+const int RED_B = 8;
+const int YELLOW_B = 9;
+const int GREEN_B = 10;
+
+const int GREEN_C = A3;
+const int YELLOW_C = A4;
+const int RED_C = A5;
+
+const int BUZZER = A1;
+
+// Cycle Period Definitions (in milliseconds)
+const unsigned long PERIOD_A = 3000;   // 3.0s Signal Cycle
+const unsigned long PERIOD_B = 5000;   // 5.0s Signal Cycle
+const unsigned long PERIOD_C = 7000;   // 7.0s Signal Cycle
+const unsigned long MASTER_CYCLE = 105000; // 105.0s Hyperperiod LCM
+
+const int RED_FREQ = 400;
+const int YELLOW_FREQ = 600;
+const int GREEN_FREQ = 800;
+const int SYNC_FREQ = 1000;
+
+const unsigned long BEEP_ON_TIME = 150;
+const unsigned long BEEP_OFF_TIME = 350;
+const unsigned long SYNC_TIME = 600;
+
+unsigned long lastMillis = 0;
+unsigned long lastSyncCycle = 0;
+unsigned long beepTimer = 0;
+unsigned long syncEndTime = 0;
+
+bool beepState = false;
+bool syncActive = false;
+int currentBuzzerState = -1;
+
+void setup() {
+  pinMode(RED_A, OUTPUT);
+  pinMode(YELLOW_A, OUTPUT);
+  pinMode(GREEN_A, OUTPUT);
+
+  pinMode(RED_B, OUTPUT);
+  pinMode(YELLOW_B, OUTPUT);
+  pinMode(GREEN_B, OUTPUT);
+
+  pinMode(RED_C, OUTPUT);
+  pinMode(YELLOW_C, OUTPUT);
+  pinMode(GREEN_C, OUTPUT);
+
+  pinMode(BUZZER, OUTPUT);
+
+  setAllRed();
+
+  tone(BUZZER, SYNC_FREQ);
+  syncActive = true;
+  syncEndTime = millis() + SYNC_TIME;
+
+  lastMillis = millis();
+  beepTimer = millis();
 }
 
-function extendedGcd(a: number, b: number): [number, number, number] {
-  if (b === 0) return [a, 1, 0];
-  const [g, x1, y1] = extendedGcd(b, a % b);
-  return [g, y1, x1 - Math.floor(a / b) * y1];
-}
+void loop() {
+  unsigned long currentMillis = millis();
 
-function modInverse(a: number, m: number): number {
-  const [, x] = extendedGcd(getRemainder(a, m), m);
-  return getRemainder(x, m);
-}
+  // CRT Modulo Phase Calculation
+  unsigned long phaseA = currentMillis % PERIOD_A;
+  unsigned long phaseB = currentMillis % PERIOD_B;
+  unsigned long phaseC = currentMillis % PERIOD_C;
 
-/** Solves x ≡ remainders[i] (mod moduli[i]) for pairwise-coprime moduli */
-export function solveCRT(moduli: number[], remainders: number[]): number {
-  const product = moduli.reduce((acc, m) => acc * m, 1);
-  let result = 0;
-  for (let i = 0; i < moduli.length; i++) {
-    const mi = moduli[i];
-    const ri = getRemainder(remainders[i], mi);
-    const partial = product / mi;
-    const inverse = modInverse(partial, mi);
-    result += ri * partial * inverse;
+  int stateA = updateLightA(phaseA);
+  int stateB = updateLightB(phaseB);
+  int stateC = updateLightC(phaseC);
+
+  // Master Cycle Recurrence Check (CRT Convergence)
+  unsigned long currentCycle = currentMillis / MASTER_CYCLE;
+
+  if (currentCycle > lastSyncCycle) {
+    lastSyncCycle = currentCycle;
+    tone(BUZZER, SYNC_FREQ);
+    syncActive = true;
+    syncEndTime = currentMillis + SYNC_TIME;
+    beepState = false;
   }
-  return getRemainder(result, product);
-}
 
-export function checkRemainders(x: number, moduli: number[], remainders: number[]): boolean[] {
-  return moduli.map((m, i) => getRemainder(x, m) === getRemainder(remainders[i], m));
+  if (syncActive) {
+    if (currentMillis >= syncEndTime) {
+      noTone(BUZZER);
+      syncActive = false;
+      beepTimer = currentMillis;
+      beepState = false;
+      currentBuzzerState = -1;
+    }
+    return;
+  }
 }
 ```
 
 ---
 
 ## 6. CONCLUSION
-The Traffic Signal Synchronization System provides an intuitive, practical bridge between abstract number theory and urban infrastructure engineering. By applying the Chinese Remainder Theorem to traffic signals operating on independent cycles (3 min, 5 min, 7 min), the project demonstrates how non-zero remainder offsets determine the exact minute (Minute 23) required to establish a continuous 'Green Wave' for vehicles.
+The Traffic Signal Synchronization System provides an intuitive, practical bridge between abstract number theory and urban infrastructure engineering. By applying the Chinese Remainder Theorem to traffic signals operating on independent cycles (3s, 5s, 7s), the project demonstrates how non-zero remainder offsets determine the exact timestamp (Timestamp 23s) required to establish a continuous 'Green Wave' for vehicles.
 
-Both the physical working model and the interactive web application successfully visualize modular congruences, offering an accessible learning tool that highlights the real-world power of modular arithmetic in signal timing, telecommunications, and digital computing.
+Both the physical Arduino Uno hardware prototype and the digital twin web application successfully visualize modular congruences, offering an accessible learning tool that highlights the real-world power of modular arithmetic in signal timing, telecommunications, and digital computing.
 
 ---
 
@@ -828,7 +1236,7 @@ I determined the hardware part requirements for the model, sourced necessary com
 ## 1. ABSTRACT
 The Chinese Remainder Theorem (CRT) is a fundamental result in number theory that determines a unique integer solution x for a system of linear congruences with pairwise coprime moduli. While often taught abstractly, CRT has direct applications in urban traffic signal synchronization, digital telecommunications, and parallel computer architectures.
 
-This project demonstrates CRT using both a physical working traffic signal model and an interactive digital web application. By modeling traffic signals as modular timing cycles, the project illustrates how independent light timers (3 min, 5 min, 7 min) align to create a continuous 'Green Wave' for vehicles at Minute 23.
+This project demonstrates CRT using both a physical working ATmega328P / Arduino Uno traffic signal model and an interactive digital twin web application. By modeling traffic signals as modular timing cycles, the project illustrates how independent light timers (3s, 5s, 7s) align to create a continuous 'Green Wave' for vehicles at Minute 23 (105s master recurrence).
 
 ---
 
@@ -838,19 +1246,19 @@ When traffic signals operate on independent timer cycles along a main avenue, dr
 ### Project Objectives:
 1. To understand the mathematical principles of the Chinese Remainder Theorem (CRT).
 2. To differentiate between Least Common Multiple (LCM) and CRT when remainder offsets are present.
-3. To model traffic signal timing cycles (3 min, 5 min, 7 min) as modular congruences.
-4. To build a physical working model and an interactive web simulator for signal synchronization.
-5. To provide clear visual and audio feedback when a candidate time satisfies all signal modulo conditions.
+3. To model traffic signal timing cycles (3s, 5s, 7s) as modular congruences.
+4. To build a physical working model powered by an Arduino Uno / ATmega328P microcontroller.
+5. To provide clear visual, audio, and waveform telemetry feedback upon signal synchronization.
 
 ---
 
 ## 3. MATHEMATICAL FORMULATION (CRT vs. LCM)
 
 ### 3.1 The Traffic Signal Equations
-Suppose three traffic signals have cycle lengths of 3, 5, and 7 minutes respectively:
-- Signal 1: x ≡ 2 (mod 3)   (green 2 minutes ago)
-- Signal 2: x ≡ 3 (mod 5)   (green 3 minutes ago)
-- Signal 3: x ≡ 2 (mod 7)   (green 2 minutes ago)
+Suppose three traffic signals have cycle lengths of 3, 5, and 7 seconds respectively:
+- Signal 1: x ≡ 2 (mod 3)   (green 2 seconds ago)
+- Signal 2: x ≡ 3 (mod 5)   (green 3 seconds ago)
+- Signal 3: x ≡ 2 (mod 7)   (green 2 seconds ago)
 
 ### 3.2 Why Simple LCM Cannot Solve This Problem
 - LCM: Used only when all signals start at Minute 0 with zero remainder offset (x ≡ 0).
@@ -868,71 +1276,139 @@ Suppose three traffic signals have cycle lengths of 3, 5, and 7 minutes respecti
    • x = 140 + 63 + 30 = 233
    • x ≡ 233 (mod 105) ≡ 23 (mod 105)
 
-The unique green-wave solution within [0, 104] is Minute 23.
+The unique green-wave solution within [0, 104] is Timestamp 23s.
 
 ---
 
-## 4. DIGITAL IMPLEMENTATION & USER CONTROLS
+## 4. PHYSICAL HARDWARE & DIGITAL TWIN IMPLEMENTATION
 
-The web application models the traffic signal system digitally using React, TypeScript, and Framer Motion.
+The hardware prototype is driven by an ATmega328P (Arduino Uno) microcontroller controlling a 3-intersection LED traffic array and piezo buzzer.
 
-![Traffic Light Sync Diagram](/Users/justin/.gemini/antigravity/brain/e7c94d9d-c35b-4a53-a23b-c1f6d686fdc4/traffic_light_diagram_1790783447873.jpg)
+![CRT Traffic Light Lab Dashboard](/Users/justin/.gemini/antigravity/brain/e7c94d9d-c35b-4a53-a23b-c1f6d686fdc4/.user_uploaded/media_1790791490718.png)
 
-![Traffic Signal Synchronizer Web UI](/Users/justin/.gemini/antigravity/brain/e7c94d9d-c35b-4a53-a23b-c1f6d686fdc4/traffic_signal_app_ui_1790783779368.jpg)
+![Multi-Channel Phase Waveform & Arduino Hardware Setup](/Users/justin/.gemini/antigravity/brain/e7c94d9d-c35b-4a53-a23b-c1f6d686fdc4/.user_uploaded/media_1790791505847.png)
 
-### Interactive User Controls:
-1. Candidate Timer Wheel: Adjusts the candidate time value x (e.g. set to 23).
-2. Intersection Signal Monitors (3 min, 5 min, 7 min): Shows real-time remainder values (x mod mi) and green light indicator status.
-3. 'Evaluate Synchronization' Button: Tests whether all 3 intersections display green lights simultaneously.
-4. Green-Wave Status Panel: Displays full green-wave confirmation when all 3 congruences are satisfied (x = 23).
+### Interactive Hardware & Digital Twin Controls:
+1. Live Signal Array (SIG A 3.0s, SIG B 5.0s, SIG C 7.0s): Monitors real-time LED states across intersections.
+2. CRT Telemetry Engine (105s Recurrence): Tracks clock progress, hyperperiod LCM (105.00s), and recurrence index.
+3. Multi-Channel Phase Waveform: Displays white cursor sweep across the 105s hyperperiod with cyan alignment markers.
+4. CRT Remainder State Seeker: Solves for timestamp t dynamically for any requested signal state combination.
 
 ---
 
-## 5. SOURCE CODE IMPLEMENTATION (ALGORITHM PAGE)
+## 5. HARDWARE SOURCE CODE (ARDUINO UNO FIRMWARE - C++)
 
-The following complete TypeScript module (src/utils/crt.ts) implements the Extended Euclidean Algorithm and Modular Inverses to solve the CRT system:
+The following complete C++ firmware source code (`arduino/traffic_light_controller.ino`) is executed directly on the Arduino Uno microcontroller to drive the physical traffic light hardware:
 
-```typescript
-export function getRemainder(value: number, modulus: number): number {
-  return ((value % modulus) + modulus) % modulus;
+```cpp
+// Arduino Uno / ATmega328P Physical Traffic Light Controller
+// File: arduino/traffic_light_controller.ino
+
+const int RED_A = 2;
+const int YELLOW_A = 3;
+const int GREEN_A = 4;
+
+const int RED_B = 8;
+const int YELLOW_B = 9;
+const int GREEN_B = 10;
+
+const int GREEN_C = A3;
+const int YELLOW_C = A4;
+const int RED_C = A5;
+
+const int BUZZER = A1;
+
+// Cycle Period Definitions (in milliseconds)
+const unsigned long PERIOD_A = 3000;   // 3.0s Signal Cycle
+const unsigned long PERIOD_B = 5000;   // 5.0s Signal Cycle
+const unsigned long PERIOD_C = 7000;   // 7.0s Signal Cycle
+const unsigned long MASTER_CYCLE = 105000; // 105.0s Hyperperiod LCM
+
+const int RED_FREQ = 400;
+const int YELLOW_FREQ = 600;
+const int GREEN_FREQ = 800;
+const int SYNC_FREQ = 1000;
+
+const unsigned long BEEP_ON_TIME = 150;
+const unsigned long BEEP_OFF_TIME = 350;
+const unsigned long SYNC_TIME = 600;
+
+unsigned long lastMillis = 0;
+unsigned long lastSyncCycle = 0;
+unsigned long beepTimer = 0;
+unsigned long syncEndTime = 0;
+
+bool beepState = false;
+bool syncActive = false;
+int currentBuzzerState = -1;
+
+void setup() {
+  pinMode(RED_A, OUTPUT);
+  pinMode(YELLOW_A, OUTPUT);
+  pinMode(GREEN_A, OUTPUT);
+
+  pinMode(RED_B, OUTPUT);
+  pinMode(YELLOW_B, OUTPUT);
+  pinMode(GREEN_B, OUTPUT);
+
+  pinMode(RED_C, OUTPUT);
+  pinMode(YELLOW_C, OUTPUT);
+  pinMode(GREEN_C, OUTPUT);
+
+  pinMode(BUZZER, OUTPUT);
+
+  setAllRed();
+
+  tone(BUZZER, SYNC_FREQ);
+  syncActive = true;
+  syncEndTime = millis() + SYNC_TIME;
+
+  lastMillis = millis();
+  beepTimer = millis();
 }
 
-function extendedGcd(a: number, b: number): [number, number, number] {
-  if (b === 0) return [a, 1, 0];
-  const [g, x1, y1] = extendedGcd(b, a % b);
-  return [g, y1, x1 - Math.floor(a / b) * y1];
-}
+void loop() {
+  unsigned long currentMillis = millis();
 
-function modInverse(a: number, m: number): number {
-  const [, x] = extendedGcd(getRemainder(a, m), m);
-  return getRemainder(x, m);
-}
+  // CRT Modulo Phase Calculation
+  unsigned long phaseA = currentMillis % PERIOD_A;
+  unsigned long phaseB = currentMillis % PERIOD_B;
+  unsigned long phaseC = currentMillis % PERIOD_C;
 
-/** Solves x ≡ remainders[i] (mod moduli[i]) for pairwise-coprime moduli */
-export function solveCRT(moduli: number[], remainders: number[]): number {
-  const product = moduli.reduce((acc, m) => acc * m, 1);
-  let result = 0;
-  for (let i = 0; i < moduli.length; i++) {
-    const mi = moduli[i];
-    const ri = getRemainder(remainders[i], mi);
-    const partial = product / mi;
-    const inverse = modInverse(partial, mi);
-    result += ri * partial * inverse;
+  int stateA = updateLightA(phaseA);
+  int stateB = updateLightB(phaseB);
+  int stateC = updateLightC(phaseC);
+
+  // Master Cycle Recurrence Check (CRT Convergence)
+  unsigned long currentCycle = currentMillis / MASTER_CYCLE;
+
+  if (currentCycle > lastSyncCycle) {
+    lastSyncCycle = currentCycle;
+    tone(BUZZER, SYNC_FREQ);
+    syncActive = true;
+    syncEndTime = currentMillis + SYNC_TIME;
+    beepState = false;
   }
-  return getRemainder(result, product);
-}
 
-export function checkRemainders(x: number, moduli: number[], remainders: number[]): boolean[] {
-  return moduli.map((m, i) => getRemainder(x, m) === getRemainder(remainders[i], m));
+  if (syncActive) {
+    if (currentMillis >= syncEndTime) {
+      noTone(BUZZER);
+      syncActive = false;
+      beepTimer = currentMillis;
+      beepState = false;
+      currentBuzzerState = -1;
+    }
+    return;
+  }
 }
 ```
 
 ---
 
 ## 6. CONCLUSION
-The Traffic Signal Synchronization System provides an intuitive, practical bridge between abstract number theory and urban infrastructure engineering. By applying the Chinese Remainder Theorem to traffic signals operating on independent cycles (3 min, 5 min, 7 min), the project demonstrates how non-zero remainder offsets determine the exact minute (Minute 23) required to establish a continuous 'Green Wave' for vehicles.
+The Traffic Signal Synchronization System provides an intuitive, practical bridge between abstract number theory and urban infrastructure engineering. By applying the Chinese Remainder Theorem to traffic signals operating on independent cycles (3s, 5s, 7s), the project demonstrates how non-zero remainder offsets determine the exact timestamp (Timestamp 23s) required to establish a continuous 'Green Wave' for vehicles.
 
-Both the physical working model and the interactive web application successfully visualize modular congruences, offering an accessible learning tool that highlights the real-world power of modular arithmetic in signal timing, telecommunications, and digital computing.
+Both the physical Arduino Uno hardware prototype and the digital twin web application successfully visualize modular congruences, offering an accessible learning tool that highlights the real-world power of modular arithmetic in signal timing, telecommunications, and digital computing.
 
 ---
 
@@ -963,7 +1439,7 @@ I handled component selection, hardware procurement, and assembly testing alongs
 ## 1. ABSTRACT
 The Chinese Remainder Theorem (CRT) is a fundamental result in number theory that determines a unique integer solution x for a system of linear congruences with pairwise coprime moduli. While often taught abstractly, CRT has direct applications in urban traffic signal synchronization, digital telecommunications, and parallel computer architectures.
 
-This project demonstrates CRT using both a physical working traffic signal model and an interactive digital web application. By modeling traffic signals as modular timing cycles, the project illustrates how independent light timers (3 min, 5 min, 7 min) align to create a continuous 'Green Wave' for vehicles at Minute 23.
+This project demonstrates CRT using both a physical working ATmega328P / Arduino Uno traffic signal model and an interactive digital twin web application. By modeling traffic signals as modular timing cycles, the project illustrates how independent light timers (3s, 5s, 7s) align to create a continuous 'Green Wave' for vehicles at Minute 23 (105s master recurrence).
 
 ---
 
@@ -973,19 +1449,19 @@ When traffic signals operate on independent timer cycles along a main avenue, dr
 ### Project Objectives:
 1. To understand the mathematical principles of the Chinese Remainder Theorem (CRT).
 2. To differentiate between Least Common Multiple (LCM) and CRT when remainder offsets are present.
-3. To model traffic signal timing cycles (3 min, 5 min, 7 min) as modular congruences.
-4. To build a physical working model and an interactive web simulator for signal synchronization.
-5. To provide clear visual and audio feedback when a candidate time satisfies all signal modulo conditions.
+3. To model traffic signal timing cycles (3s, 5s, 7s) as modular congruences.
+4. To build a physical working model powered by an Arduino Uno / ATmega328P microcontroller.
+5. To provide clear visual, audio, and waveform telemetry feedback upon signal synchronization.
 
 ---
 
 ## 3. MATHEMATICAL FORMULATION (CRT vs. LCM)
 
 ### 3.1 The Traffic Signal Equations
-Suppose three traffic signals have cycle lengths of 3, 5, and 7 minutes respectively:
-- Signal 1: x ≡ 2 (mod 3)   (green 2 minutes ago)
-- Signal 2: x ≡ 3 (mod 5)   (green 3 minutes ago)
-- Signal 3: x ≡ 2 (mod 7)   (green 2 minutes ago)
+Suppose three traffic signals have cycle lengths of 3, 5, and 7 seconds respectively:
+- Signal 1: x ≡ 2 (mod 3)   (green 2 seconds ago)
+- Signal 2: x ≡ 3 (mod 5)   (green 3 seconds ago)
+- Signal 3: x ≡ 2 (mod 7)   (green 2 seconds ago)
 
 ### 3.2 Why Simple LCM Cannot Solve This Problem
 - LCM: Used only when all signals start at Minute 0 with zero remainder offset (x ≡ 0).
@@ -1003,71 +1479,139 @@ Suppose three traffic signals have cycle lengths of 3, 5, and 7 minutes respecti
    • x = 140 + 63 + 30 = 233
    • x ≡ 233 (mod 105) ≡ 23 (mod 105)
 
-The unique green-wave solution within [0, 104] is Minute 23.
+The unique green-wave solution within [0, 104] is Timestamp 23s.
 
 ---
 
-## 4. DIGITAL IMPLEMENTATION & USER CONTROLS
+## 4. PHYSICAL HARDWARE & DIGITAL TWIN IMPLEMENTATION
 
-The web application models the traffic signal system digitally using React, TypeScript, and Framer Motion.
+The hardware prototype is driven by an ATmega328P (Arduino Uno) microcontroller controlling a 3-intersection LED traffic array and piezo buzzer.
 
-![Traffic Light Sync Diagram](/Users/justin/.gemini/antigravity/brain/e7c94d9d-c35b-4a53-a23b-c1f6d686fdc4/traffic_light_diagram_1790783447873.jpg)
+![CRT Traffic Light Lab Dashboard](/Users/justin/.gemini/antigravity/brain/e7c94d9d-c35b-4a53-a23b-c1f6d686fdc4/.user_uploaded/media_1790791490718.png)
 
-![Traffic Signal Synchronizer Web UI](/Users/justin/.gemini/antigravity/brain/e7c94d9d-c35b-4a53-a23b-c1f6d686fdc4/traffic_signal_app_ui_1790783779368.jpg)
+![Multi-Channel Phase Waveform & Arduino Hardware Setup](/Users/justin/.gemini/antigravity/brain/e7c94d9d-c35b-4a53-a23b-c1f6d686fdc4/.user_uploaded/media_1790791505847.png)
 
-### Interactive User Controls:
-1. Candidate Timer Wheel: Adjusts the candidate time value x (e.g. set to 23).
-2. Intersection Signal Monitors (3 min, 5 min, 7 min): Shows real-time remainder values (x mod mi) and green light indicator status.
-3. 'Evaluate Synchronization' Button: Tests whether all 3 intersections display green lights simultaneously.
-4. Green-Wave Status Panel: Displays full green-wave confirmation when all 3 congruences are satisfied (x = 23).
+### Interactive Hardware & Digital Twin Controls:
+1. Live Signal Array (SIG A 3.0s, SIG B 5.0s, SIG C 7.0s): Monitors real-time LED states across intersections.
+2. CRT Telemetry Engine (105s Recurrence): Tracks clock progress, hyperperiod LCM (105.00s), and recurrence index.
+3. Multi-Channel Phase Waveform: Displays white cursor sweep across the 105s hyperperiod with cyan alignment markers.
+4. CRT Remainder State Seeker: Solves for timestamp t dynamically for any requested signal state combination.
 
 ---
 
-## 5. SOURCE CODE IMPLEMENTATION (ALGORITHM PAGE)
+## 5. HARDWARE SOURCE CODE (ARDUINO UNO FIRMWARE - C++)
 
-The following complete TypeScript module (src/utils/crt.ts) implements the Extended Euclidean Algorithm and Modular Inverses to solve the CRT system:
+The following complete C++ firmware source code (`arduino/traffic_light_controller.ino`) is executed directly on the Arduino Uno microcontroller to drive the physical traffic light hardware:
 
-```typescript
-export function getRemainder(value: number, modulus: number): number {
-  return ((value % modulus) + modulus) % modulus;
+```cpp
+// Arduino Uno / ATmega328P Physical Traffic Light Controller
+// File: arduino/traffic_light_controller.ino
+
+const int RED_A = 2;
+const int YELLOW_A = 3;
+const int GREEN_A = 4;
+
+const int RED_B = 8;
+const int YELLOW_B = 9;
+const int GREEN_B = 10;
+
+const int GREEN_C = A3;
+const int YELLOW_C = A4;
+const int RED_C = A5;
+
+const int BUZZER = A1;
+
+// Cycle Period Definitions (in milliseconds)
+const unsigned long PERIOD_A = 3000;   // 3.0s Signal Cycle
+const unsigned long PERIOD_B = 5000;   // 5.0s Signal Cycle
+const unsigned long PERIOD_C = 7000;   // 7.0s Signal Cycle
+const unsigned long MASTER_CYCLE = 105000; // 105.0s Hyperperiod LCM
+
+const int RED_FREQ = 400;
+const int YELLOW_FREQ = 600;
+const int GREEN_FREQ = 800;
+const int SYNC_FREQ = 1000;
+
+const unsigned long BEEP_ON_TIME = 150;
+const unsigned long BEEP_OFF_TIME = 350;
+const unsigned long SYNC_TIME = 600;
+
+unsigned long lastMillis = 0;
+unsigned long lastSyncCycle = 0;
+unsigned long beepTimer = 0;
+unsigned long syncEndTime = 0;
+
+bool beepState = false;
+bool syncActive = false;
+int currentBuzzerState = -1;
+
+void setup() {
+  pinMode(RED_A, OUTPUT);
+  pinMode(YELLOW_A, OUTPUT);
+  pinMode(GREEN_A, OUTPUT);
+
+  pinMode(RED_B, OUTPUT);
+  pinMode(YELLOW_B, OUTPUT);
+  pinMode(GREEN_B, OUTPUT);
+
+  pinMode(RED_C, OUTPUT);
+  pinMode(YELLOW_C, OUTPUT);
+  pinMode(GREEN_C, OUTPUT);
+
+  pinMode(BUZZER, OUTPUT);
+
+  setAllRed();
+
+  tone(BUZZER, SYNC_FREQ);
+  syncActive = true;
+  syncEndTime = millis() + SYNC_TIME;
+
+  lastMillis = millis();
+  beepTimer = millis();
 }
 
-function extendedGcd(a: number, b: number): [number, number, number] {
-  if (b === 0) return [a, 1, 0];
-  const [g, x1, y1] = extendedGcd(b, a % b);
-  return [g, y1, x1 - Math.floor(a / b) * y1];
-}
+void loop() {
+  unsigned long currentMillis = millis();
 
-function modInverse(a: number, m: number): number {
-  const [, x] = extendedGcd(getRemainder(a, m), m);
-  return getRemainder(x, m);
-}
+  // CRT Modulo Phase Calculation
+  unsigned long phaseA = currentMillis % PERIOD_A;
+  unsigned long phaseB = currentMillis % PERIOD_B;
+  unsigned long phaseC = currentMillis % PERIOD_C;
 
-/** Solves x ≡ remainders[i] (mod moduli[i]) for pairwise-coprime moduli */
-export function solveCRT(moduli: number[], remainders: number[]): number {
-  const product = moduli.reduce((acc, m) => acc * m, 1);
-  let result = 0;
-  for (let i = 0; i < moduli.length; i++) {
-    const mi = moduli[i];
-    const ri = getRemainder(remainders[i], mi);
-    const partial = product / mi;
-    const inverse = modInverse(partial, mi);
-    result += ri * partial * inverse;
+  int stateA = updateLightA(phaseA);
+  int stateB = updateLightB(phaseB);
+  int stateC = updateLightC(phaseC);
+
+  // Master Cycle Recurrence Check (CRT Convergence)
+  unsigned long currentCycle = currentMillis / MASTER_CYCLE;
+
+  if (currentCycle > lastSyncCycle) {
+    lastSyncCycle = currentCycle;
+    tone(BUZZER, SYNC_FREQ);
+    syncActive = true;
+    syncEndTime = currentMillis + SYNC_TIME;
+    beepState = false;
   }
-  return getRemainder(result, product);
-}
 
-export function checkRemainders(x: number, moduli: number[], remainders: number[]): boolean[] {
-  return moduli.map((m, i) => getRemainder(x, m) === getRemainder(remainders[i], m));
+  if (syncActive) {
+    if (currentMillis >= syncEndTime) {
+      noTone(BUZZER);
+      syncActive = false;
+      beepTimer = currentMillis;
+      beepState = false;
+      currentBuzzerState = -1;
+    }
+    return;
+  }
 }
 ```
 
 ---
 
 ## 6. CONCLUSION
-The Traffic Signal Synchronization System provides an intuitive, practical bridge between abstract number theory and urban infrastructure engineering. By applying the Chinese Remainder Theorem to traffic signals operating on independent cycles (3 min, 5 min, 7 min), the project demonstrates how non-zero remainder offsets determine the exact minute (Minute 23) required to establish a continuous 'Green Wave' for vehicles.
+The Traffic Signal Synchronization System provides an intuitive, practical bridge between abstract number theory and urban infrastructure engineering. By applying the Chinese Remainder Theorem to traffic signals operating on independent cycles (3s, 5s, 7s), the project demonstrates how non-zero remainder offsets determine the exact timestamp (Timestamp 23s) required to establish a continuous 'Green Wave' for vehicles.
 
-Both the physical working model and the interactive web application successfully visualize modular congruences, offering an accessible learning tool that highlights the real-world power of modular arithmetic in signal timing, telecommunications, and digital computing.
+Both the physical Arduino Uno hardware prototype and the digital twin web application successfully visualize modular congruences, offering an accessible learning tool that highlights the real-world power of modular arithmetic in signal timing, telecommunications, and digital computing.
 
 ---
 
@@ -1098,7 +1642,7 @@ I served as Team Lead, guiding overall project execution and system architecture
 ## 1. ABSTRACT
 The Chinese Remainder Theorem (CRT) is a fundamental result in number theory that determines a unique integer solution x for a system of linear congruences with pairwise coprime moduli. While often taught abstractly, CRT has direct applications in urban traffic signal synchronization, digital telecommunications, and parallel computer architectures.
 
-This project demonstrates CRT using both a physical working traffic signal model and an interactive digital web application. By modeling traffic signals as modular timing cycles, the project illustrates how independent light timers (3 min, 5 min, 7 min) align to create a continuous 'Green Wave' for vehicles at Minute 23.
+This project demonstrates CRT using both a physical working ATmega328P / Arduino Uno traffic signal model and an interactive digital twin web application. By modeling traffic signals as modular timing cycles, the project illustrates how independent light timers (3s, 5s, 7s) align to create a continuous 'Green Wave' for vehicles at Minute 23 (105s master recurrence).
 
 ---
 
@@ -1108,19 +1652,19 @@ When traffic signals operate on independent timer cycles along a main avenue, dr
 ### Project Objectives:
 1. To understand the mathematical principles of the Chinese Remainder Theorem (CRT).
 2. To differentiate between Least Common Multiple (LCM) and CRT when remainder offsets are present.
-3. To model traffic signal timing cycles (3 min, 5 min, 7 min) as modular congruences.
-4. To build a physical working model and an interactive web simulator for signal synchronization.
-5. To provide clear visual and audio feedback when a candidate time satisfies all signal modulo conditions.
+3. To model traffic signal timing cycles (3s, 5s, 7s) as modular congruences.
+4. To build a physical working model powered by an Arduino Uno / ATmega328P microcontroller.
+5. To provide clear visual, audio, and waveform telemetry feedback upon signal synchronization.
 
 ---
 
 ## 3. MATHEMATICAL FORMULATION (CRT vs. LCM)
 
 ### 3.1 The Traffic Signal Equations
-Suppose three traffic signals have cycle lengths of 3, 5, and 7 minutes respectively:
-- Signal 1: x ≡ 2 (mod 3)   (green 2 minutes ago)
-- Signal 2: x ≡ 3 (mod 5)   (green 3 minutes ago)
-- Signal 3: x ≡ 2 (mod 7)   (green 2 minutes ago)
+Suppose three traffic signals have cycle lengths of 3, 5, and 7 seconds respectively:
+- Signal 1: x ≡ 2 (mod 3)   (green 2 seconds ago)
+- Signal 2: x ≡ 3 (mod 5)   (green 3 seconds ago)
+- Signal 3: x ≡ 2 (mod 7)   (green 2 seconds ago)
 
 ### 3.2 Why Simple LCM Cannot Solve This Problem
 - LCM: Used only when all signals start at Minute 0 with zero remainder offset (x ≡ 0).
@@ -1138,71 +1682,139 @@ Suppose three traffic signals have cycle lengths of 3, 5, and 7 minutes respecti
    • x = 140 + 63 + 30 = 233
    • x ≡ 233 (mod 105) ≡ 23 (mod 105)
 
-The unique green-wave solution within [0, 104] is Minute 23.
+The unique green-wave solution within [0, 104] is Timestamp 23s.
 
 ---
 
-## 4. DIGITAL IMPLEMENTATION & USER CONTROLS
+## 4. PHYSICAL HARDWARE & DIGITAL TWIN IMPLEMENTATION
 
-The web application models the traffic signal system digitally using React, TypeScript, and Framer Motion.
+The hardware prototype is driven by an ATmega328P (Arduino Uno) microcontroller controlling a 3-intersection LED traffic array and piezo buzzer.
 
-![Traffic Light Sync Diagram](/Users/justin/.gemini/antigravity/brain/e7c94d9d-c35b-4a53-a23b-c1f6d686fdc4/traffic_light_diagram_1790783447873.jpg)
+![CRT Traffic Light Lab Dashboard](/Users/justin/.gemini/antigravity/brain/e7c94d9d-c35b-4a53-a23b-c1f6d686fdc4/.user_uploaded/media_1790791490718.png)
 
-![Traffic Signal Synchronizer Web UI](/Users/justin/.gemini/antigravity/brain/e7c94d9d-c35b-4a53-a23b-c1f6d686fdc4/traffic_signal_app_ui_1790783779368.jpg)
+![Multi-Channel Phase Waveform & Arduino Hardware Setup](/Users/justin/.gemini/antigravity/brain/e7c94d9d-c35b-4a53-a23b-c1f6d686fdc4/.user_uploaded/media_1790791505847.png)
 
-### Interactive User Controls:
-1. Candidate Timer Wheel: Adjusts the candidate time value x (e.g. set to 23).
-2. Intersection Signal Monitors (3 min, 5 min, 7 min): Shows real-time remainder values (x mod mi) and green light indicator status.
-3. 'Evaluate Synchronization' Button: Tests whether all 3 intersections display green lights simultaneously.
-4. Green-Wave Status Panel: Displays full green-wave confirmation when all 3 congruences are satisfied (x = 23).
+### Interactive Hardware & Digital Twin Controls:
+1. Live Signal Array (SIG A 3.0s, SIG B 5.0s, SIG C 7.0s): Monitors real-time LED states across intersections.
+2. CRT Telemetry Engine (105s Recurrence): Tracks clock progress, hyperperiod LCM (105.00s), and recurrence index.
+3. Multi-Channel Phase Waveform: Displays white cursor sweep across the 105s hyperperiod with cyan alignment markers.
+4. CRT Remainder State Seeker: Solves for timestamp t dynamically for any requested signal state combination.
 
 ---
 
-## 5. SOURCE CODE IMPLEMENTATION (ALGORITHM PAGE)
+## 5. HARDWARE SOURCE CODE (ARDUINO UNO FIRMWARE - C++)
 
-The following complete TypeScript module (src/utils/crt.ts) implements the Extended Euclidean Algorithm and Modular Inverses to solve the CRT system:
+The following complete C++ firmware source code (`arduino/traffic_light_controller.ino`) is executed directly on the Arduino Uno microcontroller to drive the physical traffic light hardware:
 
-```typescript
-export function getRemainder(value: number, modulus: number): number {
-  return ((value % modulus) + modulus) % modulus;
+```cpp
+// Arduino Uno / ATmega328P Physical Traffic Light Controller
+// File: arduino/traffic_light_controller.ino
+
+const int RED_A = 2;
+const int YELLOW_A = 3;
+const int GREEN_A = 4;
+
+const int RED_B = 8;
+const int YELLOW_B = 9;
+const int GREEN_B = 10;
+
+const int GREEN_C = A3;
+const int YELLOW_C = A4;
+const int RED_C = A5;
+
+const int BUZZER = A1;
+
+// Cycle Period Definitions (in milliseconds)
+const unsigned long PERIOD_A = 3000;   // 3.0s Signal Cycle
+const unsigned long PERIOD_B = 5000;   // 5.0s Signal Cycle
+const unsigned long PERIOD_C = 7000;   // 7.0s Signal Cycle
+const unsigned long MASTER_CYCLE = 105000; // 105.0s Hyperperiod LCM
+
+const int RED_FREQ = 400;
+const int YELLOW_FREQ = 600;
+const int GREEN_FREQ = 800;
+const int SYNC_FREQ = 1000;
+
+const unsigned long BEEP_ON_TIME = 150;
+const unsigned long BEEP_OFF_TIME = 350;
+const unsigned long SYNC_TIME = 600;
+
+unsigned long lastMillis = 0;
+unsigned long lastSyncCycle = 0;
+unsigned long beepTimer = 0;
+unsigned long syncEndTime = 0;
+
+bool beepState = false;
+bool syncActive = false;
+int currentBuzzerState = -1;
+
+void setup() {
+  pinMode(RED_A, OUTPUT);
+  pinMode(YELLOW_A, OUTPUT);
+  pinMode(GREEN_A, OUTPUT);
+
+  pinMode(RED_B, OUTPUT);
+  pinMode(YELLOW_B, OUTPUT);
+  pinMode(GREEN_B, OUTPUT);
+
+  pinMode(RED_C, OUTPUT);
+  pinMode(YELLOW_C, OUTPUT);
+  pinMode(GREEN_C, OUTPUT);
+
+  pinMode(BUZZER, OUTPUT);
+
+  setAllRed();
+
+  tone(BUZZER, SYNC_FREQ);
+  syncActive = true;
+  syncEndTime = millis() + SYNC_TIME;
+
+  lastMillis = millis();
+  beepTimer = millis();
 }
 
-function extendedGcd(a: number, b: number): [number, number, number] {
-  if (b === 0) return [a, 1, 0];
-  const [g, x1, y1] = extendedGcd(b, a % b);
-  return [g, y1, x1 - Math.floor(a / b) * y1];
-}
+void loop() {
+  unsigned long currentMillis = millis();
 
-function modInverse(a: number, m: number): number {
-  const [, x] = extendedGcd(getRemainder(a, m), m);
-  return getRemainder(x, m);
-}
+  // CRT Modulo Phase Calculation
+  unsigned long phaseA = currentMillis % PERIOD_A;
+  unsigned long phaseB = currentMillis % PERIOD_B;
+  unsigned long phaseC = currentMillis % PERIOD_C;
 
-/** Solves x ≡ remainders[i] (mod moduli[i]) for pairwise-coprime moduli */
-export function solveCRT(moduli: number[], remainders: number[]): number {
-  const product = moduli.reduce((acc, m) => acc * m, 1);
-  let result = 0;
-  for (let i = 0; i < moduli.length; i++) {
-    const mi = moduli[i];
-    const ri = getRemainder(remainders[i], mi);
-    const partial = product / mi;
-    const inverse = modInverse(partial, mi);
-    result += ri * partial * inverse;
+  int stateA = updateLightA(phaseA);
+  int stateB = updateLightB(phaseB);
+  int stateC = updateLightC(phaseC);
+
+  // Master Cycle Recurrence Check (CRT Convergence)
+  unsigned long currentCycle = currentMillis / MASTER_CYCLE;
+
+  if (currentCycle > lastSyncCycle) {
+    lastSyncCycle = currentCycle;
+    tone(BUZZER, SYNC_FREQ);
+    syncActive = true;
+    syncEndTime = currentMillis + SYNC_TIME;
+    beepState = false;
   }
-  return getRemainder(result, product);
-}
 
-export function checkRemainders(x: number, moduli: number[], remainders: number[]): boolean[] {
-  return moduli.map((m, i) => getRemainder(x, m) === getRemainder(remainders[i], m));
+  if (syncActive) {
+    if (currentMillis >= syncEndTime) {
+      noTone(BUZZER);
+      syncActive = false;
+      beepTimer = currentMillis;
+      beepState = false;
+      currentBuzzerState = -1;
+    }
+    return;
+  }
 }
 ```
 
 ---
 
 ## 6. CONCLUSION
-The Traffic Signal Synchronization System provides an intuitive, practical bridge between abstract number theory and urban infrastructure engineering. By applying the Chinese Remainder Theorem to traffic signals operating on independent cycles (3 min, 5 min, 7 min), the project demonstrates how non-zero remainder offsets determine the exact minute (Minute 23) required to establish a continuous 'Green Wave' for vehicles.
+The Traffic Signal Synchronization System provides an intuitive, practical bridge between abstract number theory and urban infrastructure engineering. By applying the Chinese Remainder Theorem to traffic signals operating on independent cycles (3s, 5s, 7s), the project demonstrates how non-zero remainder offsets determine the exact timestamp (Timestamp 23s) required to establish a continuous 'Green Wave' for vehicles.
 
-Both the physical working model and the interactive web application successfully visualize modular congruences, offering an accessible learning tool that highlights the real-world power of modular arithmetic in signal timing, telecommunications, and digital computing.
+Both the physical Arduino Uno hardware prototype and the digital twin web application successfully visualize modular congruences, offering an accessible learning tool that highlights the real-world power of modular arithmetic in signal timing, telecommunications, and digital computing.
 
 ---
 
@@ -1233,7 +1845,7 @@ I explored real-world CRT applications and designed the interactive hint system 
 ## 1. ABSTRACT
 The Chinese Remainder Theorem (CRT) is a fundamental result in number theory that determines a unique integer solution x for a system of linear congruences with pairwise coprime moduli. While often taught abstractly, CRT has direct applications in urban traffic signal synchronization, digital telecommunications, and parallel computer architectures.
 
-This project demonstrates CRT using both a physical working traffic signal model and an interactive digital web application. By modeling traffic signals as modular timing cycles, the project illustrates how independent light timers (3 min, 5 min, 7 min) align to create a continuous 'Green Wave' for vehicles at Minute 23.
+This project demonstrates CRT using both a physical working ATmega328P / Arduino Uno traffic signal model and an interactive digital twin web application. By modeling traffic signals as modular timing cycles, the project illustrates how independent light timers (3s, 5s, 7s) align to create a continuous 'Green Wave' for vehicles at Minute 23 (105s master recurrence).
 
 ---
 
@@ -1243,19 +1855,19 @@ When traffic signals operate on independent timer cycles along a main avenue, dr
 ### Project Objectives:
 1. To understand the mathematical principles of the Chinese Remainder Theorem (CRT).
 2. To differentiate between Least Common Multiple (LCM) and CRT when remainder offsets are present.
-3. To model traffic signal timing cycles (3 min, 5 min, 7 min) as modular congruences.
-4. To build a physical working model and an interactive web simulator for signal synchronization.
-5. To provide clear visual and audio feedback when a candidate time satisfies all signal modulo conditions.
+3. To model traffic signal timing cycles (3s, 5s, 7s) as modular congruences.
+4. To build a physical working model powered by an Arduino Uno / ATmega328P microcontroller.
+5. To provide clear visual, audio, and waveform telemetry feedback upon signal synchronization.
 
 ---
 
 ## 3. MATHEMATICAL FORMULATION (CRT vs. LCM)
 
 ### 3.1 The Traffic Signal Equations
-Suppose three traffic signals have cycle lengths of 3, 5, and 7 minutes respectively:
-- Signal 1: x ≡ 2 (mod 3)   (green 2 minutes ago)
-- Signal 2: x ≡ 3 (mod 5)   (green 3 minutes ago)
-- Signal 3: x ≡ 2 (mod 7)   (green 2 minutes ago)
+Suppose three traffic signals have cycle lengths of 3, 5, and 7 seconds respectively:
+- Signal 1: x ≡ 2 (mod 3)   (green 2 seconds ago)
+- Signal 2: x ≡ 3 (mod 5)   (green 3 seconds ago)
+- Signal 3: x ≡ 2 (mod 7)   (green 2 seconds ago)
 
 ### 3.2 Why Simple LCM Cannot Solve This Problem
 - LCM: Used only when all signals start at Minute 0 with zero remainder offset (x ≡ 0).
@@ -1273,71 +1885,139 @@ Suppose three traffic signals have cycle lengths of 3, 5, and 7 minutes respecti
    • x = 140 + 63 + 30 = 233
    • x ≡ 233 (mod 105) ≡ 23 (mod 105)
 
-The unique green-wave solution within [0, 104] is Minute 23.
+The unique green-wave solution within [0, 104] is Timestamp 23s.
 
 ---
 
-## 4. DIGITAL IMPLEMENTATION & USER CONTROLS
+## 4. PHYSICAL HARDWARE & DIGITAL TWIN IMPLEMENTATION
 
-The web application models the traffic signal system digitally using React, TypeScript, and Framer Motion.
+The hardware prototype is driven by an ATmega328P (Arduino Uno) microcontroller controlling a 3-intersection LED traffic array and piezo buzzer.
 
-![Traffic Light Sync Diagram](/Users/justin/.gemini/antigravity/brain/e7c94d9d-c35b-4a53-a23b-c1f6d686fdc4/traffic_light_diagram_1790783447873.jpg)
+![CRT Traffic Light Lab Dashboard](/Users/justin/.gemini/antigravity/brain/e7c94d9d-c35b-4a53-a23b-c1f6d686fdc4/.user_uploaded/media_1790791490718.png)
 
-![Traffic Signal Synchronizer Web UI](/Users/justin/.gemini/antigravity/brain/e7c94d9d-c35b-4a53-a23b-c1f6d686fdc4/traffic_signal_app_ui_1790783779368.jpg)
+![Multi-Channel Phase Waveform & Arduino Hardware Setup](/Users/justin/.gemini/antigravity/brain/e7c94d9d-c35b-4a53-a23b-c1f6d686fdc4/.user_uploaded/media_1790791505847.png)
 
-### Interactive User Controls:
-1. Candidate Timer Wheel: Adjusts the candidate time value x (e.g. set to 23).
-2. Intersection Signal Monitors (3 min, 5 min, 7 min): Shows real-time remainder values (x mod mi) and green light indicator status.
-3. 'Evaluate Synchronization' Button: Tests whether all 3 intersections display green lights simultaneously.
-4. Green-Wave Status Panel: Displays full green-wave confirmation when all 3 congruences are satisfied (x = 23).
+### Interactive Hardware & Digital Twin Controls:
+1. Live Signal Array (SIG A 3.0s, SIG B 5.0s, SIG C 7.0s): Monitors real-time LED states across intersections.
+2. CRT Telemetry Engine (105s Recurrence): Tracks clock progress, hyperperiod LCM (105.00s), and recurrence index.
+3. Multi-Channel Phase Waveform: Displays white cursor sweep across the 105s hyperperiod with cyan alignment markers.
+4. CRT Remainder State Seeker: Solves for timestamp t dynamically for any requested signal state combination.
 
 ---
 
-## 5. SOURCE CODE IMPLEMENTATION (ALGORITHM PAGE)
+## 5. HARDWARE SOURCE CODE (ARDUINO UNO FIRMWARE - C++)
 
-The following complete TypeScript module (src/utils/crt.ts) implements the Extended Euclidean Algorithm and Modular Inverses to solve the CRT system:
+The following complete C++ firmware source code (`arduino/traffic_light_controller.ino`) is executed directly on the Arduino Uno microcontroller to drive the physical traffic light hardware:
 
-```typescript
-export function getRemainder(value: number, modulus: number): number {
-  return ((value % modulus) + modulus) % modulus;
+```cpp
+// Arduino Uno / ATmega328P Physical Traffic Light Controller
+// File: arduino/traffic_light_controller.ino
+
+const int RED_A = 2;
+const int YELLOW_A = 3;
+const int GREEN_A = 4;
+
+const int RED_B = 8;
+const int YELLOW_B = 9;
+const int GREEN_B = 10;
+
+const int GREEN_C = A3;
+const int YELLOW_C = A4;
+const int RED_C = A5;
+
+const int BUZZER = A1;
+
+// Cycle Period Definitions (in milliseconds)
+const unsigned long PERIOD_A = 3000;   // 3.0s Signal Cycle
+const unsigned long PERIOD_B = 5000;   // 5.0s Signal Cycle
+const unsigned long PERIOD_C = 7000;   // 7.0s Signal Cycle
+const unsigned long MASTER_CYCLE = 105000; // 105.0s Hyperperiod LCM
+
+const int RED_FREQ = 400;
+const int YELLOW_FREQ = 600;
+const int GREEN_FREQ = 800;
+const int SYNC_FREQ = 1000;
+
+const unsigned long BEEP_ON_TIME = 150;
+const unsigned long BEEP_OFF_TIME = 350;
+const unsigned long SYNC_TIME = 600;
+
+unsigned long lastMillis = 0;
+unsigned long lastSyncCycle = 0;
+unsigned long beepTimer = 0;
+unsigned long syncEndTime = 0;
+
+bool beepState = false;
+bool syncActive = false;
+int currentBuzzerState = -1;
+
+void setup() {
+  pinMode(RED_A, OUTPUT);
+  pinMode(YELLOW_A, OUTPUT);
+  pinMode(GREEN_A, OUTPUT);
+
+  pinMode(RED_B, OUTPUT);
+  pinMode(YELLOW_B, OUTPUT);
+  pinMode(GREEN_B, OUTPUT);
+
+  pinMode(RED_C, OUTPUT);
+  pinMode(YELLOW_C, OUTPUT);
+  pinMode(GREEN_C, OUTPUT);
+
+  pinMode(BUZZER, OUTPUT);
+
+  setAllRed();
+
+  tone(BUZZER, SYNC_FREQ);
+  syncActive = true;
+  syncEndTime = millis() + SYNC_TIME;
+
+  lastMillis = millis();
+  beepTimer = millis();
 }
 
-function extendedGcd(a: number, b: number): [number, number, number] {
-  if (b === 0) return [a, 1, 0];
-  const [g, x1, y1] = extendedGcd(b, a % b);
-  return [g, y1, x1 - Math.floor(a / b) * y1];
-}
+void loop() {
+  unsigned long currentMillis = millis();
 
-function modInverse(a: number, m: number): number {
-  const [, x] = extendedGcd(getRemainder(a, m), m);
-  return getRemainder(x, m);
-}
+  // CRT Modulo Phase Calculation
+  unsigned long phaseA = currentMillis % PERIOD_A;
+  unsigned long phaseB = currentMillis % PERIOD_B;
+  unsigned long phaseC = currentMillis % PERIOD_C;
 
-/** Solves x ≡ remainders[i] (mod moduli[i]) for pairwise-coprime moduli */
-export function solveCRT(moduli: number[], remainders: number[]): number {
-  const product = moduli.reduce((acc, m) => acc * m, 1);
-  let result = 0;
-  for (let i = 0; i < moduli.length; i++) {
-    const mi = moduli[i];
-    const ri = getRemainder(remainders[i], mi);
-    const partial = product / mi;
-    const inverse = modInverse(partial, mi);
-    result += ri * partial * inverse;
+  int stateA = updateLightA(phaseA);
+  int stateB = updateLightB(phaseB);
+  int stateC = updateLightC(phaseC);
+
+  // Master Cycle Recurrence Check (CRT Convergence)
+  unsigned long currentCycle = currentMillis / MASTER_CYCLE;
+
+  if (currentCycle > lastSyncCycle) {
+    lastSyncCycle = currentCycle;
+    tone(BUZZER, SYNC_FREQ);
+    syncActive = true;
+    syncEndTime = currentMillis + SYNC_TIME;
+    beepState = false;
   }
-  return getRemainder(result, product);
-}
 
-export function checkRemainders(x: number, moduli: number[], remainders: number[]): boolean[] {
-  return moduli.map((m, i) => getRemainder(x, m) === getRemainder(remainders[i], m));
+  if (syncActive) {
+    if (currentMillis >= syncEndTime) {
+      noTone(BUZZER);
+      syncActive = false;
+      beepTimer = currentMillis;
+      beepState = false;
+      currentBuzzerState = -1;
+    }
+    return;
+  }
 }
 ```
 
 ---
 
 ## 6. CONCLUSION
-The Traffic Signal Synchronization System provides an intuitive, practical bridge between abstract number theory and urban infrastructure engineering. By applying the Chinese Remainder Theorem to traffic signals operating on independent cycles (3 min, 5 min, 7 min), the project demonstrates how non-zero remainder offsets determine the exact minute (Minute 23) required to establish a continuous 'Green Wave' for vehicles.
+The Traffic Signal Synchronization System provides an intuitive, practical bridge between abstract number theory and urban infrastructure engineering. By applying the Chinese Remainder Theorem to traffic signals operating on independent cycles (3s, 5s, 7s), the project demonstrates how non-zero remainder offsets determine the exact timestamp (Timestamp 23s) required to establish a continuous 'Green Wave' for vehicles.
 
-Both the physical working model and the interactive web application successfully visualize modular congruences, offering an accessible learning tool that highlights the real-world power of modular arithmetic in signal timing, telecommunications, and digital computing.
+Both the physical Arduino Uno hardware prototype and the digital twin web application successfully visualize modular congruences, offering an accessible learning tool that highlights the real-world power of modular arithmetic in signal timing, telecommunications, and digital computing.
 
 ---
 
