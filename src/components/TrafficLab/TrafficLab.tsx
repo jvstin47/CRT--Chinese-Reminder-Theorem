@@ -9,9 +9,9 @@ interface Preset {
 }
 
 const PRESETS: Preset[] = [
-  { name: "30s Standard", periods: [1500, 2000, 2500], lcm: 30000 },
-  { name: "60s Extended", periods: [3000, 4000, 5000], lcm: 60000 },
-  { name: "12s Harmonic", periods: [2000, 3000, 4000], lcm: 12000 },
+  { name: "105s (3.0s, 5.0s, 7.0s)", periods: [3000, 5000, 7000], lcm: 105000 },
+  { name: "30s (1.5s, 2.0s, 2.5s)", periods: [1500, 2000, 2500], lcm: 30000 },
+  { name: "12s (2.0s, 3.0s, 4.0s)", periods: [2000, 3000, 4000], lcm: 12000 },
 ];
 
 const TEAM_MEMBERS = [
@@ -41,10 +41,10 @@ const int RED_C = A5;
 
 const int BUZZER = A1;
 
-const unsigned long PERIOD_A = 1500;
-const unsigned long PERIOD_B = 2000;
-const unsigned long PERIOD_C = 2500;
-const unsigned long MASTER_CYCLE = 30000;
+const unsigned long PERIOD_A = 3000;
+const unsigned long PERIOD_B = 5000;
+const unsigned long PERIOD_C = 7000;
+const unsigned long MASTER_CYCLE = 105000;
 
 const int RED_FREQ = 400;
 const int YELLOW_FREQ = 600;
