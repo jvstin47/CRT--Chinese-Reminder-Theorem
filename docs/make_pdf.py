@@ -5,7 +5,7 @@ from reportlab.lib.pagesizes import letter
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image as RLImage, HRFlowable, Preformatted, PageBreak, Table, TableStyle
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib import colors
-from PIL import Image as PILImage
+from PIL import Image as PILImage, ImageEnhance
 
 def format_inline_text(text):
     clean_text = text.replace('**', '<b>').replace('**', '</b>')
@@ -23,6 +23,26 @@ def format_inline_text(text):
     final_text = ''.join(formatted_parts)
     return final_text.replace('& ', '&amp; ')
 
+def get_bw_image_path(img_p):
+    """Converts image to high-contrast grayscale optimized for B&W printing/viewing."""
+    bw_dir = os.path.join(os.path.dirname(img_p), 'bw_cache')
+    os.makedirs(bw_dir, exist_ok=True)
+    base_name = os.path.basename(img_p)
+    bw_path = os.path.join(bw_dir, 'bw_' + base_name)
+    
+    try:
+        with PILImage.open(img_p) as im:
+            # Convert to Grayscale ('L')
+            bw_im = im.convert('L')
+            # Slightly enhance contrast for razor-sharp monochrome print readability
+            enhancer = ImageEnhance.Contrast(bw_im)
+            bw_im = enhancer.enhance(1.15)
+            bw_im.save(bw_path)
+            return bw_path, im.size
+    except Exception as e:
+        print(f"Error converting image to B&W: {e}")
+        return img_p, (470, 200)
+
 def convert_md_to_pdf(md_path, pdf_path):
     doc = SimpleDocTemplate(
         pdf_path,
@@ -31,14 +51,14 @@ def convert_md_to_pdf(md_path, pdf_path):
     )
     styles = getSampleStyleSheet()
     
-    # Elegant Formal Serif Typography with keepWithNext=True to prevent orphan headings
+    # High-Contrast Monochrome / Black & White Academic Typography
     title_style = ParagraphStyle(
         'DocTitle',
         parent=styles['Heading1'],
         fontName='Times-Bold',
         fontSize=19,
         leading=23,
-        textColor=colors.HexColor('#0F172A'),
+        textColor=colors.HexColor('#000000'),
         spaceAfter=10,
         keepWithNext=True
     )
@@ -49,7 +69,7 @@ def convert_md_to_pdf(md_path, pdf_path):
         fontName='Times-Bold',
         fontSize=13.5,
         leading=17,
-        textColor=colors.HexColor('#1E3A8A'),
+        textColor=colors.HexColor('#111111'),
         spaceBefore=12,
         spaceAfter=5,
         keepWithNext=True
@@ -61,7 +81,7 @@ def convert_md_to_pdf(md_path, pdf_path):
         fontName='Times-Bold',
         fontSize=11.5,
         leading=14.5,
-        textColor=colors.HexColor('#334155'),
+        textColor=colors.HexColor('#222222'),
         spaceBefore=10,
         spaceAfter=4,
         keepWithNext=True
@@ -73,7 +93,7 @@ def convert_md_to_pdf(md_path, pdf_path):
         fontName='Times-Roman',
         fontSize=10,
         leading=14,
-        textColor=colors.HexColor('#1E293B'),
+        textColor=colors.HexColor('#000000'),
         spaceAfter=5
     )
 
@@ -83,7 +103,7 @@ def convert_md_to_pdf(md_path, pdf_path):
         fontName='Times-Roman',
         fontSize=9.5,
         leading=13.5,
-        textColor=colors.HexColor('#0F172A'),
+        textColor=colors.HexColor('#000000'),
         spaceAfter=0
     )
 
@@ -93,8 +113,8 @@ def convert_md_to_pdf(md_path, pdf_path):
         fontName='Courier',
         fontSize=8,
         leading=10.5,
-        textColor=colors.HexColor('#0F172A'),
-        backColor=colors.HexColor('#F8FAFC'),
+        textColor=colors.HexColor('#000000'),
+        backColor=colors.HexColor('#F2F2F2'),
         borderPadding=5,
         spaceBefore=4,
         spaceAfter=6
@@ -125,9 +145,9 @@ def convert_md_to_pdf(md_path, pdf_path):
             t = Table(table_data, colWidths=[240, 230])
             t.setStyle(TableStyle([
                 ('VALIGN', (0,0), (-1,-1), 'TOP'),
-                ('BACKGROUND', (0,0), (-1,-1), colors.HexColor('#F8FAFC')),
-                ('BOX', (0,0), (-1,-1), 0.75, colors.HexColor('#CBD5E1')),
-                ('INNERGRID', (0,0), (-1,-1), 0.5, colors.HexColor('#E2E8F0')),
+                ('BACKGROUND', (0,0), (-1,-1), colors.HexColor('#F5F5F5')),
+                ('BOX', (0,0), (-1,-1), 1.0, colors.HexColor('#222222')),
+                ('INNERGRID', (0,0), (-1,-1), 0.5, colors.HexColor('#CCCCCC')),
                 ('TOPPADDING', (0,0), (-1,-1), 5),
                 ('BOTTOMPADDING', (0,0), (-1,-1), 5),
                 ('LEFTPADDING', (0,0), (-1,-1), 8),
@@ -167,7 +187,7 @@ def convert_md_to_pdf(md_path, pdf_path):
             continue
 
         if raw.strip() == '---':
-            story.append(HRFlowable(width="100%", thickness=1, color=colors.HexColor('#CBD5E1'), spaceBefore=6, spaceAfter=6))
+            story.append(HRFlowable(width="100%", thickness=1, color=colors.HexColor('#333333'), spaceBefore=6, spaceAfter=6))
             continue
 
         if raw.startswith('# '):
@@ -180,15 +200,14 @@ def convert_md_to_pdf(md_path, pdf_path):
             story.append(Paragraph(raw[4:], h3_style))
             continue
 
-        # Images: Proportional sizing with max height constraint to fit cleanly on pages
+        # Images: B&W grayscale conversion & proportional sizing
         if raw.strip().startswith('!['):
             m = re.match(r'!\[.*?\]\((.*?)\)', raw.strip())
             if m:
                 img_p = m.group(1)
                 if os.path.exists(img_p):
                     try:
-                        with PILImage.open(img_p) as im:
-                            orig_w, orig_h = im.size
+                        bw_img_p, (orig_w, orig_h) = get_bw_image_path(img_p)
                         
                         target_w = 470  # Printable width
                         aspect_ratio = orig_h / orig_w
@@ -200,7 +219,7 @@ def convert_md_to_pdf(md_path, pdf_path):
                             target_w = target_h / aspect_ratio
                         
                         story.append(Spacer(1, 3))
-                        story.append(RLImage(img_p, width=target_w, height=target_h))
+                        story.append(RLImage(bw_img_p, width=target_w, height=target_h))
                         story.append(Spacer(1, 4))
                     except Exception as img_err:
                         print(f"Error processing image: {img_err}")
@@ -213,7 +232,7 @@ def convert_md_to_pdf(md_path, pdf_path):
         flush_table()
 
     doc.build(story)
-    print(f"Generated PDF with clean page breaks & keepWithNext: {pdf_path}")
+    print(f"Generated B&W Optimized PDF: {pdf_path}")
 
 if __name__ == '__main__':
     docs_dir = '/Users/justin/Public/projects/CRT/docs'
