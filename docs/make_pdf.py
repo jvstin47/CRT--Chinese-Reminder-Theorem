@@ -12,8 +12,8 @@ def format_inline_text(text):
     text = re.sub(r'[\U00010000-\U0010ffff]', '', text)
     text = re.sub(r'[\ufe00-\ufe0f\u200b-\u200f]', '', text)
     text = re.sub(r'[💡⚙🎬👥📝📄🎭🚦🎉👉✔❌■]', '', text)
-    text = re.sub(r'[\u2500-\u257f]', '', text)
     clean_text = text.replace('**', '<b>').replace('**', '</b>')
+    clean_text = re.sub(r'`(.*?)`', r'<font face="Courier">\1</font>', clean_text)
     parts = clean_text.split('<b>')
     formatted_parts = []
     for i, p in enumerate(parts):
@@ -52,19 +52,19 @@ def convert_md_to_pdf(md_path, pdf_path):
     doc = SimpleDocTemplate(
         pdf_path,
         pagesize=letter,
-        rightMargin=36, leftMargin=36, topMargin=36, bottomMargin=36
+        rightMargin=36, leftMargin=36, topMargin=28, bottomMargin=28
     )
     styles = getSampleStyleSheet()
     
-    # High-Contrast Monochrome Academic Typography (+3pt font size boost over initial 9.5pt -> 11.5pt body, 20pt title)
+    # Typography (+1pt font size boost over previous 11.5pt -> 12.5pt body, 21pt title)
     title_style = ParagraphStyle(
         'DocTitle',
         parent=styles['Heading1'],
         fontName='Times-Bold',
-        fontSize=20,
-        leading=24,
+        fontSize=21,
+        leading=25,
         textColor=colors.HexColor('#000000'),
-        spaceAfter=6,
+        spaceAfter=8,
         keepWithNext=True
     )
     
@@ -72,11 +72,11 @@ def convert_md_to_pdf(md_path, pdf_path):
         'DocH2',
         parent=styles['Heading2'],
         fontName='Times-Bold',
-        fontSize=14.5,
-        leading=18,
+        fontSize=15.5,
+        leading=19,
         textColor=colors.HexColor('#111111'),
-        spaceBefore=8,
-        spaceAfter=3,
+        spaceBefore=14,
+        spaceAfter=7,
         keepWithNext=True
     )
 
@@ -84,11 +84,11 @@ def convert_md_to_pdf(md_path, pdf_path):
         'DocH3',
         parent=styles['Heading3'],
         fontName='Times-Bold',
-        fontSize=12.5,
-        leading=15.5,
+        fontSize=13.5,
+        leading=17,
         textColor=colors.HexColor('#222222'),
-        spaceBefore=6,
-        spaceAfter=2,
+        spaceBefore=10,
+        spaceAfter=5,
         keepWithNext=True
     )
 
@@ -96,18 +96,28 @@ def convert_md_to_pdf(md_path, pdf_path):
         'DocBody',
         parent=styles['Normal'],
         fontName='Times-Roman',
-        fontSize=11.5,
+        fontSize=12.5,
+        leading=16,
+        textColor=colors.HexColor('#000000'),
+        spaceAfter=5
+    )
+
+    meta_style = ParagraphStyle(
+        'DocMeta',
+        parent=styles['Normal'],
+        fontName='Times-Roman',
+        fontSize=12.0,
         leading=15,
         textColor=colors.HexColor('#000000'),
-        spaceAfter=3
+        spaceAfter=1
     )
 
     table_cell_style = ParagraphStyle(
         'DocTableCell',
         parent=styles['Normal'],
         fontName='Times-Roman',
-        fontSize=11,
-        leading=14,
+        fontSize=12,
+        leading=15,
         textColor=colors.HexColor('#000000'),
         spaceAfter=0
     )
@@ -116,13 +126,13 @@ def convert_md_to_pdf(md_path, pdf_path):
         'DocCode',
         parent=styles['Code'],
         fontName='Courier',
-        fontSize=8.5,
-        leading=10.5,
+        fontSize=9.0,
+        leading=11.0,
         textColor=colors.HexColor('#000000'),
         backColor=colors.HexColor('#F2F2F2'),
         borderPadding=4,
-        spaceBefore=3,
-        spaceAfter=4
+        spaceBefore=4,
+        spaceAfter=5
     )
 
     story = []
@@ -172,7 +182,7 @@ def convert_md_to_pdf(md_path, pdf_path):
                 p1, w1, h1 = image_buffer[i]
                 p2, w2, h2 = image_buffer[i+1]
                 col_w = 265
-                max_h = 190
+                max_h = 115
 
                 asp1 = h1 / w1 if w1 > 0 else 0.75
                 asp2 = h2 / w2 if w2 > 0 else 0.75
@@ -202,7 +212,7 @@ def convert_md_to_pdf(md_path, pdf_path):
                     ('TOPPADDING', (0,0), (-1,-1), 2),
                     ('BOTTOMPADDING', (0,0), (-1,-1), 2),
                 ]))
-                story.append(Spacer(1, 2))
+                story.append(Spacer(1, 3))
                 story.append(row_table)
                 story.append(Spacer(1, 4))
                 i += 2
@@ -211,8 +221,8 @@ def convert_md_to_pdf(md_path, pdf_path):
                 asp1 = h1 / w1 if w1 > 0 else 0.75
                 tw1 = 360
                 th1 = tw1 * asp1
-                if th1 > 190:
-                    th1 = 190
+                if th1 > 115:
+                    th1 = 115
                     tw1 = th1 / asp1
                 story.append(RLImage(p1, width=tw1, height=th1))
                 story.append(Spacer(1, 4))
@@ -267,7 +277,9 @@ def convert_md_to_pdf(md_path, pdf_path):
             continue
 
         if raw.strip() == '---':
-            story.append(HRFlowable(width="100%", thickness=1, color=colors.HexColor('#333333'), spaceBefore=4, spaceAfter=4))
+            story.append(Spacer(1, 4))
+            story.append(HRFlowable(width="100%", thickness=1, color=colors.HexColor('#333333'), spaceBefore=8, spaceAfter=10))
+            story.append(Spacer(1, 4))
             continue
 
         if raw.startswith('# '):
@@ -281,7 +293,10 @@ def convert_md_to_pdf(md_path, pdf_path):
             continue
 
         if raw.strip():
-            story.append(Paragraph(format_inline_text(raw), body_style))
+            if any(raw.strip().startswith(k) for k in ['**PROJECT TITLE:', '**STUDENT NAME:', '**COURSE:', '**ROLL NO:', '**CLASS:', '**ROLE / FUNCTION:']):
+                story.append(Paragraph(format_inline_text(raw), meta_style))
+            else:
+                story.append(Paragraph(format_inline_text(raw), body_style))
 
     if image_buffer:
         flush_images()
